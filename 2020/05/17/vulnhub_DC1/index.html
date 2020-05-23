@@ -1,0 +1,203 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>vulnhub-DC1 | crownZ's Blog</title><meta name="description" content="vulnhub-DC1"><meta name="keywords" content="vulnhub"><meta name="author" content="crownZ"><meta name="copyright" content="crownZ"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="preconnect" href="//cdn.jsdelivr.net"><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin><link rel="preconnect" href="//busuanzi.ibruce.info"><meta name="google-site-verification" content="A2oGpKcpeHVKtuaxnARzKhD0x9h4UyHUwhMpeBZ2cHk"><meta name="baidu-site-verification" content="DRcGuvTARl"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="vulnhub-DC1"><meta name="twitter:description" content="vulnhub-DC1"><meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200116112234.png"><meta property="og:type" content="article"><meta property="og:title" content="vulnhub-DC1"><meta property="og:url" content="https://crownz-sec.github.io/2020/05/17/vulnhub_DC1/"><meta property="og:site_name" content="crownZ's Blog"><meta property="og:description" content="vulnhub-DC1"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200116112234.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>const autoChangeMode = 'false'
+var t = Cookies.get("theme");
+if (autoChangeMode == '1'){
+const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+const isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+const isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+if (t === undefined){
+  if (isLightMode) activateLightMode()
+  else if (isDarkMode) activateDarkMode()
+  else if (isNotSpecified || hasNoSupport){
+    console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+    now = new Date();
+    hour = now.getHours();
+    isNight = hour < 6 || hour >= 18
+    isNight ? activateDarkMode() : activateLightMode()
+}
+} else if (t == 'light') activateLightMode()
+else activateDarkMode()
+
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="canonical" href="https://crownz-sec.github.io/2020/05/17/vulnhub_DC1/"><link rel="prev" title="vulnhub-DC2" href="https://crownz-sec.github.io/2020/05/17/vulnhub_DC2/"><link rel="next" title="Linux下的Socket编程" href="https://crownz-sec.github.io/2020/05/16/linux_socket/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"cookieDomain":"https://crownz-sec.github.io/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  bookmark: {
+    title: 'Snackbar.bookmark.title',
+    message_prev: '按',
+    message_next: '键将本页加入书签'
+  },
+  runtime_unit: '天',
+  runtime: true,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  baiduPush: false,
+  isHome: false,
+  isPost: true
+  
+}</script><meta name="generator" content="Hexo 4.2.1"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head><body><header> <div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/">crownZ's Blog</a></span><span class="toggle-menu pull_right close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> 关于我</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> 清单</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li><li><a class="site-page" href="/gallery/"><i class="fa-fw fa fa-camera"></i><span> 相册</span></a></li></ul></div></div></span></div></header><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">19</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">22</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">10</div></a></div></div></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> 关于我</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> 清单</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li><li><a class="site-page" href="/gallery/"><i class="fa-fw fa fa-camera"></i><span> 相册</span></a></li></ul></div></div></div><div id="mobile-sidebar-toc"><div class="toc_mobile_headline">目录</div><div class="sidebar-toc__content"><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-1"><a class="toc_mobile_items-link" href="#flag1"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">flag1</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-1"><a class="toc_mobile_items-link" href="#flag2"><span class="toc_mobile_items-number">2.</span> <span class="toc_mobile_items-text">flag2</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-1"><a class="toc_mobile_items-link" href="#flag3"><span class="toc_mobile_items-number">3.</span> <span class="toc_mobile_items-text">flag3</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-1"><a class="toc_mobile_items-link" href="#flag4"><span class="toc_mobile_items-number">4.</span> <span class="toc_mobile_items-text">flag4</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-1"><a class="toc_mobile_items-link" href="#flag5"><span class="toc_mobile_items-number">5.</span> <span class="toc_mobile_items-text">flag5</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-1"><a class="toc_mobile_items-link" href="#回顾过程"><span class="toc_mobile_items-number">6.</span> <span class="toc_mobile_items-text">回顾过程</span></a></li></ol></div></div></div><div id="body-wrap"><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true">     </i><div id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#flag1"><span class="toc-number">1.</span> <span class="toc-text">flag1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#flag2"><span class="toc-number">2.</span> <span class="toc-text">flag2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#flag3"><span class="toc-number">3.</span> <span class="toc-text">flag3</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#flag4"><span class="toc-number">4.</span> <span class="toc-text">flag4</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#flag5"><span class="toc-number">5.</span> <span class="toc-text">flag5</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#回顾过程"><span class="toc-number">6.</span> <span class="toc-text">回顾过程</span></a></li></ol></div></div></div><main id="content-outer"><div id="top-container" style="background-image: url(https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200116112234.png)"><div id="post-info"><div id="post-title"><div class="posttitle">vulnhub-DC1</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 发表于 2020-05-17<span class="post-meta__separator">|</span><i class="fa fa-history fa-fw" aria-hidden="true"></i> 更新于 2020-05-17</time><span class="post-meta__separator">|</span><span><i class="fa fa-inbox post-meta__icon fa-fw" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a></span><div class="post-meta-wordcount"><i class="fa fa-file-word-o post-meta__icon fa-fw" aria-hidden="true"></i><span>字数总计:</span><span class="word-count">1.3k</span><span class="post-meta__separator">|</span><i class="fa fa-clock-o post-meta__icon fa-fw" aria-hidden="true"></i><span>阅读时长: 4 分钟</span><div class="post-meta-pv-cv"><span class="post-meta__separator">|</span><span><i class="fa fa-eye post-meta__icon fa-fw" aria-hidden="true"> </i>阅读量:</span><span id="busuanzi_value_page_pv"></span></div></div></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><html><head></head><body><blockquote>
+<p><a href="https://www.vulnhub.com/" target="_blank" rel="noopener">vulnhub</a>是一个有各种靶机的网站，用来练习渗透是一个不错的选择。要注意这个并不是p神的那个vulhub，vulhub是各大公开的漏洞，要用docker运行，这里vulnhub是用虚拟机的。</p>
+</blockquote>
+<h1 id="flag1"><a href="#flag1" class="headerlink" title="flag1"></a>flag1</h1><p>打开DC1靶机，看到直接就让登录，我想这怎么搞啊。看别人的解析，原来是这个靶机只是开着就行了，下面就在攻击机进行渗透。也对，要是直接登录了，还算什么渗透呀。</p>
+<p><a href="https://gitee.com/crownZ/blog_image/raw/master/20200517110925.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://gitee.com/crownZ/blog_image/raw/master/20200517110925.png" class="lazyload"></a></p>
+<p>但现在，靶机的IP和端口都不知道，这里用kali的nmap扫描整个子网段。因为都是在虚拟机上运行的，网络模式也是NAT的，这两个机子都是在同一个网段的，并不需要特别的配置。</p>
+<p><a href="https://gitee.com/crownZ/blog_image/raw/master/20200517111626.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://gitee.com/crownZ/blog_image/raw/master/20200517111626.png" class="lazyload"></a></p>
+<p>能看到两个开放端口的主机，第一个测试后是我本机的IP，因为这个时候我本地还在运行一个PHP网站，试一下就知道了。判断下面的IP是靶机IP，因为开了80端口，就直接浏览器访问。看到是一个管理网站，用Drupal驱动。看到Power by，就认为它可能是一个模版网站，这样的网站通常都有对应的版本漏洞。</p>
+<p><a href="https://gitee.com/crownZ/blog_image/raw/master/20200517111955.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://gitee.com/crownZ/blog_image/raw/master/20200517111955.png" class="lazyload"></a></p>
+<p>到网上搜一下，看到就有相关的漏洞分析。</p>
+<p><a href="https://gitee.com/crownZ/blog_image/raw/master/20200517112444.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://gitee.com/crownZ/blog_image/raw/master/20200517112444.png" class="lazyload"></a></p>
+<p>打开msfconsole，查找相关exp。</p>
+<p><a href="https://gitee.com/crownZ/blog_image/raw/master/20200517142752.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://gitee.com/crownZ/blog_image/raw/master/20200517142752.png" class="lazyload"></a></p>
+<p>选择2018年的那一条，设置好远程主机，运行exp。</p>
+<p><a href="https://gitee.com/crownZ/blog_image/raw/master/20200517142736.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://gitee.com/crownZ/blog_image/raw/master/20200517142736.png" class="lazyload"></a></p>
+<p>看到建立了连接，输入shell，获得普通用户权限。</p>
+<p><a href="https://gitee.com/crownZ/blog_image/raw/master/20200517142710.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://gitee.com/crownZ/blog_image/raw/master/20200517142710.png" class="lazyload"></a></p>
+<p>查看当前目录，找到flag1。提示我们找config文件。</p>
+<p><a href="https://gitee.com/crownZ/blog_image/raw/master/20200517143555.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://gitee.com/crownZ/blog_image/raw/master/20200517143555.png" class="lazyload"></a></p>
+<h1 id="flag2"><a href="#flag2" class="headerlink" title="flag2"></a>flag2</h1><p>之前进入的shell并不是交互的，用<code>python -c 'import pty;pty.spawn("/bin/bash")'</code>即可进入交互式的shell。</p>
+<p><a href="https://gitee.com/crownZ/blog_image/raw/master/20200517153139.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://gitee.com/crownZ/blog_image/raw/master/20200517153139.png" class="lazyload"></a></p>
+<p>drupal的配置文件为<code>/sites/default/settings.php</code>，是数据库连接配置文件。</p>
+<p><a href="https://gitee.com/crownZ/blog_image/raw/master/20200517144534.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://gitee.com/crownZ/blog_image/raw/master/20200517144534.png" class="lazyload"></a></p>
+<p>找到之后查看内容，看到第二个flag，获得了数据库的账户和密码。</p>
+<p><a href="https://gitee.com/crownZ/blog_image/raw/master/20200517144646.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://gitee.com/crownZ/blog_image/raw/master/20200517144646.png" class="lazyload"></a></p>
+<p>flag2提示暴力破解和字典攻击并不是唯一获取访问的途径，毕竟他已经把数据的账户和密码给出了，就连接查看数据库。</p>
+<p><a href="https://gitee.com/crownZ/blog_image/raw/master/20200517145013.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://gitee.com/crownZ/blog_image/raw/master/20200517145013.png" class="lazyload"></a></p>
+<p>显示数据库，再查看主要数据库的表。</p>
+<p><a href="https://gitee.com/crownZ/blog_image/raw/master/20200517145214.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://gitee.com/crownZ/blog_image/raw/master/20200517145214.png" class="lazyload"></a></p>
+<p>看到用户表为users。</p>
+<p><a href="https://gitee.com/crownZ/blog_image/raw/master/20200517145354.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://gitee.com/crownZ/blog_image/raw/master/20200517145354.png" class="lazyload"></a></p>
+<p>我们查看name和pass。</p>
+<p><a href="https://gitee.com/crownZ/blog_image/raw/master/20200517145543.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://gitee.com/crownZ/blog_image/raw/master/20200517145543.png" class="lazyload"></a></p>
+<p>看到账户和加密的密码，flag2提示暴力破解并非唯一的方法，下面就去破解密码。</p>
+<h1 id="flag3"><a href="#flag3" class="headerlink" title="flag3"></a>flag3</h1><p>由于很多在线MD5爆破和MD5数据库，可以查到很多MD5码的原文，所以Drupal 7已不再采用Drupal 6和5简单的MD5加密，而是采用一种新型的Hash加密方法。新型加密方法是“加了盐（Salt）”的MD5码，简单理解就是，并不会直接将password进行MD5加密，而会和用户名或其它随机字符串组合在一起后再MD5加密。</p>
+<p>在Drupal 7安装目录的scripts目录下，有一些Drupal 7开发者准备好的PHP脚本，可以执行一些高级操作。其中有一个脚本名为password-hash.sh，它的功能是传入一个密码（字符串），即返回加密后的密码字符串。我们可以利用它，生成一个我们知道密码，再用该密码替换原admin密码。</p>
+<p>Drupal 7对数据库加密的脚本位于网站根目录scripts下，利用该脚本修改为新密码123456。先退出mysql，切换到www目录下，看到scripts。使用<code>php scripts/password-hash.sh 123456</code>，得到加密的密码。</p>
+<p><a href="https://gitee.com/crownZ/blog_image/raw/master/20200517150331.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://gitee.com/crownZ/blog_image/raw/master/20200517150331.png" class="lazyload"></a></p>
+<p>下面再次登录数据库。</p>
+<p><a href="https://gitee.com/crownZ/blog_image/raw/master/20200517150658.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://gitee.com/crownZ/blog_image/raw/master/20200517150658.png" class="lazyload"></a></p>
+<p>选择数据库之后，修改用update语句更改密码。</p>
+<p><a href="https://gitee.com/crownZ/blog_image/raw/master/20200517150955.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://gitee.com/crownZ/blog_image/raw/master/20200517150955.png" class="lazyload"></a></p>
+<p>用admin和123456登录cms，在Content看到flag3。</p>
+<p><a href="https://gitee.com/crownZ/blog_image/raw/master/20200517151205.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://gitee.com/crownZ/blog_image/raw/master/20200517151205.png" class="lazyload"></a></p>
+<p>查看flag3内容，提示：特殊的文件保留权限(Perms)会帮助找到密码，你需要用-exec执行命令来获得shadow文件信息。</p>
+<p><a href="https://gitee.com/crownZ/blog_image/raw/master/20200517152121.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://gitee.com/crownZ/blog_image/raw/master/20200517152121.png" class="lazyload"></a></p>
+<h1 id="flag4"><a href="#flag4" class="headerlink" title="flag4"></a>flag4</h1><p>先查看密码，看到了flag4用户。</p>
+<p><a href="https://gitee.com/crownZ/blog_image/raw/master/20200517152007.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://gitee.com/crownZ/blog_image/raw/master/20200517152007.png" class="lazyload"></a></p>
+<p>切换目录，查看flag4，提示我们查看root用户的flag。</p>
+<p><a href="https://gitee.com/crownZ/blog_image/raw/master/20200517152100.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://gitee.com/crownZ/blog_image/raw/master/20200517152100.png" class="lazyload"></a></p>
+<h1 id="flag5"><a href="#flag5" class="headerlink" title="flag5"></a>flag5</h1><p>我们查找root，<code>find /root</code>，看到最后一个flag在root目录下面。</p>
+<p><a href="https://gitee.com/crownZ/blog_image/raw/master/20200517152435.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://gitee.com/crownZ/blog_image/raw/master/20200517152435.png" class="lazyload"></a></p>
+<p>当想切换到root目录下面，会提示没有权限，就需要提权了。</p>
+<p>使用命令：</p>
+<ul>
+<li>mkdir test</li>
+<li>find test -exec ‘/bin/sh’ /</li>
+</ul>
+<p><a href="https://gitee.com/crownZ/blog_image/raw/master/20200517153415.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://gitee.com/crownZ/blog_image/raw/master/20200517153415.png" class="lazyload"></a></p>
+<p>看到我们获取了有root权限的shell，直接查看最终的flag。</p>
+<p><a href="https://gitee.com/crownZ/blog_image/raw/master/20200517153541.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://gitee.com/crownZ/blog_image/raw/master/20200517153541.png" class="lazyload"></a></p>
+<p>上面提权的方法叫做suid提权，学一下提权的原理。</p>
+<p>suid是其他用户执行这个程序的时候可以用该程序所有者/组的权限。suid提权可以理解为某个文件有s标志，并且如果该文件拥有者为root，当我们运行这个文件时就可以有root的权限。前面的提权就是如此，find命令找到了文件夹test，下来以root权限执行/bin/sh，就获得了root权限的/bin/sh。常见suid提权的命令包括nmap、vim、find、bash、more、less、nano、cp等。</p>
+<h1 id="回顾过程"><a href="#回顾过程" class="headerlink" title="回顾过程"></a>回顾过程</h1><ol>
+<li>信息收集</li>
+</ol>
+<ul>
+<li>目标IP探测</li>
+<li>Nmap端口扫描</li>
+</ul>
+<ol start="2">
+<li>CMS漏洞搜索</li>
+</ol>
+<ul>
+<li>识别Drupal CMS管理系统</li>
+<li>搜索Drupal漏洞编号CVE-2018-7600</li>
+</ul>
+<ol start="3">
+<li>msf漏洞利用</li>
+</ol>
+<ul>
+<li>搜索drupal漏洞</li>
+<li>msf使用漏洞并配置参数</li>
+<li>反弹shell</li>
+</ul>
+<ol start="4">
+<li>敏感信息分析</li>
+</ol>
+<ul>
+<li>python交互反弹shell</li>
+<li>获取数据库账户密码</li>
+</ul>
+<ol start="5">
+<li>数据库密码修改</li>
+</ol>
+<ul>
+<li>搜索drupal数据库密码信息</li>
+<li>利用脚本生成密码并替换管理员密码</li>
+</ul>
+<ol start="6">
+<li>suid提权</li>
+</ol>
+<ul>
+<li>查看最终flag</li>
+</ul>
+<blockquote>
+<p>参考 </p>
+<p>[1] <a href="https://my.oschina.net/u/4257499/blog/3230676" target="_blank" rel="noopener">Vulnhub靶机渗透之DC-1提权和Drupal漏洞利用</a></p>
+<p>[2] <a href="https://www.anquanke.com/post/id/86979" target="_blank" rel="noopener">Linux提权——利用可执行文件SUID</a></p>
+</blockquote>
+</body></html></div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">crownZ</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://crownz-sec.github.io/2020/05/17/vulnhub_DC1/">https://crownz-sec.github.io/2020/05/17/vulnhub_DC1/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://crownz-sec.github.io">crownZ's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/vulnhub/">vulnhub    </a></div><div class="post_share"></div></div><nav class="pagination_post" id="pagination"><div class="prev-post pull_left"><a href="/2020/05/17/vulnhub_DC2/"><img class="prev_cover lazyload" data-src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200116112234.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">上一篇</div><div class="prev_info"><span>vulnhub-DC2</span></div></a></div><div class="next-post pull_right"><a href="/2020/05/16/linux_socket/"><img class="next_cover lazyload" data-src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/linux.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="label">下一篇</div><div class="next_info"><span>Linux下的Socket编程</span></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> 相关推荐</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2020/05/17/vulnhub_DC2/" title="vulnhub-DC2"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200116112234.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-05-17</div><div class="relatedPosts_title">vulnhub-DC2</div></div></a></div></div><div class="clear_both"></div></div><hr><div id="post-comment"><div class="comment_headling"><i class="fa fa-comments fa-fw" aria-hidden="true"></i><span> 评论</span></div><div class="vcomment" id="vcomment"></div><script src="https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js"></script><script>var notify = false == true ? true : false;
+var verify = false == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'jALuqrrccTRxjAMC17xGE0Nu-gzGzoHsz',
+  appKey:'pbX3djxpUh6D9M8yY3iARsbk',
+  placeholder:'Please leave your footprints',
+  avatar:'mp',
+  guest_info:guest_info,
+  pageSize:'10',
+  lang:'zh-cn',
+  recordIP: true
+});</script></div><!--添加音频--></div></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2020 By crownZ</div><div class="framework-info"><span>驱动 </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="阅读模式"></i><i class="fa fa-plus" id="font_plus" title="放大字体"></i><i class="fa fa-minus" id="font_minus" title="缩小字体"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="简繁转换" target="_self">繁</a><i class="darkmode fa fa-moon-o" id="darkmode" title="夜间模式"></i></div><div id="rightside-config-show"><div id="rightside_config" title="设置"><i class="fa fa-cog" aria-hidden="true"></i></div><a id="to_comment" href="#post-comment" title="直达评论"><i class="scroll_to_comment fa fa-comments">  </i></a><i class="fa fa-list-ul close" id="mobile-toc-button" title="目录" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="回到顶部" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script id="ribbon_piao" mobile="false" src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/piao.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script></body></html>

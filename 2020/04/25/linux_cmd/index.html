@@ -1,0 +1,134 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>一些有意思的linux命令 | crownZ's Blog</title><meta name="description" content="一些有意思的linux命令"><meta name="keywords" content="学习,命令"><meta name="author" content="crownZ"><meta name="copyright" content="crownZ"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="preconnect" href="//cdn.jsdelivr.net"><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin><link rel="preconnect" href="//busuanzi.ibruce.info"><meta name="google-site-verification" content="A2oGpKcpeHVKtuaxnARzKhD0x9h4UyHUwhMpeBZ2cHk"><meta name="baidu-site-verification" content="DRcGuvTARl"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="一些有意思的linux命令"><meta name="twitter:description" content="一些有意思的linux命令"><meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/linux.jpg"><meta property="og:type" content="article"><meta property="og:title" content="一些有意思的linux命令"><meta property="og:url" content="https://crownz-sec.github.io/2020/04/25/linux_cmd/"><meta property="og:site_name" content="crownZ's Blog"><meta property="og:description" content="一些有意思的linux命令"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/linux.jpg"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>const autoChangeMode = 'false'
+var t = Cookies.get("theme");
+if (autoChangeMode == '1'){
+const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+const isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+const isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+if (t === undefined){
+  if (isLightMode) activateLightMode()
+  else if (isDarkMode) activateDarkMode()
+  else if (isNotSpecified || hasNoSupport){
+    console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+    now = new Date();
+    hour = now.getHours();
+    isNight = hour < 6 || hour >= 18
+    isNight ? activateDarkMode() : activateLightMode()
+}
+} else if (t == 'light') activateLightMode()
+else activateDarkMode()
+
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="canonical" href="https://crownz-sec.github.io/2020/04/25/linux_cmd/"><link rel="prev" title="NTFS的初步理解以及简单的文件删除和恢复" href="https://crownz-sec.github.io/2020/04/26/NTFS/"><link rel="next" title="FAT32的初步理解以及简单的文件删除和恢复" href="https://crownz-sec.github.io/2020/04/23/FAT32/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"cookieDomain":"https://crownz-sec.github.io/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  bookmark: {
+    title: 'Snackbar.bookmark.title',
+    message_prev: '按',
+    message_next: '键将本页加入书签'
+  },
+  runtime_unit: '天',
+  runtime: true,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  baiduPush: false,
+  isHome: false,
+  isPost: true
+  
+}</script><meta name="generator" content="Hexo 4.2.1"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head><body><header> <div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/">crownZ's Blog</a></span><span class="toggle-menu pull_right close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> 关于我</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> 清单</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li><li><a class="site-page" href="/gallery/"><i class="fa-fw fa fa-camera"></i><span> 相册</span></a></li></ul></div></div></span></div></header><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">19</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">22</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">10</div></a></div></div></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> 关于我</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> 清单</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li><li><a class="site-page" href="/gallery/"><i class="fa-fw fa fa-camera"></i><span> 相册</span></a></li></ul></div></div></div><div id="mobile-sidebar-toc"><div class="toc_mobile_headline">目录</div><div class="sidebar-toc__content"><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-1"><a class="toc_mobile_items-link" href="#sort命令"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">sort命令</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-1"><a class="toc_mobile_items-link" href="#tac命令"><span class="toc_mobile_items-number">2.</span> <span class="toc_mobile_items-text">tac命令</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-1"><a class="toc_mobile_items-link" href="#od命令"><span class="toc_mobile_items-number">3.</span> <span class="toc_mobile_items-text">od命令</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-1"><a class="toc_mobile_items-link" href="#chattr与lsattr命令"><span class="toc_mobile_items-number">4.</span> <span class="toc_mobile_items-text">chattr与lsattr命令</span></a></li></ol></div></div></div><div id="body-wrap"><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true">     </i><div id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#sort命令"><span class="toc-number">1.</span> <span class="toc-text">sort命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#tac命令"><span class="toc-number">2.</span> <span class="toc-text">tac命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#od命令"><span class="toc-number">3.</span> <span class="toc-text">od命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#chattr与lsattr命令"><span class="toc-number">4.</span> <span class="toc-text">chattr与lsattr命令</span></a></li></ol></div></div></div><main id="content-outer"><div id="top-container" style="background-image: url(https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/linux.jpg)"><div id="post-info"><div id="post-title"><div class="posttitle">一些有意思的linux命令</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 发表于 2020-04-25<span class="post-meta__separator">|</span><i class="fa fa-history fa-fw" aria-hidden="true"></i> 更新于 2020-05-04</time><span class="post-meta__separator">|</span><span><i class="fa fa-inbox post-meta__icon fa-fw" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/Linux/">Linux</a></span><div class="post-meta-wordcount"><i class="fa fa-file-word-o post-meta__icon fa-fw" aria-hidden="true"></i><span>字数总计:</span><span class="word-count">1.2k</span><span class="post-meta__separator">|</span><i class="fa fa-clock-o post-meta__icon fa-fw" aria-hidden="true"></i><span>阅读时长: 3 分钟</span><div class="post-meta-pv-cv"><span class="post-meta__separator">|</span><span><i class="fa fa-eye post-meta__icon fa-fw" aria-hidden="true"> </i>阅读量:</span><span id="busuanzi_value_page_pv"></span></div></div></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><html><head></head><body><blockquote>
+<p>记得一年前，我就买了《鸟哥的Linux私房菜》，当时就感觉这书太厚了，简单翻了一下就没看的欲望了。这次等上了Linux，再打开看一下，竟然能看下去了，而且发现讲的是通俗易懂，非常详细，也难怪那么多人推荐Linux入门者看这个。不过这本书还是太厚了，如果不是从事Linux相关工作的，没必要从头到尾看完。只是使用Linux的话，可以找自己所需要的章节阅读，当个字典来看挺不错的。</p>
+</blockquote>
+<p>这里就只记一些比较有意思的命令，一些简单命令的格式，就不写了。</p>
+<h1 id="sort命令"><a href="#sort命令" class="headerlink" title="sort命令"></a>sort命令</h1><p>sort按英文意思是排序，针对文本文件的内容，以行为单位来排序。但可以用来查看文件内容，单对一个文件操作的时候，它将把文本内容排序后，打印出来。<br><a href="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/QQ20200425-212630@2x.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/QQ20200425-212630@2x.png" class="lazyload"></a></p>
+<h1 id="tac命令"><a href="#tac命令" class="headerlink" title="tac命令"></a>tac命令</h1><p>tac是cat反着写，实际的作用也正好cat相反，将文件内容倒着，从最后一行打印到屏幕上面。在一些黑名单过滤的简单题目中，用这个能省一些事儿。<br><a href="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/QQ20200425.jpg" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/QQ20200425.jpg" class="lazyload"></a></p>
+<h1 id="od命令"><a href="#od命令" class="headerlink" title="od命令"></a>od命令</h1><p>sort和tac命令都是针对纯文本文件的，而od命令是针对非纯文本的。执行文件通常是二进制文件(binary file)，这时候就可以用它来读取信息。</p>
+<p>格式：<code>od [-t TYPE] 文件</code></p>
+<pre><code>-t：后面可以接各种类型（TYPE）的输出，如：
+   a：利用默认字符来输出
+   c：使用ASCII字符来输出
+   d [size]：利用十进制来输出数据，每个整数占用size Bytes
+   f [size]：利用浮点数值来输出数据，每个整数占用size Bytes
+   o [size]：利用八进制来输出数据，每个整数占用size Bytes
+   x [size]：利用十六进制来输出数据，每个整数占用size Bytes</code></pre><p>使用<code>od -t c /usr/bin/passwd</code>可以把passwd文件的内容以ASCII方式显示，因为内容实在太多，在这个命令后面通过管道符“｜”连接一个命令<code>head -n 10</code>来取上一个命令的前10行输出。<br><a href="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200425215411.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200425215411.png" class="lazyload"></a></p>
+<p>使用<code>od -t oCc /usr/bin/passwd</code>可以把passwd这个文件的内容以十进制列出存储值和ASCII的对照表。<br><a href="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200425220922.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200425220922.png" class="lazyload"></a></p>
+<p>没有记忆ASCII表的话，还可以用来查询字符的ASCII对照。<br><a href="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200425221104.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200425221104.png" class="lazyload"></a></p>
+<h1 id="chattr与lsattr命令"><a href="#chattr与lsattr命令" class="headerlink" title="chattr与lsattr命令"></a>chattr与lsattr命令</h1><p>chattr用来配置文件隐藏属性，隐藏属性是chmod所能控制的9个权限之外的属性，在系统安全上非常重要。</p>
+<p>格式：<code>chatttr [+-=] [ASacdistu] 文件或者目录名称</code></p>
+<pre><code>选项与参数：
++ ：增加某一个特殊参数，其他原本存在参数保持不变
+- ：删除某一个特殊参数，其他原本存在参数保持不变
+= ：直接设置参数，且仅有后面的参数
+A ：设置之后，在存取该文件时，它的存取时间atime不会被改变，可避免I/O较慢的机器过度的读写磁盘
+S ：一般文件以非同步写入磁盘，加上S属性之后，进行任何文件的修改，该修改都会同步写入磁盘
+a ：设置之后，该文件只能增加数据，且不能删除和修改，只有root才能设置
+c ：设置之后，将自动把该文件压缩，在读取的时候会自动解压缩；在存储的时候，会先进行压缩再存储
+d ：当dump程序被执行的时候，设置d属性可使该文件不被dump备份
+i ：可以使一个文件不能被删除、改名、设置链接也无法写入或新增数据，只有root用户才能设置
+s ：设置之后，该文件被删除后，将会完全的从磁盘删除，无法恢复
+u ：与s相反，若该文件被删除了，数据内容还存在磁盘中，可以恢复</code></pre><p>先通过su 使用touch命令新建一个<code>attrtest</code>空文件，给它新增一个i属性，发现root身份是无法删除的。注意，这个属性只能由root设置，要用su命令切换到root。<br><a href="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200425224240.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200425224240.png" class="lazyload"></a><br>在这之后，用<code>chattr -i attrtest</code>，才可以把文件删除。</p>
+<p>同时，还有lsattr命令显示文件隐藏属性。</p>
+<p>格式：<code>lsattr [-adR] 文件或目录</code></p>
+<pre><code>选项与参数： 
+-a ：将隐藏文件的属性也显示出来
+-d ：若接的是目录，仅列出目录本身的属性而非目录内的文件名
+-R ：连同子目录的数据也一并列出来，递归选项，很多命令都有这个参数</code></pre><p>这个lsattr跟ls用法挺像的，只是多了能够看到隐藏属性，少了一些参数。<br><a href="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200425225426.png" target="_blank" rel="noopener" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200425225426.png" class="lazyload"></a></p>
+<blockquote>
+<p>参考</p>
+<p>[1] 《鸟哥的Linux私房菜》</p>
+</blockquote>
+</body></html></div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">crownZ</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://crownz-sec.github.io/2020/04/25/linux_cmd/">https://crownz-sec.github.io/2020/04/25/linux_cmd/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://crownz-sec.github.io">crownZ's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%AD%A6%E4%B9%A0/">学习    </a><a class="post-meta__tags" href="/tags/%E5%91%BD%E4%BB%A4/">命令    </a></div><div class="post_share"></div></div><nav class="pagination_post" id="pagination"><div class="prev-post pull_left"><a href="/2020/04/26/NTFS/"><img class="prev_cover lazyload" data-src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/computer_forensics.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="label">上一篇</div><div class="prev_info"><span>NTFS的初步理解以及简单的文件删除和恢复</span></div></a></div><div class="next-post pull_right"><a href="/2020/04/23/FAT32/"><img class="next_cover lazyload" data-src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/computer_forensics.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="label">下一篇</div><div class="next_info"><span>FAT32的初步理解以及简单的文件删除和恢复</span></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> 相关推荐</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2020/05/09/Ethernaut/" title="智能合约入门游戏——Ethernaut"><img class="relatedPosts_cover lazyload"data-src="https://gitee.com/crownZ/blog_image/raw/master/20200509194026.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-05-09</div><div class="relatedPosts_title">智能合约入门游戏——Ethernaut</div></div></a></div><div class="relatedPosts_item"><a href="/2020/04/23/FAT32/" title="FAT32的初步理解以及简单的文件删除和恢复"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/computer_forensics.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-04-23</div><div class="relatedPosts_title">FAT32的初步理解以及简单的文件删除和恢复</div></div></a></div><div class="relatedPosts_item"><a href="/2020/04/26/NTFS/" title="NTFS的初步理解以及简单的文件删除和恢复"><img class="relatedPosts_cover lazyload"data-src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/computer_forensics.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-04-26</div><div class="relatedPosts_title">NTFS的初步理解以及简单的文件删除和恢复</div></div></a></div></div><div class="clear_both"></div></div><hr><div id="post-comment"><div class="comment_headling"><i class="fa fa-comments fa-fw" aria-hidden="true"></i><span> 评论</span></div><div class="vcomment" id="vcomment"></div><script src="https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js"></script><script>var notify = false == true ? true : false;
+var verify = false == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'jALuqrrccTRxjAMC17xGE0Nu-gzGzoHsz',
+  appKey:'pbX3djxpUh6D9M8yY3iARsbk',
+  placeholder:'Please leave your footprints',
+  avatar:'mp',
+  guest_info:guest_info,
+  pageSize:'10',
+  lang:'zh-cn',
+  recordIP: true
+});</script></div><!--添加音频--></div></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2020 By crownZ</div><div class="framework-info"><span>驱动 </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="阅读模式"></i><i class="fa fa-plus" id="font_plus" title="放大字体"></i><i class="fa fa-minus" id="font_minus" title="缩小字体"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="简繁转换" target="_self">繁</a><i class="darkmode fa fa-moon-o" id="darkmode" title="夜间模式"></i></div><div id="rightside-config-show"><div id="rightside_config" title="设置"><i class="fa fa-cog" aria-hidden="true"></i></div><a id="to_comment" href="#post-comment" title="直达评论"><i class="scroll_to_comment fa fa-comments">  </i></a><i class="fa fa-list-ul close" id="mobile-toc-button" title="目录" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="回到顶部" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script id="ribbon_piao" mobile="false" src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/piao.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script></body></html>
