@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://crownz-sec.github.io/2020/05/26/GKCTF2020/</loc>
+    
+    <lastmod>2020-05-28T13:59:48.462Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://crownz-sec.github.io/2020/05/17/vulnhub_DC1/</loc>
     
     <lastmod>2020-05-27T13:48:43.374Z</lastmod>
@@ -12,13 +19,6 @@
     <loc>https://crownz-sec.github.io/2020/05/04/linux_process_control/</loc>
     
     <lastmod>2020-05-27T13:47:37.563Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://crownz-sec.github.io/2020/05/26/GKCTF2020/</loc>
-    
-    <lastmod>2020-05-27T12:41:11.067Z</lastmod>
     
   </url>
   
