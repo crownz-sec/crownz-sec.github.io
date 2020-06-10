@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://crownz-sec.github.io/2020/06/07/RACTF2020/</loc>
+    
+    <lastmod>2020-06-10T13:13:34.416Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://crownz-sec.github.io/2020/06/09/vulnhub_DC3/</loc>
     
     <lastmod>2020-06-10T11:38:45.705Z</lastmod>
