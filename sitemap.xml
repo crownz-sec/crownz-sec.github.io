@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://crownz-sec.github.io/2020/04/25/linux_cmd/</loc>
+    
+    <lastmod>2020-07-13T03:15:34.216Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://crownz-sec.github.io/2020/01/15/crypto_report/</loc>
     
     <lastmod>2020-07-07T14:00:35.180Z</lastmod>
@@ -110,13 +117,6 @@
     <loc>https://crownz-sec.github.io/2020/05/03/NTL_Install/</loc>
     
     <lastmod>2020-05-04T14:56:08.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://crownz-sec.github.io/2020/04/25/linux_cmd/</loc>
-    
-    <lastmod>2020-05-04T08:03:52.000Z</lastmod>
     
   </url>
   
