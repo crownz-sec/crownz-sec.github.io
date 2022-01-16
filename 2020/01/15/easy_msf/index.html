@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="1.CVE-2019-0708-RDP漏洞​        Windows系列服务器于2019年5月15号，被爆出高危漏洞，该漏洞影响范围较广，漏洞利用方式是通过远程桌面端口3389的RDP协议进行攻击的。这个漏洞是今年来说危害严重性最大的漏洞，跟之前的勒索，永恒之蓝病毒差不多。 1.1环境配置​        下载并安装VMware Workstation 15 Pro。在虚拟机中安装64位Ka">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记一次简单的MSF使用">
+<meta property="og:url" content="https://crownz-sec.github.io/2020/01/15/easy_msf/index.html">
+<meta property="og:site_name" content="crownZ&#39;s Blog">
+<meta property="og:description" content="1.CVE-2019-0708-RDP漏洞​        Windows系列服务器于2019年5月15号，被爆出高危漏洞，该漏洞影响范围较广，漏洞利用方式是通过远程桌面端口3389的RDP协议进行攻击的。这个漏洞是今年来说危害严重性最大的漏洞，跟之前的勒索，永恒之蓝病毒差不多。 1.1环境配置​        下载并安装VMware Workstation 15 Pro。在虚拟机中安装64位Ka">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115142412.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115142524.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115142619.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115142715.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115142735.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115142758.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115142827.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115142847.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115142916.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115142938.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115143419.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115143751.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115143848.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115143932.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115143957.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115144025.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115144043.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115144131.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115144204.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115144234.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115144319.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115144351.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115144416.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115144439.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115144502.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115144537.png">
+<meta property="article:published_time" content="2020-01-15T07:00:00.000Z">
+<meta property="article:modified_time" content="2022-01-16T06:59:53.128Z">
+<meta property="article:author" content="crownZ">
+<meta property="article:tag" content="学习">
+<meta property="article:tag" content="MSF">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115142412.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>记一次简单的MSF使用</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2020/01/15/crypto_report/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2020/01/11/japan_travel/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://crownz-sec.github.io/2020/01/15/easy_msf/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://crownz-sec.github.io/2020/01/15/easy_msf/&text=记一次简单的MSF使用"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://crownz-sec.github.io/2020/01/15/easy_msf/&title=记一次简单的MSF使用"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://crownz-sec.github.io/2020/01/15/easy_msf/&is_video=false&description=记一次简单的MSF使用"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=记一次简单的MSF使用&body=Check out this article: https://crownz-sec.github.io/2020/01/15/easy_msf/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://crownz-sec.github.io/2020/01/15/easy_msf/&title=记一次简单的MSF使用"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://crownz-sec.github.io/2020/01/15/easy_msf/&title=记一次简单的MSF使用"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://crownz-sec.github.io/2020/01/15/easy_msf/&title=记一次简单的MSF使用"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://crownz-sec.github.io/2020/01/15/easy_msf/&title=记一次简单的MSF使用"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://crownz-sec.github.io/2020/01/15/easy_msf/&name=记一次简单的MSF使用&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://crownz-sec.github.io/2020/01/15/easy_msf/&t=记一次简单的MSF使用"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-CVE-2019-0708-RDP%E6%BC%8F%E6%B4%9E"><span class="toc-number">1.</span> <span class="toc-text">1.CVE-2019-0708-RDP漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="toc-number">1.1.</span> <span class="toc-text">1.1环境配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">1.2.</span> <span class="toc-text">1.2信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">1.3.</span> <span class="toc-text">1.3漏洞利用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4%E6%80%BB%E7%BB%93"><span class="toc-number">1.4.</span> <span class="toc-text">1.4总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-CVE-2017-0146-%E6%B0%B8%E6%81%92%E4%B9%8B%E8%93%9D"><span class="toc-number">2.</span> <span class="toc-text">2.CVE-2017-0146-永恒之蓝</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="toc-number">2.1.</span> <span class="toc-text">2.1环境配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">2.2.</span> <span class="toc-text">2.2信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">2.3.</span> <span class="toc-text">2.3漏洞利用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4%E5%90%8E%E6%B8%97%E9%80%8F%E9%98%B6%E6%AE%B5"><span class="toc-number">2.4.</span> <span class="toc-text">2.4后渗透阶段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-5%E6%80%BB%E7%BB%93"><span class="toc-number">2.5.</span> <span class="toc-text">1.5总结</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        记一次简单的MSF使用
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">crownZ</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-01-15T07:00:00.000Z" itemprop="datePublished">2020-01-15</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/MSF/" rel="tag">MSF</a>, <a class="tag-link-link" href="/tags/%E5%AD%A6%E4%B9%A0/" rel="tag">学习</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="1-CVE-2019-0708-RDP漏洞"><a href="#1-CVE-2019-0708-RDP漏洞" class="headerlink" title="1.CVE-2019-0708-RDP漏洞"></a>1.CVE-2019-0708-RDP漏洞</h1><p>​        Windows系列服务器于2019年5月15号，被爆出高危漏洞，该漏洞影响范围较广，漏洞利用方式是通过远程桌面端口3389的RDP协议进行攻击的。这个漏洞是今年来说危害严重性最大的漏洞，跟之前的勒索，永恒之蓝病毒差不多。</p>
+<h2 id="1-1环境配置"><a href="#1-1环境配置" class="headerlink" title="1.1环境配置"></a>1.1环境配置</h2><p>​        下载并安装VMware Workstation 15 Pro。在虚拟机中安装64位Kali Linux3系统和64位专业版Windows 7系统。<br>​        因为需要进行渗透攻击，那首先就需要让Kali系统能够ping通Windows系统。在此基础上，进行下来的操作。</p>
+<p>​        先在靶机查看IP地址，看到是192.168.91.2。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115142412.png"><br>​        之后在kali中ping测试，看到可以ping通。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115142524.png"></p>
+<h2 id="1-2信息收集"><a href="#1-2信息收集" class="headerlink" title="1.2信息收集"></a>1.2信息收集</h2><p>​        已经知道靶机IO用Nmap进行扫描，看靶机是否开放了我们想要利用的端口。用命令<br>nmap –sS –Pn 192.168.91.2，对靶机进行SYN扫描，查看靶机开放端口。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115142619.png"><br>​        从以上结果中，看到了我想要的3389端口。那么，这个靶机就有被这个漏洞攻击的风险。</p>
+<h2 id="1-3漏洞利用"><a href="#1-3漏洞利用" class="headerlink" title="1.3漏洞利用"></a>1.3漏洞利用</h2><p>​        在kali中打开MSF并搜索0708漏洞模块。可以在下面看到有我们所能够利用的漏洞EXP。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115142715.png"><br>​        在这里，我选择其中第一个漏洞扫描模块进行利用。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115142735.png"><br>​        下来，查看相关参数。可以看到，靶机的IP还没有进行设置。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115142758.png"><br>​        设置靶机IP为192.168.91.2。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115142827.png"><br>​        运行漏洞扫描EXP，可以看到目标是脆弱的（vulnerable）。我就可以进行最后一步的攻击操作了。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115142847.png"><br>​        下来，切换到准备好攻击脚本的目录，用python运行从github上拷下来的漏洞攻击EXP。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115142916.png"><br>​        待上述命令执行后，就立马切换到Windows 7虚拟机界面中。能够看到，靶机因为遭受到攻击而变成蓝屏的状态。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115142938.png"><br>​        过一二十秒后，靶机将会进入重启界面，重启系统。</p>
+<h2 id="1-4总结"><a href="#1-4总结" class="headerlink" title="1.4总结"></a>1.4总结</h2><p>​        这是一个刚爆出来的漏洞，现阶段的利用也只是让靶机蓝屏重启，还谈不上获取权限之类的，总感觉这样少点什么。但近期看一些文章，也有人能够利用这个漏洞提权，并不是百分百成功的，只能说是反复测试，3次中有一次能够成功，这样的攻击和结果有点奇怪。<br>​        而且呢，这个漏洞的利用必须是目标主机用户有着非常低的安全意识。靶机的防火墙必须处于关闭状态，而且远程桌面服务也就是3389端口，必须处于开启状态，不然是无法利用这个漏洞的。所以，我觉得如果要用这个漏洞攻击现实世界的主机是很难的，至少对我来说是这样的。</p>
+<h1 id="2-CVE-2017-0146-永恒之蓝"><a href="#2-CVE-2017-0146-永恒之蓝" class="headerlink" title="2.CVE-2017-0146-永恒之蓝"></a>2.CVE-2017-0146-永恒之蓝</h1><p>​        永恒之蓝可以说是大名鼎鼎，或者说是臭名昭著。在我没入信安这个门的时候，就已经听说过了，是个很厉害的漏洞，但不知道具体是怎么样的，今天终于有机会把玩一番。</p>
+<h2 id="2-1环境配置"><a href="#2-1环境配置" class="headerlink" title="2.1环境配置"></a>2.1环境配置</h2><p>​        首先，下载并安装VMware Workstation 15 Pro。在虚拟机中安装64位KaliLinux3系统和64位旗舰版Windows7系统。Windows7系统最好是在2017年及以前的，不然很可能打上了相关的补丁而无法操作，我上个专业版系统被我测试过，没有漏洞。又去找舍友要了一个老版本的Windows7系统，才复现了这次操作。</p>
+<p>​        因为需要进行渗透攻击，那首先就需要让Kali系统能够ping通Windows系统。在此基础上，进行下来的操作。这里跟之前是一样的。</p>
+<p>​        查看靶机IP为192.168.24.135。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115143419.png"><br>​        同样能够ping通。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115143751.png"></p>
+<h2 id="2-2信息收集"><a href="#2-2信息收集" class="headerlink" title="2.2信息收集"></a>2.2信息收集</h2><p>​        用命令nmap –sS 192.168.24.135，对靶机进行SYN扫描，查看靶机开放端口。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115143848.png"><br>​        从以上结果中，看到了我想要的445端口。那么，这个靶机就有被这个漏洞攻击的风险。</p>
+<h2 id="2-3漏洞利用"><a href="#2-3漏洞利用" class="headerlink" title="2.3漏洞利用"></a>2.3漏洞利用</h2><p>​        打开MSF并搜索0708漏洞模块。可以在下面看到有我们所能够利用的漏洞EXP。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115143932.png"><br>​        在这里，我选择其中第一个漏洞扫描模块并进行靶机IP设置。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115143957.png"><br>​        运行漏洞扫描模块，可以看到目标是脆弱的，可以尝试进行攻击。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115144025.png"><br>​        下来，切换到漏洞攻击模块并设置好靶机IP地址。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115144043.png"><br>​        运行漏洞攻击EXP，可以看到攻击过程。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115144131.png"><br>​        等待一会儿，在最后将看到一个“WIN”，代表着我成功的侵入了靶机。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115144204.png"><br>​        待上述命令执行后，可以看到Windows系统的cmd命令行。输入ipconfig，看到是靶机的IP。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115144234.png"></p>
+<h2 id="2-4后渗透阶段"><a href="#2-4后渗透阶段" class="headerlink" title="2.4后渗透阶段"></a>2.4后渗透阶段</h2><p>​        在获取了一定了权限后，就要留下一个方便日后访问的后门账户。当然这只是最低级的，很容易被察觉。更高级的操作，等之后再学。<br>​        输入net user命令，只看到靶机有一个账户。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115144319.png"><br>​        在Windows系统中看，也是如此（GUEST不算正式账户）。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115144351.png"><br>​        输入net user hacker admin /add命令，创建一个名称为hacker，密码为admin的账户。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115144416.png"><br>​        但新账户只是个普通用户，用net localgroup Administrators hacker /add对新创建的账户进行提权。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115144439.png"><br>​        用net user hacker命令，就可以查看到自己新创建的hacker的所有信息（因为编码原因，存在字符乱码）。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115144502.png"><br>​        下来返回Windows系统中进行确认。可以看到，成功添加了一个名为hacker的管理员账户。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200115144537.png"></p>
+<h2 id="1-5总结"><a href="#1-5总结" class="headerlink" title="1.5总结"></a>1.5总结</h2><p>​        又玩了一次，还是那句话，MSF和靶机是真的好玩。永恒之蓝漏洞就是这样被我给利用了，但更深的原理我还不知道。一般来说，渗透攻击就是利用各种手段去收集目标系统的信息，针对系统版本，去找到相应的漏洞和EXP，不需要相应的专业知识，也不要求你必须会写EXP。但说着简单，即便是信息搜集和合适版本EXP的收集也是要花大功夫的。自己还处在很低的层次，需要学习精进。</p>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-CVE-2019-0708-RDP%E6%BC%8F%E6%B4%9E"><span class="toc-number">1.</span> <span class="toc-text">1.CVE-2019-0708-RDP漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="toc-number">1.1.</span> <span class="toc-text">1.1环境配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">1.2.</span> <span class="toc-text">1.2信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">1.3.</span> <span class="toc-text">1.3漏洞利用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4%E6%80%BB%E7%BB%93"><span class="toc-number">1.4.</span> <span class="toc-text">1.4总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-CVE-2017-0146-%E6%B0%B8%E6%81%92%E4%B9%8B%E8%93%9D"><span class="toc-number">2.</span> <span class="toc-text">2.CVE-2017-0146-永恒之蓝</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="toc-number">2.1.</span> <span class="toc-text">2.1环境配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">2.2.</span> <span class="toc-text">2.2信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">2.3.</span> <span class="toc-text">2.3漏洞利用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4%E5%90%8E%E6%B8%97%E9%80%8F%E9%98%B6%E6%AE%B5"><span class="toc-number">2.4.</span> <span class="toc-text">2.4后渗透阶段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-5%E6%80%BB%E7%BB%93"><span class="toc-number">2.5.</span> <span class="toc-text">1.5总结</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://crownz-sec.github.io/2020/01/15/easy_msf/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://crownz-sec.github.io/2020/01/15/easy_msf/&text=记一次简单的MSF使用"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://crownz-sec.github.io/2020/01/15/easy_msf/&title=记一次简单的MSF使用"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://crownz-sec.github.io/2020/01/15/easy_msf/&is_video=false&description=记一次简单的MSF使用"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=记一次简单的MSF使用&body=Check out this article: https://crownz-sec.github.io/2020/01/15/easy_msf/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://crownz-sec.github.io/2020/01/15/easy_msf/&title=记一次简单的MSF使用"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://crownz-sec.github.io/2020/01/15/easy_msf/&title=记一次简单的MSF使用"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://crownz-sec.github.io/2020/01/15/easy_msf/&title=记一次简单的MSF使用"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://crownz-sec.github.io/2020/01/15/easy_msf/&title=记一次简单的MSF使用"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://crownz-sec.github.io/2020/01/15/easy_msf/&name=记一次简单的MSF使用&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://crownz-sec.github.io/2020/01/15/easy_msf/&t=记一次简单的MSF使用"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2022
+    crownZ
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'crownZz';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+<!-- utterances Comments -->
+
+</body>
+</html>

@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="1 FAT32文件系统FAT文件系统主要有FAT12、FAT16和FAT32几种形式，其中FAT32是FAT发展的最后形式。这里FAT32的意思是簇的编址采用32bit宽度的数，所以FAT32文件系统最多能寻址 2 ** 32 &#x3D; 4294967296 个簇，其他FAT变种类似。 FAT32文件系统由DBR及保留扇区，FAT1，FAT2和数据区组成：  DBR及保留扇区：DBR的含义是DOS引导记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FAT32的初步理解以及简单的文件删除和恢复">
+<meta property="og:url" content="https://crownz-sec.github.io/2020/04/23/FAT32/index.html">
+<meta property="og:site_name" content="crownZ&#39;s Blog">
+<meta property="og:description" content="1 FAT32文件系统FAT文件系统主要有FAT12、FAT16和FAT32几种形式，其中FAT32是FAT发展的最后形式。这里FAT32的意思是簇的编址采用32bit宽度的数，所以FAT32文件系统最多能寻址 2 ** 32 &#x3D; 4294967296 个簇，其他FAT变种类似。 FAT32文件系统由DBR及保留扇区，FAT1，FAT2和数据区组成：  DBR及保留扇区：DBR的含义是DOS引导记">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423150622.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423150820.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423151845.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423151925.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423152909.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423153938.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423154017.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423160207.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423154700.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423154745.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423154808.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423154829.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/7509DACA-A76C-4D70-AFFE-D5BA693D5EB7.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423154914.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423155008.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423155311.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423155125.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423155227.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423155331.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423155417.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423160606.png">
+<meta property="article:published_time" content="2020-04-23T08:00:00.000Z">
+<meta property="article:modified_time" content="2020-04-26T05:18:59.000Z">
+<meta property="article:author" content="crownZ">
+<meta property="article:tag" content="学习">
+<meta property="article:tag" content="操作">
+<meta property="article:tag" content="FAT32">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423150622.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>FAT32的初步理解以及简单的文件删除和恢复</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2020/04/25/linux_cmd/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2020/04/23/linux_shell/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://crownz-sec.github.io/2020/04/23/FAT32/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://crownz-sec.github.io/2020/04/23/FAT32/&text=FAT32的初步理解以及简单的文件删除和恢复"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://crownz-sec.github.io/2020/04/23/FAT32/&title=FAT32的初步理解以及简单的文件删除和恢复"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://crownz-sec.github.io/2020/04/23/FAT32/&is_video=false&description=FAT32的初步理解以及简单的文件删除和恢复"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=FAT32的初步理解以及简单的文件删除和恢复&body=Check out this article: https://crownz-sec.github.io/2020/04/23/FAT32/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://crownz-sec.github.io/2020/04/23/FAT32/&title=FAT32的初步理解以及简单的文件删除和恢复"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://crownz-sec.github.io/2020/04/23/FAT32/&title=FAT32的初步理解以及简单的文件删除和恢复"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://crownz-sec.github.io/2020/04/23/FAT32/&title=FAT32的初步理解以及简单的文件删除和恢复"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://crownz-sec.github.io/2020/04/23/FAT32/&title=FAT32的初步理解以及简单的文件删除和恢复"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://crownz-sec.github.io/2020/04/23/FAT32/&name=FAT32的初步理解以及简单的文件删除和恢复&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://crownz-sec.github.io/2020/04/23/FAT32/&t=FAT32的初步理解以及简单的文件删除和恢复"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-FAT32%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.</span> <span class="toc-text">1 FAT32文件系统</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4%E5%8F%8A%E6%81%A2%E5%A4%8D"><span class="toc-number">2.</span> <span class="toc-text">2 文件删除及恢复</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E8%87%AA%E5%8A%A8%E6%81%A2%E5%A4%8D"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 自动恢复</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-2-%E6%89%8B%E5%8A%A8%E6%81%A2%E5%A4%8D"><span class="toc-number">3.</span> <span class="toc-text">2.2 手动恢复</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        FAT32的初步理解以及简单的文件删除和恢复
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">crownZ</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-04-23T08:00:00.000Z" itemprop="datePublished">2020-04-23</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8F%96%E8%AF%81/">计算机取证</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/FAT32/" rel="tag">FAT32</a>, <a class="tag-link-link" href="/tags/%E5%AD%A6%E4%B9%A0/" rel="tag">学习</a>, <a class="tag-link-link" href="/tags/%E6%93%8D%E4%BD%9C/" rel="tag">操作</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="1-FAT32文件系统"><a href="#1-FAT32文件系统" class="headerlink" title="1 FAT32文件系统"></a>1 FAT32文件系统</h1><p>FAT文件系统主要有FAT12、FAT16和FAT32几种形式，其中FAT32是FAT发展的最后形式。这里FAT32的意思是簇的编址采用32bit宽度的数，所以FAT32文件系统最多能寻址 2 ** 32 = 4294967296 个簇，其他FAT变种类似。</p>
+<p>FAT32文件系统由DBR及保留扇区，FAT1，FAT2和数据区组成：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423150622.png"></p>
+<p>DBR及保留扇区：DBR的含义是DOS引导记录，也称为操作系统引导记录，在DBR之后往往还会有一些保留扇区。</p>
+<p>FAT1：FAT的含义是文件分配表，FAT32一般有两份FAT，FAT1是第一份，也是主FAT。</p>
+<p>FAT2：FAT2是FAT32的第二份文件分配表，也是FAT1的备份。</p>
+<p>DATA：DATA也就是数据区，是FAT32文件系统的主要区域，其中包含目录区域。</p>
+<p>用WinHew打开一个FAT32格式的磁盘，其DBR如下，对内容进行简要的表明。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423150820.png"></p>
+<p>跳转指令将呈现执行流程跳转到引导程序处；</p>
+<p>OEM ID由厂商指定，这里是MSDOS5.0；</p>
+<p>BPB记录文件系统相关的重要信息，由BPB和拓展BPB组成，具体参数解释如下：</p>
+<table>
+<thead>
+<tr>
+<th>字节偏移</th>
+<th align="center">字段长度(字节)</th>
+<th>对应取值</th>
+<th>名称和定义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x0B</td>
+<td align="center">2</td>
+<td>0x0200</td>
+<td>扇区字节数</td>
+</tr>
+<tr>
+<td>0x0D</td>
+<td align="center">1</td>
+<td>0x20</td>
+<td>每簇扇区数</td>
+</tr>
+<tr>
+<td>0x0E</td>
+<td align="center">2</td>
+<td>0x080E</td>
+<td>保留扇区数</td>
+</tr>
+<tr>
+<td>0x10</td>
+<td align="center">1</td>
+<td>0x02</td>
+<td>FAT数</td>
+</tr>
+<tr>
+<td>0x11</td>
+<td align="center">2</td>
+<td>0x0000</td>
+<td>根目录项数</td>
+</tr>
+<tr>
+<td>0x13</td>
+<td align="center">2</td>
+<td>0x0000</td>
+<td>小扇区数</td>
+</tr>
+<tr>
+<td>0x15</td>
+<td align="center">1</td>
+<td>0xF8</td>
+<td>媒体描述符</td>
+</tr>
+<tr>
+<td>0x16</td>
+<td align="center">2</td>
+<td>0x0000</td>
+<td>每FAT扇区数（FAT32为0）</td>
+</tr>
+<tr>
+<td>0x18</td>
+<td align="center">2</td>
+<td>0x003F</td>
+<td>每道扇区数</td>
+</tr>
+<tr>
+<td>0x1A</td>
+<td align="center">2</td>
+<td>0x00FF</td>
+<td>磁头数</td>
+</tr>
+<tr>
+<td>0x1C</td>
+<td align="center">4</td>
+<td>0x00000060</td>
+<td>隐藏扇区数</td>
+</tr>
+<tr>
+<td>0x20</td>
+<td align="center">4</td>
+<td>0x03BFFF0A</td>
+<td>总扇区数</td>
+</tr>
+<tr>
+<td>0x24</td>
+<td align="center">4</td>
+<td>0x00003BF9</td>
+<td>每FAT扇区数</td>
+</tr>
+<tr>
+<td>0x28</td>
+<td align="center">2</td>
+<td>0x0000</td>
+<td>扩展标志</td>
+</tr>
+<tr>
+<td>0x2A</td>
+<td align="center">2</td>
+<td>0x0000</td>
+<td>文件系统版本</td>
+</tr>
+<tr>
+<td>0x2C</td>
+<td align="center">4</td>
+<td>0x00000002</td>
+<td>根目录簇号</td>
+</tr>
+<tr>
+<td>0x30</td>
+<td align="center">2</td>
+<td>0x0001</td>
+<td>文件系统信息扇区号</td>
+</tr>
+<tr>
+<td>0x34</td>
+<td align="center">2</td>
+<td>0x0006</td>
+<td>备份引导扇区</td>
+</tr>
+<tr>
+<td>0x36</td>
+<td align="center">12</td>
+<td>12字节均为0x00</td>
+<td>保留</td>
+</tr>
+</tbody></table>
+<p>拓展BPB参数如下：</p>
+<table>
+<thead>
+<tr>
+<th>字节偏移</th>
+<th align="center">字段长度(字节)</th>
+<th>对应取值</th>
+<th>名称和定义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x40</td>
+<td align="center">1</td>
+<td>0x00</td>
+<td>物理驱动器号</td>
+</tr>
+<tr>
+<td>0x41</td>
+<td align="center">1    0</td>
+<td>x00</td>
+<td>每保留</td>
+</tr>
+<tr>
+<td>0x42</td>
+<td align="center">1</td>
+<td>0x29</td>
+<td>扩展引导标签</td>
+</tr>
+<tr>
+<td>0x43</td>
+<td align="center">4</td>
+<td>0x5168C523</td>
+<td>分区序号</td>
+</tr>
+<tr>
+<td>0x47</td>
+<td align="center">11</td>
+<td>“NO NAME”</td>
+<td>卷标</td>
+</tr>
+<tr>
+<td>0x52</td>
+<td align="center">8</td>
+<td>“FAT32”</td>
+<td>系统ID</td>
+</tr>
+</tbody></table>
+<p>FAT32文件系统在DBR的保留扇区中还安排了一个文件系统信息扇区，用以记录数据区中空闲簇的数量及下一个空闲簇的簇号，该扇区一般在分区的1号扇区，也就是紧跟着DBR后的一个扇区，其内容如下图（其中字节值为零的，都没有被使用）：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423151845.png"></p>
+<p>在DBR之后，就是FAT，文件分配表。FAT一般有两个，一个正常使用称为FAT1，另一个是备份称为FAT2，FAT1和FAT2的内容完全一样。</p>
+<p>FAT是一组与数据簇号对应的列表，表项的编号从0开始，但是编号0表示FAT介质类型，编号1表示FAT文件系统错误标志，所以实际存储从2号开始。大文件占用多个簇的话，则FAT项纪录下一个FAT项编号，依次类推直到最后以“0F FF FF FF“表示文件末尾。文件至少占用一个簇，所以新建文件的时候，即使只写入1字节的数据，它也会占用一个簇的空间。</p>
+<p>而且，从之前DBR偏移0xB的两字节和00x0D的一字节可以看出，一簇为32扇区，每扇区512字节，一簇大小为16KB。</p>
+<p>下面对FAT1的部分内容进行一下标记（图上只标注了0-7项，后面的FAT表项依此类推）：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423151925.png"></p>
+<p>从上图中，可以看到第4-7项存储了一个文件。第4项的存储内容说明下一个簇号在第5项，后面一样，直到第7项表明该文件存储结束。每一项对应一个簇，该文件就占用了4簇。</p>
+<p>FAT2和FAT1内容完全一样，不单独拿出分析。</p>
+<p>最后是数据区，是真正存储文件内容的区域。数据区紧跟在FAT2之后，被划分成一个个的簇。所有的簇从2开始进行编号，也就是说，2号簇的起始位置就是数据区的起始位置。在WinHex中，根目录起始扇区号即为数据区起始扇区号。</p>
+<p>在数据区中，目录所在的扇区，都以32字节划分为一个单位，每个单位称为一个目录项。根目录由若干个目录项组成，一个目录项占用32个字节，可以是长文件名目录项、文件目录项、子目录项等。这些目录项用来存储文件名、文件属性、最后修改时间、最后保存时间等信息。</p>
+<p>对短文件目录项（文件名&lt;=8字节且后缀名&lt;=3字节），其字节有如下定义：</p>
+<table>
+<thead>
+<tr>
+<th>字节偏移</th>
+<th align="center">字段长度(字节)</th>
+<th>定义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x0</td>
+<td align="center">8</td>
+<td>文件名</td>
+</tr>
+<tr>
+<td>0x8</td>
+<td align="center">3</td>
+<td>拓展名</td>
+</tr>
+<tr>
+<td>0xB</td>
+<td align="center">1</td>
+<td>属性字节：00000000：读写；00000001：只读；00000010：隐藏；00000100：系统；00001000：卷标；00010000：子目录；00100000：归档</td>
+</tr>
+<tr>
+<td>0xC</td>
+<td align="center">1</td>
+<td>系统保留</td>
+</tr>
+<tr>
+<td>0xD</td>
+<td align="center">1</td>
+<td>创建文件的10毫秒位</td>
+</tr>
+<tr>
+<td>0xE</td>
+<td align="center">2</td>
+<td>文件创建时间</td>
+</tr>
+<tr>
+<td>0x10</td>
+<td align="center">2</td>
+<td>文件创建日期</td>
+</tr>
+<tr>
+<td>0x12</td>
+<td align="center">2</td>
+<td>文件最后访问时间</td>
+</tr>
+<tr>
+<td>0x14</td>
+<td align="center">2</td>
+<td>文件起始簇号的高16位</td>
+</tr>
+<tr>
+<td>0x16</td>
+<td align="center">2</td>
+<td>文件最近修改时间</td>
+</tr>
+<tr>
+<td>0x18</td>
+<td align="center">2</td>
+<td>文件最近修改日期</td>
+</tr>
+<tr>
+<td>0x1A</td>
+<td align="center">2</td>
+<td>文件起始簇号的低16位</td>
+</tr>
+<tr>
+<td>0x1C</td>
+<td align="center">4</td>
+<td>文件长度</td>
+</tr>
+</tbody></table>
+<p>对长文件目录项（文件名&gt;8字节或后缀名&gt;3字节），其字节有如下定义：</p>
+<table>
+<thead>
+<tr>
+<th>字节偏移</th>
+<th align="center">字段长度(字节)</th>
+<th>定义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x0</td>
+<td align="center">1</td>
+<td>属性字节位意义：7：保留未用；6：表示长文件最后的目录项；5：保留未用；4：顺序号数值；3：顺序号数值；2：子顺序号数值；1：顺序号数值；0：顺序号数值</td>
+</tr>
+<tr>
+<td>0x1</td>
+<td align="center">10</td>
+<td>长文件名Unicode码1</td>
+</tr>
+<tr>
+<td>0xB</td>
+<td align="center">1</td>
+<td>长文件名目录标志</td>
+</tr>
+<tr>
+<td>0xC</td>
+<td align="center">1</td>
+<td>系统保留</td>
+</tr>
+<tr>
+<td>0xD</td>
+<td align="center">1</td>
+<td>校验值</td>
+</tr>
+<tr>
+<td>0xE</td>
+<td align="center">12</td>
+<td>长文件名Unicode码2</td>
+</tr>
+<tr>
+<td>0x1A</td>
+<td align="center">2</td>
+<td>文件起始簇号</td>
+</tr>
+<tr>
+<td>0x1C</td>
+<td align="center">4</td>
+<td>长文件名Unicode码3</td>
+</tr>
+</tbody></table>
+<p>当需要找文件真正存储内容的时候，就可以根据上面目录项的起始簇号去寻找文件内容。而每个文件所占用的簇信息，又在FAT表项中进行了标识，再按照FAT的信息进行查找，即可找到相应文件的所有内容。</p>
+<p>比较方便的是，WinHex还提供了簇号和扇区的转换，可以根据簇号来跳转到相应的扇区。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423152909.png"></p>
+<h1 id="2-文件删除及恢复"><a href="#2-文件删除及恢复" class="headerlink" title="2 文件删除及恢复"></a>2 文件删除及恢复</h1><p>现在Windows10操作系统的磁盘已经不使用FAT格式，这里选择U盘来做FAT的实验。</p>
+<p>在WinHex工具栏，选择“工具”—“打开磁盘”。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423153938.png"></p>
+<p>在磁盘选择窗口，选择接入电脑的U盘并打开。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423154017.png"></p>
+<p>打开U盘之后，WinHex显示如下，可以看到U盘中的文件。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423160207.png"></p>
+<h2 id="2-1-自动恢复"><a href="#2-1-自动恢复" class="headerlink" title="2.1 自动恢复"></a>2.1 自动恢复</h2><p>先在U盘中创建一个文件—“计算机取证05171759.txt”，用于删除。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423154700.png"></p>
+<p>新建文件内容是我的名字。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423154745.png"></p>
+<p>确认文件内容之后，就可以把文件删除。删除之后，要在WinHex中更新磁盘。<br>在WinHex工具栏，选择“专业工具”—“进行磁盘快照”。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423154808.png"></p>
+<p>在弹出的对话框中，勾选“更新快照”。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423154829.png"></p>
+<p>更新磁盘之后，可以在Winhex找到删除的文件。</p>
+<p>右键单击，选择“恢复/复制”，导出到新文件。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/7509DACA-A76C-4D70-AFFE-D5BA693D5EB7.png"></p>
+<p>将恢复文件的位置选择为U盘。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423154914.png"></p>
+<p>在U盘中查看文件内容，看到名字和内容都和原来一样。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423155008.png"></p>
+<h1 id="2-2-手动恢复"><a href="#2-2-手动恢复" class="headerlink" title="2.2 手动恢复"></a>2.2 手动恢复</h1><p>这里仍然可以在U盘中找到对应的文件。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423155311.png"></p>
+<p>但文件内容是乱码的，在编码页面选择GBK编码，就可以看到正确的文件内容。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423155125.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423155227.png"></p>
+<p>之后选中文件区域，右键选择“复制选块”—“至新文件”。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423155331.png"></p>
+<p>将文件命名“恢复文件.txt”，另存到U盘中。再到U盘中验证文件内容，看到是跟原来文件内容是一样的。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423155417.png"></p>
+<p>这里是一个比较小的文件，存储内容在一簇的空间内即可存储，手工恢复比较简单。如果是想要对比较大的文件，进行恢复，经常会发现它的簇并不是完全连续的，而是呈现出片段状。手工恢复的话，就要找到这些簇，并把这些簇拼接到一起输出为文件，比较麻烦。但使用Winhex的话可以借助它的功能实现自动恢复，省去手动的麻烦。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200423160606.png"></p>
+<p>然后，如果看这篇文章对FAT32还有不理解，或者有地方写的不明白，可以参照下面两篇文章，多篇文章参考起来，来回阅读的效果会好一点。</p>
+<blockquote>
+<p>参考：</p>
+<p>[1] <a target="_blank" rel="noopener" href="https://blog.csdn.net/csdn66_2016/article/details/88066637">FAT32文件系统格式详解</a></p>
+<p>[2] <a target="_blank" rel="noopener" href="https://blog.csdn.net/yangyang031213/article/details/79030247?depth_1-utm_source=distribute.pc_relevant.none-task&utm_source=distribute.pc_relevant.none-task">FAT32文件系统结构</a></p>
+</blockquote>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-FAT32%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.</span> <span class="toc-text">1 FAT32文件系统</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4%E5%8F%8A%E6%81%A2%E5%A4%8D"><span class="toc-number">2.</span> <span class="toc-text">2 文件删除及恢复</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E8%87%AA%E5%8A%A8%E6%81%A2%E5%A4%8D"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 自动恢复</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-2-%E6%89%8B%E5%8A%A8%E6%81%A2%E5%A4%8D"><span class="toc-number">3.</span> <span class="toc-text">2.2 手动恢复</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://crownz-sec.github.io/2020/04/23/FAT32/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://crownz-sec.github.io/2020/04/23/FAT32/&text=FAT32的初步理解以及简单的文件删除和恢复"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://crownz-sec.github.io/2020/04/23/FAT32/&title=FAT32的初步理解以及简单的文件删除和恢复"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://crownz-sec.github.io/2020/04/23/FAT32/&is_video=false&description=FAT32的初步理解以及简单的文件删除和恢复"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=FAT32的初步理解以及简单的文件删除和恢复&body=Check out this article: https://crownz-sec.github.io/2020/04/23/FAT32/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://crownz-sec.github.io/2020/04/23/FAT32/&title=FAT32的初步理解以及简单的文件删除和恢复"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://crownz-sec.github.io/2020/04/23/FAT32/&title=FAT32的初步理解以及简单的文件删除和恢复"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://crownz-sec.github.io/2020/04/23/FAT32/&title=FAT32的初步理解以及简单的文件删除和恢复"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://crownz-sec.github.io/2020/04/23/FAT32/&title=FAT32的初步理解以及简单的文件删除和恢复"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://crownz-sec.github.io/2020/04/23/FAT32/&name=FAT32的初步理解以及简单的文件删除和恢复&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://crownz-sec.github.io/2020/04/23/FAT32/&t=FAT32的初步理解以及简单的文件删除和恢复"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2022
+    crownZ
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'crownZz';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+<!-- utterances Comments -->
+
+</body>
+</html>

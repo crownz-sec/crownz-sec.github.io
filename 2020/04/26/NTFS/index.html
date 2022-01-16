@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="不知道计算机取证这门课为啥要上英文的，而且还上的网课，根本没听进去，结果还不如自己上网找资料看来得痛快。  1 NTFS文件系统NTFS文件系统（New Tecnology File System），是现在绝大多数电脑磁盘分区使用的文件系统。NTFS 文件系统具有安全性高、稳定性好、不易产生文件碎片等优点。 NTFS文件系统大致结构如下： DBR：由“跳转指令”、“OEM代号”、“BPB”、“引">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NTFS的初步理解以及简单的文件删除和恢复">
+<meta property="og:url" content="https://crownz-sec.github.io/2020/04/26/NTFS/index.html">
+<meta property="og:site_name" content="crownZ&#39;s Blog">
+<meta property="og:description" content="不知道计算机取证这门课为啥要上英文的，而且还上的网课，根本没听进去，结果还不如自己上网找资料看来得痛快。  1 NTFS文件系统NTFS文件系统（New Tecnology File System），是现在绝大多数电脑磁盘分区使用的文件系统。NTFS 文件系统具有安全性高、稳定性好、不易产生文件碎片等优点。 NTFS文件系统大致结构如下： DBR：由“跳转指令”、“OEM代号”、“BPB”、“引">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200426123926.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200426124008.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200426124038.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200426124108.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200426124142.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200426125042.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200426125102.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200426125144.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200426125450.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/30%E5%B1%9E%E6%80%A7.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/80%E5%B1%9E%E6%80%A7%E5%8D%95%E8%BF%90%E8%A1%8C%E5%88%97%E8%A1%A8.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/80%E5%B1%9E%E6%80%A7%E5%A4%9A%E8%BF%90%E8%A1%8C%E5%88%97%E8%A1%A8.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/%E6%89%BE%E5%88%B0%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/%E8%87%AA%E5%8A%A8%E6%81%A2%E5%A4%8D.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/%E5%86%8D%E6%AC%A1%E7%A1%AE%E8%AE%A4%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/%E6%9F%A5%E6%89%BE%E6%96%87%E6%9C%AC.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/%E6%90%9C%E7%B4%A2%E5%88%B0%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/80%E5%B1%9E%E6%80%A7%E5%88%86%E6%9E%90.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/%E9%80%89%E4%B8%AD%E6%95%B0%E6%8D%AE%E5%9D%97.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/%E5%8F%A6%E5%AD%98%E6%96%87%E4%BB%B6.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/%E7%A1%AE%E8%AE%A4%E6%81%A2%E5%A4%8D%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9.png">
+<meta property="article:published_time" content="2020-04-26T05:16:00.000Z">
+<meta property="article:modified_time" content="2020-05-23T13:22:18.335Z">
+<meta property="article:author" content="crownZ">
+<meta property="article:tag" content="学习">
+<meta property="article:tag" content="操作">
+<meta property="article:tag" content="NTFS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200426123926.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>NTFS的初步理解以及简单的文件删除和恢复</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2020/05/04/linux_process_control/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2020/04/25/linux_cmd/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://crownz-sec.github.io/2020/04/26/NTFS/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://crownz-sec.github.io/2020/04/26/NTFS/&text=NTFS的初步理解以及简单的文件删除和恢复"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://crownz-sec.github.io/2020/04/26/NTFS/&title=NTFS的初步理解以及简单的文件删除和恢复"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://crownz-sec.github.io/2020/04/26/NTFS/&is_video=false&description=NTFS的初步理解以及简单的文件删除和恢复"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=NTFS的初步理解以及简单的文件删除和恢复&body=Check out this article: https://crownz-sec.github.io/2020/04/26/NTFS/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://crownz-sec.github.io/2020/04/26/NTFS/&title=NTFS的初步理解以及简单的文件删除和恢复"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://crownz-sec.github.io/2020/04/26/NTFS/&title=NTFS的初步理解以及简单的文件删除和恢复"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://crownz-sec.github.io/2020/04/26/NTFS/&title=NTFS的初步理解以及简单的文件删除和恢复"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://crownz-sec.github.io/2020/04/26/NTFS/&title=NTFS的初步理解以及简单的文件删除和恢复"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://crownz-sec.github.io/2020/04/26/NTFS/&name=NTFS的初步理解以及简单的文件删除和恢复&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://crownz-sec.github.io/2020/04/26/NTFS/&t=NTFS的初步理解以及简单的文件删除和恢复"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-NTFS%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.</span> <span class="toc-text">1 NTFS文件系统</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4%E5%8F%8A%E6%81%A2%E5%A4%8D"><span class="toc-number">2.</span> <span class="toc-text">2 文件删除及恢复</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1%E8%87%AA%E5%8A%A8%E6%81%A2%E5%A4%8D"><span class="toc-number">2.1.</span> <span class="toc-text">2.1自动恢复</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2%E6%89%8B%E5%8A%A8%E6%81%A2%E5%A4%8D"><span class="toc-number">2.2.</span> <span class="toc-text">2.2手动恢复</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%8E%E8%AE%B0"><span class="toc-number">3.</span> <span class="toc-text">后记</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        NTFS的初步理解以及简单的文件删除和恢复
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">crownZ</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-04-26T05:16:00.000Z" itemprop="datePublished">2020-04-26</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8F%96%E8%AF%81/">计算机取证</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/NTFS/" rel="tag">NTFS</a>, <a class="tag-link-link" href="/tags/%E5%AD%A6%E4%B9%A0/" rel="tag">学习</a>, <a class="tag-link-link" href="/tags/%E6%93%8D%E4%BD%9C/" rel="tag">操作</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <blockquote>
+<p>不知道计算机取证这门课为啥要上英文的，而且还上的网课，根本没听进去，结果还不如自己上网找资料看来得痛快。</p>
+</blockquote>
+<h1 id="1-NTFS文件系统"><a href="#1-NTFS文件系统" class="headerlink" title="1 NTFS文件系统"></a>1 NTFS文件系统</h1><p>NTFS文件系统（New Tecnology File System），是现在绝大多数电脑磁盘分区使用的文件系统。NTFS 文件系统具有安全性高、稳定性好、不易产生文件碎片等优点。</p>
+<p>NTFS文件系统大致结构如下：<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200426123926.png"></p>
+<p>DBR：由“跳转指令”、“OEM代号”、“BPB”、“引导程序”和“结束标志”组成，这里和FAT32文件系统的DBR一样。</p>
+<p>数据区：数据区分为三部分，这是真正存储文件内容的地方。</p>
+<p>MFT：它由一个个表项构成，每一个表项是一个文件记录，大小一般为1KB(两个扇区)，记录着卷中每一个目录和文件的信息，每个文件记录的结构都是固定的，由文件记录头和若干属性构成。</p>
+<p>部分MFT备份：用来备份MFT部分信息。</p>
+<p>DBR备份：备份DBR。</p>
+<p>NTFS中DBR的大致结构和FAT32相同，但部分字节的定义有差异。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200426124008.png"><br>使用WinHex，并结合上图就可以理解各个字节的意思。</p>
+<p>在NTFS的MFT文件中，会预先建立16个重要的文件（MFT记录的ID编号固定为0-15）和8个保留文件（MFT记录的ID编号固定为16-23），这24个文件是被称为元文件（Metafiles）或元数据（metadata）的系统文件、，NTFS文件系统将这些数据都当做文件进行管理，这些文件用户是不能访问的，它们的文件名的第一个字符都是“$”，表示该文件是隐藏的。而用户的文件在MFT中的ID编号从24后开始排，用户每添加一个文件，ID号加1。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200426124038.png"></p>
+<p>上面是MFT的元文件及相应功能，元文件序号和数量不是不变的，随着操作系统的变化，它的内容也会发生部分变化。</p>
+<p>下来解析MFT中的用户文件记录部分。文件记录由两部分组成，一部分是文件记录头，另一部分是属性列表，结尾是四个“FF”。一个完整的文件记录如下图：<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200426124108.png"></p>
+<p>文件记录头的字节定义如下图如下图：<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200426124142.png"></p>
+<p>在属性列表中，每个MFT的属性分为两类常驻属性和非常驻属性。</p>
+<ul>
+<li>常驻属性：直接在MFT项中记录属性体，例如10和30属性<pre><code>  *优点：直接在MFT项中记录属体，访问速度快 
+  *缺点：只能记录少量的数据
+</code></pre>
+</li>
+</ul>
+<ul>
+<li><p>非常驻属性：在MFT之外的区域记录属性体，例如80属性（当数据较小时为常驻属性）</p>
+<pre><code>  *优点：用簇流记录文件存储的数据区域，可以记录很大的数据
+  *缺点：访问速度较慢
+</code></pre>
+</li>
+</ul>
+<p>对每个MFT的属性来说，它又分为两部分：属性头和属性体。</p>
+<p>对常驻属性，它属性头的结构如下：<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200426125042.png"></p>
+<p>对非常驻属性，它属性头的结构如下：<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200426125102.png"></p>
+<p>对上面的00-03偏移字段，MFT中所有的属性类型表如下：<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200426125144.png"></p>
+<p>下面，给出10、30和80属性体的结构。</p>
+<p>10属性体结构：<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200426125450.jpg"></p>
+<p>30属性体结构：<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/30%E5%B1%9E%E6%80%A7.jpg"></p>
+<p>80属性是存储数据的地方，如果相应文件存储的内容较小那它就是常驻属性，属性头即为前面的常驻属性属性头，紧跟在属性头后面的属性体即为文件内容。</p>
+<p>而如果文件存储的内容较大，在当前MFT表装不下（一半般没个MFT项都占用1024字节，即两个扇区）。此时，80属性就是非常驻属性，紧跟它属性头后面的属性体就是簇流记录信息。</p>
+<p>80为非常驻时，又分为单个运行列表和多个运行列表。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/80%E5%B1%9E%E6%80%A7%E5%8D%95%E8%BF%90%E8%A1%8C%E5%88%97%E8%A1%A8.png"></p>
+<p>对上图中80属性体的单运行列表分析。(用参考链接中博主的图)</p>
+<p>开头的0x33，低4位的3表示它后面的3字节内容为运行簇个数，这里为0x00BC40；高4位的3表示簇大小后面的3字节内容为起始簇，这里为0x0C0000。而且，这个起始簇是整个文件卷的相对位置。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/80%E5%B1%9E%E6%80%A7%E5%A4%9A%E8%BF%90%E8%A1%8C%E5%88%97%E8%A1%A8.png"></p>
+<p>对上图中80属性体的多运行列表分析。(用参考链接中博主的图)</p>
+<p>对第一个运行列表开头的0x31，低4位的1表示它后面的1字节内容为运行簇个数，这里为0x03；高4位的3表示簇大小后面的3字节内容为起始簇，这里为0x009A65。这个起始簇是整个文件卷的相对位置，是LCN (logical cluster number)。</p>
+<p>对第二个运行列表开头的0x11，低4位的1表示它后面的1字节内容为运行簇个数，这里为0x01；高4位的1表示簇大小后面的1字节内容为起始簇，这里为0x13。但这里的起始簇是整个文件内部的相对位置，是VCN (virtual cluster number)。</p>
+<p>所以有计算公式：</p>
+<p>第N个运行列表的LCN=第一个运行列表的起始簇(LCN) + 第二个运行列表的起始簇(VCN) +…+第n个运行列表的起始簇(VCN)</p>
+<h1 id="2-文件删除及恢复"><a href="#2-文件删除及恢复" class="headerlink" title="2 文件删除及恢复"></a>2 文件删除及恢复</h1><p>在这个实验刚开始时，我是一直使用虚拟机的C盘来操作的。结果C盘文件太多，每次搜索删除的文件明时，非常费事，中间还出现删除文件，搜索不到等现象。后来是，新建了一个容量较小的拓展磁盘来进行这次实验，使得文件搜索分析等操作变得容易进行。</p>
+<p>在E盘中新建一个文件，名为“wgz.txt”,确认文件内容。</p>
+<p>之后长按“Shift”键，再右键选择“删除”，来将文件直接删除。如果不按“Shift”，而是将文件直接删除，那样文件会移动到回收站里面，文件名也会被更改，后面就不能通过搜索文件名来找到文件，这一点值得注意。</p>
+<h2 id="2-1自动恢复"><a href="#2-1自动恢复" class="headerlink" title="2.1自动恢复"></a>2.1自动恢复</h2><p>在删除文件之后，用WinHex打开E盘，可以轻易地找到被删除的文件“wgz.txt”。从这个文件头部开始的0x16偏移处看到标记为“00 00”，说明这是一个被删除的文件。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/%E6%89%BE%E5%88%B0%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6.png"></p>
+<p>当进行自动恢复的时候，只需要右键选中文件，选择“恢复/复制”，导出到新文件，位置选择为E盘。这里和上面FAT文件系统的自动恢复是一样的。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/%E8%87%AA%E5%8A%A8%E6%81%A2%E5%A4%8D.png"></p>
+<p>恢复之后，到E盘查看到恢复文件内容和原来一样。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/%E5%86%8D%E6%AC%A1%E7%A1%AE%E8%AE%A4%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9.png"></p>
+<h2 id="2-2手动恢复"><a href="#2-2手动恢复" class="headerlink" title="2.2手动恢复"></a>2.2手动恢复</h2><p>这里换一种方式寻找文件。在工具栏的“搜索”中，选择“查找文本”。输入文件名，勾选“匹配大小写”，选择“Unicode”编码，因为NTFS文件系统的中文使用Unicode编码。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/%E6%9F%A5%E6%89%BE%E6%96%87%E6%9C%AC.png"></p>
+<p>因为这个磁盘不大，搜索很快就能完成，可以看到被删除文件对应的MFT表项。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/%E6%90%9C%E7%B4%A2%E5%88%B0%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6.png"></p>
+<p>文件内容存储在80属性，通过分析该文件MFT表项的80属性体，可以知道这是一个常驻属性。同时知道文件大小是3*16+6=54字节，数据起始位置是从80属性体开头的0x18偏移处。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/80%E5%B1%9E%E6%80%A7%E5%88%86%E6%9E%90.png"></p>
+<p>既然是常驻属性那么文件内容就全部在这个80属性体里面，右键选中数据区域，导出到新文件即可。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/%E9%80%89%E4%B8%AD%E6%95%B0%E6%8D%AE%E5%9D%97.png"></p>
+<p>选择恢复到E盘，命名为“恢复文件.txt”。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/%E5%8F%A6%E5%AD%98%E6%96%87%E4%BB%B6.png"></p>
+<p>恢复之后，到E盘打开，看到内容和之前一样。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/%E7%A1%AE%E8%AE%A4%E6%81%A2%E5%A4%8D%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9.png"></p>
+<h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><p>其实等上网找资料看过一些之后，再去看老师的英文ppt会发现讲的还是很好的，尤其是里面的一些图对于理解FAT和NTFS很有帮助。这里就放一个网盘链接，有兴趣的可以看一下。链接: <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1NLtYBqCDo0X0k7Z113Y8-w">https://pan.baidu.com/s/1NLtYBqCDo0X0k7Z113Y8-w</a>  密码: rrjd</p>
+<blockquote>
+<p>参考：</p>
+<p>[1] <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/1be47267b98b">深究NTFS文件系统</a></p>
+<p>[2] <a target="_blank" rel="noopener" href="https://blog.csdn.net/yiqiaoxihui/article/details/70171159">NTFS文件系统结构–从零开始追踪一个文件的位置</a></p>
+<p>[3] <a target="_blank" rel="noopener" href="https://blog.csdn.net/Hilavergil/article/details/82622470?depth_1-utm_source=distribute.pc_relevant.none-task&utm_source=distribute.pc_relevant.none-task">NTFS文件系统详解之文件定位</a></p>
+</blockquote>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-NTFS%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.</span> <span class="toc-text">1 NTFS文件系统</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4%E5%8F%8A%E6%81%A2%E5%A4%8D"><span class="toc-number">2.</span> <span class="toc-text">2 文件删除及恢复</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1%E8%87%AA%E5%8A%A8%E6%81%A2%E5%A4%8D"><span class="toc-number">2.1.</span> <span class="toc-text">2.1自动恢复</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2%E6%89%8B%E5%8A%A8%E6%81%A2%E5%A4%8D"><span class="toc-number">2.2.</span> <span class="toc-text">2.2手动恢复</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%8E%E8%AE%B0"><span class="toc-number">3.</span> <span class="toc-text">后记</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://crownz-sec.github.io/2020/04/26/NTFS/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://crownz-sec.github.io/2020/04/26/NTFS/&text=NTFS的初步理解以及简单的文件删除和恢复"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://crownz-sec.github.io/2020/04/26/NTFS/&title=NTFS的初步理解以及简单的文件删除和恢复"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://crownz-sec.github.io/2020/04/26/NTFS/&is_video=false&description=NTFS的初步理解以及简单的文件删除和恢复"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=NTFS的初步理解以及简单的文件删除和恢复&body=Check out this article: https://crownz-sec.github.io/2020/04/26/NTFS/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://crownz-sec.github.io/2020/04/26/NTFS/&title=NTFS的初步理解以及简单的文件删除和恢复"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://crownz-sec.github.io/2020/04/26/NTFS/&title=NTFS的初步理解以及简单的文件删除和恢复"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://crownz-sec.github.io/2020/04/26/NTFS/&title=NTFS的初步理解以及简单的文件删除和恢复"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://crownz-sec.github.io/2020/04/26/NTFS/&title=NTFS的初步理解以及简单的文件删除和恢复"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://crownz-sec.github.io/2020/04/26/NTFS/&name=NTFS的初步理解以及简单的文件删除和恢复&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://crownz-sec.github.io/2020/04/26/NTFS/&t=NTFS的初步理解以及简单的文件删除和恢复"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2022
+    crownZ
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'crownZz';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+<!-- utterances Comments -->
+
+</body>
+</html>

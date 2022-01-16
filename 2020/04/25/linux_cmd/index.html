@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="记得一年前，我就买了《鸟哥的Linux私房菜》，当时就感觉这书太厚了，简单翻了一下就没看的欲望了。这次等上了Linux，再打开看一下，竟然能看下去了，而且发现讲的是通俗易懂，非常详细，也难怪那么多人推荐Linux入门者看这个。不过这本书还是太厚了，如果不是从事Linux相关工作的，没必要从头到尾看完。只是使用Linux的话，可以找自己所需要的章节阅读，当个字典来看挺不错的。  这里就只记一些比较">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一些有意思的linux命令">
+<meta property="og:url" content="https://crownz-sec.github.io/2020/04/25/linux_cmd/index.html">
+<meta property="og:site_name" content="crownZ&#39;s Blog">
+<meta property="og:description" content="记得一年前，我就买了《鸟哥的Linux私房菜》，当时就感觉这书太厚了，简单翻了一下就没看的欲望了。这次等上了Linux，再打开看一下，竟然能看下去了，而且发现讲的是通俗易懂，非常详细，也难怪那么多人推荐Linux入门者看这个。不过这本书还是太厚了，如果不是从事Linux相关工作的，没必要从头到尾看完。只是使用Linux的话，可以找自己所需要的章节阅读，当个字典来看挺不错的。  这里就只记一些比较">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/QQ20200425-212630@2x.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/QQ20200425.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200425215411.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200425220922.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200425221104.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200425224240.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200425225426.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200713111151.png">
+<meta property="article:published_time" content="2020-04-25T13:00:00.000Z">
+<meta property="article:modified_time" content="2020-07-13T03:15:34.216Z">
+<meta property="article:author" content="crownZ">
+<meta property="article:tag" content="学习">
+<meta property="article:tag" content="命令">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/QQ20200425-212630@2x.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>一些有意思的linux命令</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2020/04/26/NTFS/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2020/04/23/FAT32/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://crownz-sec.github.io/2020/04/25/linux_cmd/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://crownz-sec.github.io/2020/04/25/linux_cmd/&text=一些有意思的linux命令"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://crownz-sec.github.io/2020/04/25/linux_cmd/&title=一些有意思的linux命令"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://crownz-sec.github.io/2020/04/25/linux_cmd/&is_video=false&description=一些有意思的linux命令"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=一些有意思的linux命令&body=Check out this article: https://crownz-sec.github.io/2020/04/25/linux_cmd/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://crownz-sec.github.io/2020/04/25/linux_cmd/&title=一些有意思的linux命令"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://crownz-sec.github.io/2020/04/25/linux_cmd/&title=一些有意思的linux命令"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://crownz-sec.github.io/2020/04/25/linux_cmd/&title=一些有意思的linux命令"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://crownz-sec.github.io/2020/04/25/linux_cmd/&title=一些有意思的linux命令"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://crownz-sec.github.io/2020/04/25/linux_cmd/&name=一些有意思的linux命令&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://crownz-sec.github.io/2020/04/25/linux_cmd/&t=一些有意思的linux命令"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#sort%E5%91%BD%E4%BB%A4"><span class="toc-number">1.</span> <span class="toc-text">sort命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#tac%E5%91%BD%E4%BB%A4"><span class="toc-number">2.</span> <span class="toc-text">tac命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#od%E5%91%BD%E4%BB%A4"><span class="toc-number">3.</span> <span class="toc-text">od命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#chattr%E4%B8%8Elsattr%E5%91%BD%E4%BB%A4"><span class="toc-number">4.</span> <span class="toc-text">chattr与lsattr命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#cmatrix"><span class="toc-number">5.</span> <span class="toc-text">cmatrix</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        一些有意思的linux命令
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">crownZ</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-04-25T13:00:00.000Z" itemprop="datePublished">2020-04-25</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/Linux/">Linux</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/%E5%91%BD%E4%BB%A4/" rel="tag">命令</a>, <a class="tag-link-link" href="/tags/%E5%AD%A6%E4%B9%A0/" rel="tag">学习</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <blockquote>
+<p>记得一年前，我就买了《鸟哥的Linux私房菜》，当时就感觉这书太厚了，简单翻了一下就没看的欲望了。这次等上了Linux，再打开看一下，竟然能看下去了，而且发现讲的是通俗易懂，非常详细，也难怪那么多人推荐Linux入门者看这个。不过这本书还是太厚了，如果不是从事Linux相关工作的，没必要从头到尾看完。只是使用Linux的话，可以找自己所需要的章节阅读，当个字典来看挺不错的。</p>
+</blockquote>
+<p>这里就只记一些比较有意思的命令，一些简单命令的格式，就不写了。</p>
+<h1 id="sort命令"><a href="#sort命令" class="headerlink" title="sort命令"></a>sort命令</h1><p>sort按英文意思是排序，针对文本文件的内容，以行为单位来排序。但可以用来查看文件内容，单对一个文件操作的时候，它将把文本内容排序后，打印出来。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/QQ20200425-212630@2x.png"></p>
+<h1 id="tac命令"><a href="#tac命令" class="headerlink" title="tac命令"></a>tac命令</h1><p>tac是cat反着写，实际的作用也正好cat相反，将文件内容倒着，从最后一行打印到屏幕上面。在一些黑名单过滤的简单题目中，用这个能省一些事儿。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/QQ20200425.jpg"></p>
+<h1 id="od命令"><a href="#od命令" class="headerlink" title="od命令"></a>od命令</h1><p>sort和tac命令都是针对纯文本文件的，而od命令是针对非纯文本的。执行文件通常是二进制文件(binary file)，这时候就可以用它来读取信息。</p>
+<p>格式：<code>od [-t TYPE] 文件</code></p>
+<pre><code>-t：后面可以接各种类型（TYPE）的输出，如：
+   a：利用默认字符来输出
+   c：使用ASCII字符来输出
+   d [size]：利用十进制来输出数据，每个整数占用size Bytes
+   f [size]：利用浮点数值来输出数据，每个整数占用size Bytes
+   o [size]：利用八进制来输出数据，每个整数占用size Bytes
+   x [size]：利用十六进制来输出数据，每个整数占用size Bytes
+</code></pre>
+<p>使用<code>od -t c /usr/bin/passwd</code>可以把passwd文件的内容以ASCII方式显示，因为内容实在太多，在这个命令后面通过管道符“｜”连接一个命令<code>head -n 10</code>来取上一个命令的前10行输出。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200425215411.png"></p>
+<p>使用<code>od -t oCc /usr/bin/passwd</code>可以把passwd这个文件的内容以十进制列出存储值和ASCII的对照表。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200425220922.png"></p>
+<p>没有记忆ASCII表的话，还可以用来查询字符的ASCII对照。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200425221104.png"></p>
+<h1 id="chattr与lsattr命令"><a href="#chattr与lsattr命令" class="headerlink" title="chattr与lsattr命令"></a>chattr与lsattr命令</h1><p>chattr用来配置文件隐藏属性，隐藏属性是chmod所能控制的9个权限之外的属性，在系统安全上非常重要。</p>
+<p>格式：<code>chatttr [+-=] [ASacdistu] 文件或者目录名称</code></p>
+<pre><code>选项与参数：
++ ：增加某一个特殊参数，其他原本存在参数保持不变
+- ：删除某一个特殊参数，其他原本存在参数保持不变
+= ：直接设置参数，且仅有后面的参数
+A ：设置之后，在存取该文件时，它的存取时间atime不会被改变，可避免I/O较慢的机器过度的读写磁盘
+S ：一般文件以非同步写入磁盘，加上S属性之后，进行任何文件的修改，该修改都会同步写入磁盘
+a ：设置之后，该文件只能增加数据，且不能删除和修改，只有root才能设置
+c ：设置之后，将自动把该文件压缩，在读取的时候会自动解压缩；在存储的时候，会先进行压缩再存储
+d ：当dump程序被执行的时候，设置d属性可使该文件不被dump备份
+i ：可以使一个文件不能被删除、改名、设置链接也无法写入或新增数据，只有root用户才能设置
+s ：设置之后，该文件被删除后，将会完全的从磁盘删除，无法恢复
+u ：与s相反，若该文件被删除了，数据内容还存在磁盘中，可以恢复
+</code></pre>
+<p>先通过su 使用touch命令新建一个<code>attrtest</code>空文件，给它新增一个i属性，发现root身份是无法删除的。注意，这个属性只能由root设置，要用su命令切换到root。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200425224240.png"><br>在这之后，用<code>chattr -i attrtest</code>，才可以把文件删除。</p>
+<p>同时，还有lsattr命令显示文件隐藏属性。</p>
+<p>格式：<code>lsattr [-adR] 文件或目录</code></p>
+<pre><code>选项与参数： 
+-a ：将隐藏文件的属性也显示出来
+-d ：若接的是目录，仅列出目录本身的属性而非目录内的文件名
+-R ：连同子目录的数据也一并列出来，递归选项，很多命令都有这个参数
+</code></pre>
+<p>这个lsattr跟ls用法挺像的，只是多了能够看到隐藏属性，少了一些参数。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200425225426.png"></p>
+<h1 id="cmatrix"><a href="#cmatrix" class="headerlink" title="cmatrix"></a>cmatrix</h1><p>一个超级酷炫但是没卵用的命令，应该是仿照《黑客帝国》那种命令行开发的。系统不会自带，mac通过homebrew安装，其他Linux也可以通过apt-get安装。安装后，在终端输入<code>cmatrix</code>，回车即可一键装X。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200713111151.png"></p>
+<p>其他这样的趣味命令还有很多，可知乎搜索有趣的Linux命令。</p>
+<blockquote>
+<p>参考</p>
+<p>[1] 《鸟哥的Linux私房菜》</p>
+</blockquote>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#sort%E5%91%BD%E4%BB%A4"><span class="toc-number">1.</span> <span class="toc-text">sort命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#tac%E5%91%BD%E4%BB%A4"><span class="toc-number">2.</span> <span class="toc-text">tac命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#od%E5%91%BD%E4%BB%A4"><span class="toc-number">3.</span> <span class="toc-text">od命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#chattr%E4%B8%8Elsattr%E5%91%BD%E4%BB%A4"><span class="toc-number">4.</span> <span class="toc-text">chattr与lsattr命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#cmatrix"><span class="toc-number">5.</span> <span class="toc-text">cmatrix</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://crownz-sec.github.io/2020/04/25/linux_cmd/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://crownz-sec.github.io/2020/04/25/linux_cmd/&text=一些有意思的linux命令"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://crownz-sec.github.io/2020/04/25/linux_cmd/&title=一些有意思的linux命令"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://crownz-sec.github.io/2020/04/25/linux_cmd/&is_video=false&description=一些有意思的linux命令"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=一些有意思的linux命令&body=Check out this article: https://crownz-sec.github.io/2020/04/25/linux_cmd/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://crownz-sec.github.io/2020/04/25/linux_cmd/&title=一些有意思的linux命令"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://crownz-sec.github.io/2020/04/25/linux_cmd/&title=一些有意思的linux命令"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://crownz-sec.github.io/2020/04/25/linux_cmd/&title=一些有意思的linux命令"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://crownz-sec.github.io/2020/04/25/linux_cmd/&title=一些有意思的linux命令"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://crownz-sec.github.io/2020/04/25/linux_cmd/&name=一些有意思的linux命令&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://crownz-sec.github.io/2020/04/25/linux_cmd/&t=一些有意思的linux命令"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2022
+    crownZ
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'crownZz';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+<!-- utterances Comments -->
+
+</body>
+</html>

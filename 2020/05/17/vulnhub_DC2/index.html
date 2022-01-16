@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="flag1用nmap扫瞄子网段，确定靶机IP。  此时需要在本机的hosts文件加一个域名解析，不然会出错，这里为192.168.123.147  dc-2。我想是因为访问这个IP，会自动跳转到http:&#x2F;&#x2F;dc-2，要不加解析，就变成向DNS服务器寻求解析了，而DNS服务器显然是没有这个的，会造成无法访问页面。 这里需要再用nmap扫描一下目标IP的65535个端口，防止错失一些端口信息。看到有">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vulnhub-DC2">
+<meta property="og:url" content="https://crownz-sec.github.io/2020/05/17/vulnhub_DC2/index.html">
+<meta property="og:site_name" content="crownZ&#39;s Blog">
+<meta property="og:description" content="flag1用nmap扫瞄子网段，确定靶机IP。  此时需要在本机的hosts文件加一个域名解析，不然会出错，这里为192.168.123.147  dc-2。我想是因为访问这个IP，会自动跳转到http:&#x2F;&#x2F;dc-2，要不加解析，就变成向DNS服务器寻求解析了，而DNS服务器显然是没有这个的，会造成无法访问页面。 这里需要再用nmap扫描一下目标IP的65535个端口，防止错失一些端口信息。看到有">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517160938.png">
+<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517165331.png">
+<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517161428.png">
+<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517162913.png">
+<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517163153.png">
+<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517164854.png">
+<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517164353.png">
+<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517164832.png">
+<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517171428.png">
+<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517172012.png">
+<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517170215.png">
+<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517170319.png">
+<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517172119.png">
+<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517173632.png">
+<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517191109.png">
+<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517191755.png">
+<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517191844.png">
+<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517193615.png">
+<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517193908.png">
+<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517194045.png">
+<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517194124.png">
+<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517194220.png">
+<meta property="article:published_time" content="2020-05-17T12:00:00.000Z">
+<meta property="article:modified_time" content="2020-05-17T11:58:07.000Z">
+<meta property="article:author" content="crownZ">
+<meta property="article:tag" content="vulnhub">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517160938.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>vulnhub-DC2</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2020/05/23/Mac_app/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2020/05/17/vulnhub_DC1/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://crownz-sec.github.io/2020/05/17/vulnhub_DC2/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://crownz-sec.github.io/2020/05/17/vulnhub_DC2/&text=vulnhub-DC2"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://crownz-sec.github.io/2020/05/17/vulnhub_DC2/&title=vulnhub-DC2"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://crownz-sec.github.io/2020/05/17/vulnhub_DC2/&is_video=false&description=vulnhub-DC2"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=vulnhub-DC2&body=Check out this article: https://crownz-sec.github.io/2020/05/17/vulnhub_DC2/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://crownz-sec.github.io/2020/05/17/vulnhub_DC2/&title=vulnhub-DC2"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://crownz-sec.github.io/2020/05/17/vulnhub_DC2/&title=vulnhub-DC2"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://crownz-sec.github.io/2020/05/17/vulnhub_DC2/&title=vulnhub-DC2"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://crownz-sec.github.io/2020/05/17/vulnhub_DC2/&title=vulnhub-DC2"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://crownz-sec.github.io/2020/05/17/vulnhub_DC2/&name=vulnhub-DC2&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://crownz-sec.github.io/2020/05/17/vulnhub_DC2/&t=vulnhub-DC2"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#flag1"><span class="toc-number">1.</span> <span class="toc-text">flag1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#flag2"><span class="toc-number">2.</span> <span class="toc-text">flag2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#flag3"><span class="toc-number">3.</span> <span class="toc-text">flag3</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#flag4"><span class="toc-number">4.</span> <span class="toc-text">flag4</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#flag5"><span class="toc-number">5.</span> <span class="toc-text">flag5</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9E%E9%A1%BE%E8%BF%87%E7%A8%8B"><span class="toc-number">6.</span> <span class="toc-text">回顾过程</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        vulnhub-DC2
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">crownZ</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-05-17T12:00:00.000Z" itemprop="datePublished">2020-05-17</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/vulnhub/" rel="tag">vulnhub</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="flag1"><a href="#flag1" class="headerlink" title="flag1"></a>flag1</h1><p>用nmap扫瞄子网段，确定靶机IP。</p>
+<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517160938.png"></p>
+<p>此时需要在本机的hosts文件加一个域名解析，不然会出错，这里为<code>192.168.123.147  dc-2</code>。我想是因为访问这个IP，会自动跳转到<code>http://dc-2</code>，要不加解析，就变成向DNS服务器寻求解析了，而DNS服务器显然是没有这个的，会造成无法访问页面。</p>
+<p>这里需要再用nmap扫描一下目标IP的65535个端口，防止错失一些端口信息。看到有80和7744端口。nmap好像默认是扫前1000个端口，这里就用-p-让它扫全部端口。</p>
+<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517165331.png"></p>
+<p>看到靶机开放有80端口，浏览器访问，可以看到第一个flag。提示我们惯用的字典可能不管用，让我们cewl。</p>
+<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517161428.png"></p>
+<h1 id="flag2"><a href="#flag2" class="headerlink" title="flag2"></a>flag2</h1><p>cewl是一个从目标网站选取关键词，并生成字典的工具。这里生成一个字典dc_passwords.txt。</p>
+<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517162913.png"></p>
+<p>但我们此时还没有用户名，不知道怎么登录。用谷歌插件Wappalyzer，看到是一个WordPress的CMS。</p>
+<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517163153.png"></p>
+<blockquote>
+<p>WPScan是很多安全系统默认自带的一款漏洞扫描工具，它采用Ruby编写，能够扫描WordPress网站中的多种安全漏洞，其中包括主题漏洞、插件漏洞和WordPress本身的漏洞。最新版本WPScan的数据库中包含超过18000种插件漏洞和2600种主题漏洞，并且支持最新版本的WordPress。值得注意的是，它不仅能够扫描类似robots.txt这样的敏感文件，而且还能够检测当前已启用的插件和其他功能。</p>
+</blockquote>
+<p>WPScan常用参数如下：</p>
+<ul>
+<li>–url 目标网站地址</li>
+<li>-e, –enumerate [OPTS] 枚举<ul>
+<li>vp 枚举有漏洞的插件</li>
+<li>ap 枚举所有插件</li>
+<li>p 枚举所有插件</li>
+<li>vt 枚举有漏洞的主题</li>
+<li>at 枚举所有主题</li>
+<li>t 枚举流行的主题</li>
+<li>tt 枚举缩略图</li>
+<li>cb 枚举备份配置文件</li>
+<li>dbe 导出数据库</li>
+<li>u 枚举用户</li>
+<li>m 枚举媒体</li>
+</ul>
+</li>
+<li>-t, –max-threads VALUE 最大线程数，默认为5</li>
+<li>-U, –usernames LIST 枚举用户<ul>
+<li>–password-attack ATTACK 指定用户爆破密码</li>
+</ul>
+</li>
+<li>-P, –passwords FILE_PATH 爆破密码，当没有指定用户时候，会默认使用<code>-e u</code>枚举出来的用户进行爆破</li>
+</ul>
+<p>使用wpscan命令<code>wpscan --url https://dc-2</code>扫描，看到一些配置信息，还能看到当前版本不是最新的，就有可能存在漏洞。</p>
+<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517164854.png"></p>
+<p>再用<code>wpscan --url https://dc-2 -e u</code>，枚举WP的用户。</p>
+<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517164353.png"></p>
+<p>使用之前的生成的密码字典爆破，<code>wpscan --url https://dc-2 -e u-t 50 -P dc_2passwords.txt</code>。看到两个账户和密码。</p>
+<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517164832.png"></p>
+<p>那有了账户和密码怎么登录呢，网页上又没有登录接口。查了一下，知道WordPress的后台地址为wp-admin，访问<code>http://dc-2/wp-admin</code>，就会有登录页面。输入jerry和密码，登录成功。在Pages页面找到第二个flag，提示我们如果无法利用WordPress并采取捷径的话，换另一种方法。希望我们找另一个入口点。</p>
+<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517171428.png"></p>
+<p>在查找网站域下面的地址时，用kali下的dirb也是一个不错的选择。</p>
+<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517172012.png"></p>
+<h1 id="flag3"><a href="#flag3" class="headerlink" title="flag3"></a>flag3</h1><p>另一个入口点在哪儿呢，这时想到之前的SSH端口，尝试去登录一下。用jerry试了几次，都发现登录失败。</p>
+<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517170215.png"></p>
+<p>那就换下一个账户，登录成功。</p>
+<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517170319.png"></p>
+<p>ls后，看到第三个flag。想直接查看时，发现出错：命令没找到。</p>
+<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517172119.png"></p>
+<p>rbash全称Restricted Shell，是一个被阉割的shell，只能使用被指定的命令。而且使用了rbash，还会有以下限制（禁止事项）：</p>
+<ol>
+<li>使用<code>cd</code>来改变路径</li>
+<li>设置或取消SHELL,PATH,ENV或BASH_ENV变量的值</li>
+<li>指定的命令里包含<code>/</code></li>
+<li>指定包含<code>/</code>的文件名作为传递参数给内建命令的参数</li>
+<li>指定包含斜杠(slash)的文件名作为-p选项的参数，传递给hash内建命令</li>
+<li>启动时从shell环境中导入函数定义</li>
+<li>启动时解释shell环境中SHELLOPTS的值</li>
+<li>使用 <code>&gt;</code>, <code>&gt;|</code>, <code>&lt;&gt;</code>,<code>&gt;&amp;</code>, <code>&amp;&gt;</code>, <code>&gt;&gt;</code>等重定向操作符重定向输出</li>
+<li>使用<code>exec</code>内建命令来意另一个命令替换shell</li>
+<li>使用<code>enable</code>内建命令的 -f 和 -d 选项来增加和内建命令</li>
+<li>使用<code>enable</code>内建命令来允许和禁止shell内建命令</li>
+<li>指定command内建命令的 -p 选项</li>
+<li>使用<code>set +r</code>或<code>set +o restricted</code>来关闭受限模式</li>
+</ol>
+<p>知道有了许多限制之后，就先看我们能使用哪些命令，用<code>echo $PATH</code>查看环境变量。我们不能使用cd，那就使用ls来查看目标文件夹内容。</p>
+<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517173632.png"></p>
+<p>看到less命令，就想到之前的suid提权就有它。我想用它提权，发现rbash限制执行命令后再输入’/‘，么的办法。vi命令可以直接用来编辑文件，那直接用它也能查看文件内容。（其实也可以用less查看，less可以指定行数，输出文件后面几行内容）查看flag3.txt，看到提示：可怜的老汤姆总是追逐着杰瑞。也许他应该承受自己所造成的所有压力。</p>
+<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517191109.png"></p>
+<h1 id="flag4"><a href="#flag4" class="headerlink" title="flag4"></a>flag4</h1><p>上面提示杰瑞，可能在jerry用户下面有信息。</p>
+<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517191755.png"></p>
+<p>查看内容，提示：还没有到家，需要找到最终的flag。</p>
+<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517191844.png"></p>
+<h1 id="flag5"><a href="#flag5" class="headerlink" title="flag5"></a>flag5</h1><p>还有最后一个，说没其他提示，可能就是root权限了。说没提示，但还是有的，上面最后一行：继续，git离开这里。离开哪里？离开这受限的rbash。怎么离开？git提权。前面常见的suid提权没有这个，长见识了。但git提权是要sudo命令的，还是先要跳出这个rbash。绕过限制的方法为下面几条的命令，执行完毕就可以执行其他命令。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">BASH_CMDS[a]=/bin/sh;a		<span class="comment"># 把/bin/sh赋值给BASH_CMDS[a]变量</span></span><br><span class="line">/bin/bash</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/bin/		<span class="comment"># 将/bin作为PATH环境变量导出</span></span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/usr/bin  <span class="comment"># 将/bin/bash作为PATH环境变量导出</span></span><br></pre></td></tr></table></figure>
+
+<p>git提权方法（两种）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo git <span class="built_in">help</span> config</span><br><span class="line">    !/bin/bash <span class="comment"># 或者 !&#x27;sh&#x27;  完成提权</span></span><br><span class="line">    </span><br><span class="line">sudo git -p <span class="built_in">help</span> </span><br><span class="line">    !/bin/bash</span><br></pre></td></tr></table></figure>
+
+<p>尝试的时候，发现tom并没sudo这个命令。</p>
+<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517193615.png"></p>
+<p>那尝试换到jerry，发现是可行的。</p>
+<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517193908.png"></p>
+<p>进行git提权。</p>
+<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517194045.png"></p>
+<p>发现我们已经是root用户了。</p>
+<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517194124.png"></p>
+<p>切换到root根目录，看到最后的flag。</p>
+<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517194220.png"></p>
+<h1 id="回顾过程"><a href="#回顾过程" class="headerlink" title="回顾过程"></a>回顾过程</h1><ol>
+<li>信息收集</li>
+</ol>
+<ul>
+<li>目标IP探测</li>
+<li>Nmap端口扫描</li>
+</ul>
+<ol start="2">
+<li>CMS漏洞搜索</li>
+</ol>
+<ul>
+<li>识别WordPress CMS管理系统</li>
+<li>使用WPScan扫描</li>
+</ul>
+<ol start="3">
+<li>生成字典并爆破</li>
+</ol>
+<ul>
+<li>bewl生成字典</li>
+<li>WPScan扫描账户</li>
+<li>爆破账户密码</li>
+</ul>
+<ol start="4">
+<li>SSH连接</li>
+</ol>
+<ul>
+<li>绕过rbash切换用户</li>
+</ul>
+<ol start="5">
+<li>git提权</li>
+</ol>
+<ul>
+<li>查看最终flag</li>
+</ul>
+<blockquote>
+<p>参考 </p>
+<p>[1] <a target="_blank" rel="noopener" href="https://www.icheung.net/archives/65/"><a target="_blank" rel="noopener" href="https://www.icheung.net/archives/65/">VulnHub DC-2 入门靶机初探</a></a></p>
+</blockquote>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#flag1"><span class="toc-number">1.</span> <span class="toc-text">flag1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#flag2"><span class="toc-number">2.</span> <span class="toc-text">flag2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#flag3"><span class="toc-number">3.</span> <span class="toc-text">flag3</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#flag4"><span class="toc-number">4.</span> <span class="toc-text">flag4</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#flag5"><span class="toc-number">5.</span> <span class="toc-text">flag5</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9E%E9%A1%BE%E8%BF%87%E7%A8%8B"><span class="toc-number">6.</span> <span class="toc-text">回顾过程</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://crownz-sec.github.io/2020/05/17/vulnhub_DC2/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://crownz-sec.github.io/2020/05/17/vulnhub_DC2/&text=vulnhub-DC2"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://crownz-sec.github.io/2020/05/17/vulnhub_DC2/&title=vulnhub-DC2"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://crownz-sec.github.io/2020/05/17/vulnhub_DC2/&is_video=false&description=vulnhub-DC2"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=vulnhub-DC2&body=Check out this article: https://crownz-sec.github.io/2020/05/17/vulnhub_DC2/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://crownz-sec.github.io/2020/05/17/vulnhub_DC2/&title=vulnhub-DC2"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://crownz-sec.github.io/2020/05/17/vulnhub_DC2/&title=vulnhub-DC2"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://crownz-sec.github.io/2020/05/17/vulnhub_DC2/&title=vulnhub-DC2"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://crownz-sec.github.io/2020/05/17/vulnhub_DC2/&title=vulnhub-DC2"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://crownz-sec.github.io/2020/05/17/vulnhub_DC2/&name=vulnhub-DC2&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://crownz-sec.github.io/2020/05/17/vulnhub_DC2/&t=vulnhub-DC2"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2022
+    crownZ
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'crownZz';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+<!-- utterances Comments -->
+
+</body>
+</html>

