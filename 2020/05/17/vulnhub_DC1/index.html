@@ -13,38 +13,39 @@
 <meta property="og:site_name" content="crownZ&#39;s Blog">
 <meta property="og:description" content="vulnhub是一个有各种靶机的网站，用来练习渗透是一个不错的选择。要注意这个并不是p神的那个vulhub，vulhub是各大公开的漏洞，要用docker运行，这里vulnhub是用虚拟机的。  flag1打开DC1靶机，看到直接就让登录，我想这怎么搞啊。看别人的解析，原来是这个靶机只是开着就行了，下面就在攻击机进行渗透。也对，要是直接登录了，还算什么渗透呀。  但现在，靶机的IP和端口都不知道">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517110925.png">
-<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517111626.png">
-<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517111955.png">
-<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517112444.png">
-<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517142752.png">
-<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517142736.png">
-<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517142710.png">
-<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517143555.png">
-<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517153139.png">
-<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517144534.png">
-<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517144646.png">
-<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517145013.png">
-<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517145214.png">
-<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517145354.png">
-<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517145543.png">
-<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517150331.png">
-<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517150658.png">
-<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517150955.png">
-<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517151205.png">
-<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517152121.png">
-<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517152007.png">
-<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517152100.png">
-<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517152435.png">
-<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517153415.png">
-<meta property="og:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517153541.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517110925.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517111626.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517111955.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517112444.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517142752.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517142736.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517142710.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517143555.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517153139.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517153139.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517144534.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517144646.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517145013.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517145214.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517145354.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517145543.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517150331.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517150658.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517150955.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517151205.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517152121.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517152007.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517152100.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517152435.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517153415.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517153541.png">
 <meta property="article:published_time" content="2020-05-17T07:00:00.000Z">
-<meta property="article:modified_time" content="2020-05-27T13:48:43.374Z">
+<meta property="article:modified_time" content="2022-07-06T12:06:28.461Z">
 <meta property="article:author" content="crownZ">
 <meta property="article:tag" content="MSF">
 <meta property="article:tag" content="vulnhub">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/crownZ/blog_image/raw/master/20200517110925.png">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517110925.png">
     
     
       
@@ -184,63 +185,64 @@
 <p><a target="_blank" rel="noopener" href="https://www.vulnhub.com/">vulnhub</a>是一个有各种靶机的网站，用来练习渗透是一个不错的选择。要注意这个并不是p神的那个vulhub，vulhub是各大公开的漏洞，要用docker运行，这里vulnhub是用虚拟机的。</p>
 </blockquote>
 <h1 id="flag1"><a href="#flag1" class="headerlink" title="flag1"></a>flag1</h1><p>打开DC1靶机，看到直接就让登录，我想这怎么搞啊。看别人的解析，原来是这个靶机只是开着就行了，下面就在攻击机进行渗透。也对，要是直接登录了，还算什么渗透呀。</p>
-<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517110925.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517110925.png"></p>
 <p>但现在，靶机的IP和端口都不知道，这里用kali的nmap扫描整个子网段。因为都是在虚拟机上运行的，网络模式也是NAT的，这两个机子都是在同一个网段的，并不需要特别的配置。</p>
-<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517111626.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517111626.png"></p>
 <p>能看到两个开放端口的主机，第一个测试后是我本机的IP，因为这个时候我本地还在运行一个PHP网站，试一下就知道了。判断下面的IP是靶机IP，因为开了80端口，就直接浏览器访问。看到是一个管理网站，用Drupal驱动。看到Power by，就认为它可能是一个模版网站，这样的网站通常都有对应的版本漏洞。</p>
-<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517111955.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517111955.png"></p>
 <p>到网上搜一下，看到就有相关的漏洞分析。</p>
-<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517112444.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517112444.png"></p>
 <p>打开msfconsole，查找相关exp。</p>
-<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517142752.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517142752.png"></p>
 <p>选择2018年的那一条，设置好远程主机，运行exp。</p>
-<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517142736.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517142736.png"></p>
 <p>看到建立了连接，输入shell，获得普通用户权限。</p>
-<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517142710.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517142710.png"></p>
 <p>查看当前目录，找到flag1。提示我们找config文件。</p>
-<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517143555.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517143555.png"></p>
 <h1 id="flag2"><a href="#flag2" class="headerlink" title="flag2"></a>flag2</h1><p>之前进入的shell并不是交互的，用<code>python -c &#39;import pty;pty.spawn(&quot;/bin/bash&quot;)&#39;</code>即可进入交互式的shell。</p>
-<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517153139.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517153139.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517153139.png"></p>
 <p>drupal的配置文件为<code>/sites/default/settings.php</code>，是数据库连接配置文件。</p>
-<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517144534.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517144534.png"></p>
 <p>找到之后查看内容，看到第二个flag，获得了数据库的账户和密码。</p>
-<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517144646.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517144646.png"></p>
 <p>flag2提示暴力破解和字典攻击并不是唯一获取访问的途径，毕竟他已经把数据的账户和密码给出了，就连接查看数据库。</p>
-<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517145013.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517145013.png"></p>
 <p>显示数据库，再查看主要数据库的表。</p>
-<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517145214.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517145214.png"></p>
 <p>看到用户表为users。</p>
-<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517145354.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517145354.png"></p>
 <p>我们查看name和pass。</p>
-<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517145543.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517145543.png"></p>
 <p>看到账户和加密的密码，flag2提示暴力破解并非唯一的方法，下面就去破解密码。</p>
 <h1 id="flag3"><a href="#flag3" class="headerlink" title="flag3"></a>flag3</h1><p>由于很多在线MD5爆破和MD5数据库，可以查到很多MD5码的原文，所以Drupal 7已不再采用Drupal 6和5简单的MD5加密，而是采用一种新型的Hash加密方法。新型加密方法是“加了盐（Salt）”的MD5码，简单理解就是，并不会直接将password进行MD5加密，而会和用户名或其它随机字符串组合在一起后再MD5加密。</p>
 <p>在Drupal 7安装目录的scripts目录下，有一些Drupal 7开发者准备好的PHP脚本，可以执行一些高级操作。其中有一个脚本名为password-hash.sh，它的功能是传入一个密码（字符串），即返回加密后的密码字符串。我们可以利用它，生成一个我们知道密码，再用该密码替换原admin密码。</p>
 <p>Drupal 7对数据库加密的脚本位于网站根目录scripts下，利用该脚本修改为新密码123456。先退出mysql，切换到www目录下，看到scripts。使用<code>php scripts/password-hash.sh 123456</code>，得到加密的密码。</p>
-<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517150331.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517150331.png"></p>
 <p>下面再次登录数据库。</p>
-<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517150658.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517150658.png"></p>
 <p>选择数据库之后，修改用update语句更改密码。</p>
-<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517150955.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517150955.png"></p>
 <p>用admin和123456登录cms，在Content看到flag3。</p>
-<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517151205.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517151205.png"></p>
 <p>查看flag3内容，提示：特殊的文件保留权限(Perms)会帮助找到密码，你需要用-exec执行命令来获得shadow文件信息。</p>
-<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517152121.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517152121.png"></p>
 <h1 id="flag4"><a href="#flag4" class="headerlink" title="flag4"></a>flag4</h1><p>先查看密码，看到了flag4用户。</p>
-<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517152007.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517152007.png"></p>
 <p>切换目录，查看flag4，提示我们查看root用户的flag。</p>
-<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517152100.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517152100.png"></p>
 <h1 id="flag5"><a href="#flag5" class="headerlink" title="flag5"></a>flag5</h1><p>我们查找root，<code>find /root</code>，看到最后一个flag在root目录下面。</p>
-<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517152435.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517152435.png"></p>
 <p>当想切换到root目录下面，会提示没有权限，就需要提权了。</p>
 <p>使用命令：</p>
 <ul>
 <li>mkdir test</li>
 <li>find test -exec ‘/bin/sh’ /</li>
 </ul>
-<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517153415.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517153415.png"></p>
 <p>看到我们获取了有root权限的shell，直接查看最终的flag。</p>
-<p><img src="https://gitee.com/crownZ/blog_image/raw/master/20200517153541.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/20200517153541.png"></p>
 <p>上面提权的方法叫做suid提权，学一下提权的原理。</p>
 <p>suid是其他用户执行这个程序的时候可以用该程序所有者/组的权限。suid提权可以理解为某个文件有s标志，并且如果该文件拥有者为root，当我们运行这个文件时就可以有root的权限。前面的提权就是如此，find命令找到了文件夹test，下来以root权限执行/bin/sh，就获得了root权限的/bin/sh。常见suid提权的命令包括nmap、vim、find、bash、more、less、nano、cp等。</p>
 <h1 id="回顾过程"><a href="#回顾过程" class="headerlink" title="回顾过程"></a>回顾过程</h1><ol>
