@@ -45,7 +45,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/AdvancedComputerNetworReview/Odin-Architecture.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/crownz-sec/Blog_Source@master/img/gitee-image/AdvancedComputerNetworReview/Odin-LVAP.png">
 <meta property="article:published_time" content="2022-06-21T08:00:00.000Z">
-<meta property="article:modified_time" content="2022-07-08T10:30:24.915Z">
+<meta property="article:modified_time" content="2022-07-08T10:32:59.756Z">
 <meta property="article:author" content="crownZ">
 <meta property="article:tag" content="总结">
 <meta property="article:tag" content="复习">
@@ -184,7 +184,7 @@
   
 
   <div class="content" itemprop="articleBody">
-    <p>开篇问题：什么叫做高级计算机网络？这个“高级”是什么意思？老师说，网络本来就没有什么高级和低级之分，不是说以前学的就比较低级，这门课讲的就比较高级，只不过是在他上学的时候，课程名就叫这个了，这里只是沿用下来。自己的理解是可能觉得网络的新工作是在传统TCP/IP架构上进行各种修改去做的，所以认为后续的工作会比以往所学的网络要“高级”一点。这节课主要是带着读论文，讲解近十年左右的网络新进展，去了解比较前沿的知识。因为大部分论文其实是10年左右的，也不是网络方面的第一手资料，所以也不是很前沿。但这些论文也确实是有很大影响力的工作，现在每年也还有很多人在研究其中一些论文所开辟的方向，甚至有些论文即将成为HTTP/3的的标准。</p>
+    <p>开篇问题：什么叫做高级计算机网络？这个“高级”是什么意思？老师说，网络本来就没有什么高级和低级之分，不是说以前学的就比较低级，这门课讲的就比较高级，只不过是在他上学的时候，课程名就叫这个了，这里只是沿用下来。自己的理解是可能觉得网络的新工作是在传统TCP/IP架构上进行各种修改去做的，所以认为后续的工作会比以往所学的网络要“高级”一点。这节课主要是带着读论文，讲解近十年左右的网络新进展，去了解比较前沿的知识。因为大部分论文其实是10年左右的，也不是网络方面的第一手资料，所以也不是很前沿。但这些论文也确实是有很大影响力的工作，现在每年也还有很多人在研究其中一些论文所开辟的方向，甚至有些论文即将成为HTTP/3的标准。</p>
 <h1 id="数据中心网络"><a href="#数据中心网络" class="headerlink" title="数据中心网络"></a>数据中心网络</h1><h2 id="FatTree"><a href="#FatTree" class="headerlink" title="FatTree"></a>FatTree</h2><p>原论文：<strong>A Scalable, Commodity Data Center Network Architecture-2008</strong></p>
 <h3 id="1-什么是数据中心网络？数据中心网络所期望的属性是什么？"><a href="#1-什么是数据中心网络？数据中心网络所期望的属性是什么？" class="headerlink" title="1.什么是数据中心网络？数据中心网络所期望的属性是什么？"></a>1.什么是数据中心网络？数据中心网络所期望的属性是什么？</h3><p>数据中心：成千上百个电脑的集群，且集群的节点与节点存在大量的信息交换，并且整个集群由一个权威的中心设备进行管理。</p>
 <p>期望的属性：</p>
@@ -839,7 +839,7 @@
 <p>只要客户机接收到它生成的数据帧的ACK，并从它关联的AP(在本例中是一个LVAP)接收到信标，客户机就保持关联。如果与客户端的LVAP对应的状态足够快地迁移到另一个Odin代理并实例化，客户端就不会试图重新扫描。因此，通过在物理AP之间迁移客户机的LVAP，基础设施现在可以控制客户机到网络的连接点，而不需要在客户机上触发重新关联。但如果由于LVAP迁移到远端AP，客户端信号强度显著降低，则客户端将执行常规重新扫描。</p>
 <p>理解：</p>
 <p>Odin把跟客户端交互的AP抽象为LVAP，客户端认为LVAP就是它想要通信的对象。同时，当用户移动时，其跟物理AP上的LVAP之间的通信仍会继续。由于客户端跟WiFi通信是广播的，多个物理AP都会收到同一个客户端的信息。这时，多个物理AP将信息上报给控制器，控制器会根据物理AP的RSSI，将LVAP迁移到RSSI最好的物理AP上。通过，物理AP上的LVAP迁移，实现了用户无感的AP切换。</p>
-<h1 id="学习感想"><a href="#学习感想" class="headerlink" title="学习感想"></a>学习感想</h1><p>首先感谢计算机学院田野老师的细致授课，田老师总是能把很抽象的例子用直观的图和语言将其描述出来，使得我们理解起来比较轻松，这一点比大部分老师都好多了，但就是语速有点快。学完这门课，最重要的收获是对近期的计算机网络研究内容有所了解，选这门课的目的其实也就是为了这。而且，能够知道本科所学的一些经典TCP/IP知识可能都过时了，印象最深的就是HTTP3.0将抛弃TCP，完全使用UDP以及真正基于拥塞的拥塞控制算法——BBR。</p>
+<h1 id="学习感想"><a href="#学习感想" class="headerlink" title="学习感想"></a>学习感想</h1><p>首先感谢计算机学院田野老师的细致授课，田老师总是能把很抽象的例子用直观的图和语言将其描述出来，使得我们理解起来比较轻松，这一点比大部分老师都好多了，但就是语速有点快。学完这门课，最重要的收获是对近期的计算机网络研究内容有所了解，选这门课的目的其实也就是为了这。而且，能够知道本科所学的一些经典TCP/IP知识可能都过时了，印象最深的就是HTTP/3将抛弃TCP，完全使用UDP以及真正基于拥塞的拥塞控制算法——BBR。</p>
 <p>下面简要谈谈自己对计算机网络的相关想法和理解。本科所学的内容主要是经典的TCP/IP协议族，是计算机网络发展早期的工作，主要用于满足基础的局域网，互联网等网络的连通与数据传输工作，其也是现在大量应用的网络设备的基础理论。但随着计算机顶层应用的不断发展，其实也对网络的方方面面提出了更高的要求。为了满足这些要求，相关学者也在围绕TCP/IP去做一系列改进和提升，但由于TCP/IP设备应用过于广泛，所做的修改其实并不能很大，以实现后向兼容的目的，可以认为是“带着镣铐跳舞”。终于，有一群人受不了了，搞了一个叫做SDN的东西，开端论文是Martìn Casado等人发表的<code>Ethane: Taking Control of the Enterprise</code>和Nick McKeown等人发表的<code>OpenFlow: Enabling Innovation in Campus Networks</code>。SDN全称为Software Defined Network，中文名叫软件定义网络。</p>
 <blockquote>
 <p> SDN对网络功能进行抽象，通过控制平面和数据转发平面之间的开放接口分离了它们的角色。SDN将控制平面抬起并脱离交换机，将其置于外部软件中。这种对数据转发平面的编程控制允许网络所有者在复制现有协议行为的同时，向他们的网络添加新功能。</p>
